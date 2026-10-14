@@ -1,0 +1,130 @@
+/* ==========================================
+   🏨 NS-HEADER — Cabecera superior (SPEC-0041)
+   Clases con namespace ns-header__ exclusivas de este archivo.
+   No se reutilizan fuera de aquí.
+   ========================================== */
+
+.ns-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 0.9rem 1.75rem;
+    background-color: rgba(11, 15, 25, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.ns-header__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.ns-header__brand h2 {
+    color: var(--primary-color);
+    font-size: 1.4rem;
+    margin: 0;
+}
+
+.ns-header__status {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.ns-header__cashbox-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background-color: rgba(59, 130, 246, 0.15);
+    color: #93c5fd;
+    border: 1px solid rgba(59, 130, 246, 0.35);
+}
+
+.ns-header__cashbox-badge.is-open {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #6ee7b7;
+    border-color: rgba(16, 185, 129, 0.4);
+}
+
+.ns-header__user-profile {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.ns-header__user-role {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    background-color: rgba(148, 163, 184, 0.15);
+    padding: 0.1rem 0.45rem;
+    border-radius: 4px;
+}
+
+.ns-header__logout {
+    color: #f87171;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.ns-header__logout:hover {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #fca5a5;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 767px) {
+    .ns-header {
+        padding: 0.65rem 1rem;
+        flex-wrap: nowrap;
+    }
+
+    .ns-header__brand h2 {
+        font-size: 1.15rem;
+    }
+
+    .ns-header__status {
+        gap: 0.75rem;
+    }
+
+    .ns-header__cashbox-badge {
+        font-size: 0.74rem;
+        padding: 0.25rem 0.55rem;
+    }
+
+    .ns-header__user-profile {
+        font-size: 0.8rem;
+    }
+
+    /* En móvil muy estrecho, ocultar el texto de rol para ahorrar espacio */
+    .ns-header__user-role {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .ns-header__cashbox-badge {
+        display: none;
+    }
+}

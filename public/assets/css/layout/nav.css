@@ -1,0 +1,172 @@
+/* ==========================================
+   🧭 NS-NAV — Navegación lateral (SPEC-0041)
+   Clases con namespace ns-nav__ exclusivas de este archivo.
+   No se reutilizan fuera de aquí.
+   ========================================== */
+
+/* Backdrop / overlay para móvil */
+.ns-nav__backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1090;
+    background-color: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+/* Contenedor del sidebar (navegación lateral) */
+.ns-nav {
+    width: 260px;
+    flex-shrink: 0;
+    background-color: #0b1120;
+    border-right: 1px solid var(--border-color);
+    padding: 1.5rem 0;
+    overflow-y: auto;
+    height: 100%;
+}
+
+.ns-nav__list {
+    list-style: none;
+    margin: 0;
+    padding: 0 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.ns-nav__item {
+    position: relative;
+}
+
+.ns-nav__link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: #94a3b8;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.18s ease;
+}
+
+.ns-nav__link:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+    transform: translateX(2px);
+}
+
+.ns-nav__item--active .ns-nav__link,
+.ns-nav__link.active {
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.22) 0%, rgba(59, 130, 246, 0.06) 100%);
+    color: #ffffff;
+    font-weight: 600;
+    border: 1px solid rgba(59, 130, 246, 0.35);
+    box-shadow: 0 4px 12px -2px rgba(59, 130, 246, 0.25);
+}
+
+.ns-nav__link-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+/* Botón hamburguesa (visible solo en móvil) */
+.ns-nav__toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-main);
+    cursor: pointer;
+    font-size: 1.3rem;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.ns-nav__toggle:hover {
+    background-color: var(--bg-card);
+    border-color: var(--border-light);
+}
+
+.ns-nav__toggle:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.ns-nav__toggle-bar {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background-color: currentColor;
+    border-radius: 2px;
+    position: relative;
+}
+
+.ns-nav__toggle-bar::before,
+.ns-nav__toggle-bar::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 20px;
+    height: 2px;
+    background-color: currentColor;
+    border-radius: 2px;
+    transition: transform 0.25s ease, top 0.25s ease;
+}
+
+.ns-nav__toggle-bar::before { top: -6px; }
+.ns-nav__toggle-bar::after  { top: 6px; }
+
+/* Estado abierto: el ícono se convierte en X */
+.ns-nav__toggle.is-open .ns-nav__toggle-bar { background-color: transparent; }
+.ns-nav__toggle.is-open .ns-nav__toggle-bar::before { top: 0; transform: rotate(45deg); }
+.ns-nav__toggle.is-open .ns-nav__toggle-bar::after  { top: 0; transform: rotate(-45deg); }
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+/* Tablet: sidebar más estrecho */
+@media (max-width: 1023px) {
+    .ns-nav {
+        width: 200px;
+    }
+}
+
+/* Móvil: sidebar oculto, se abre como overlay */
+@media (max-width: 767px) {
+    .ns-nav__toggle {
+        display: inline-flex;
+    }
+
+    .ns-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 1100;
+        width: 280px;
+        max-width: 85vw;
+        transform: translateX(-100%);
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Estado abierto */
+    body.ns-nav--open .ns-nav {
+        transform: translateX(0);
+    }
+
+    body.ns-nav--open .ns-nav__backdrop {
+        display: block;
+        opacity: 1;
+    }
+}

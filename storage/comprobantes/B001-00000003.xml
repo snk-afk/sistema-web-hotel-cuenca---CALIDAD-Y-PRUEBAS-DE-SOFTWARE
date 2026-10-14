@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+  <ID>B001-00000003</ID>
+  <IssueDate>2026-08-22</IssueDate>
+  <Customer>Carlos Mendoza Flores</Customer>
+  <TotalAmount>25</TotalAmount>
+</Invoice>

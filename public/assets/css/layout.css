@@ -1,0 +1,43 @@
+/* ==========================================
+   🏨 LAYOUT — Contenedor base de la app (SPEC-0041)
+   Solo el esqueleto: .app-container y .app-body.
+   Header, nav y footer viven en layout/{header,nav,footer}.css
+   ========================================== */
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.app-body {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+.app-content {
+    flex: 1;
+    padding: 2rem;
+    background-color: var(--bg-dark);
+    overflow-y: auto;
+    min-width: 0;
+}
+
+/* ─── Responsive ───────────────────────────────────────────────────── */
+
+@media (max-width: 1023px) {
+    .app-content {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .app-content {
+        padding: 1rem;
+    }
+    /* En móvil el body deja de ser flex-row porque el nav es overlay */
+    .app-body {
+        display: block;
+    }
+}
