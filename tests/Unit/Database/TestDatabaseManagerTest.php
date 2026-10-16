@@ -33,7 +33,7 @@ final class TestDatabaseManagerTest extends TestCase
             port: 3306,
             username: 'root',
             password: '',
-            database_name: 'cs_hotel',
+            database_name: 'railway_test',
             environment: 'local',
         );
 
@@ -49,7 +49,7 @@ final class TestDatabaseManagerTest extends TestCase
             port: 3306,
             username: 'root',
             password: '',
-            database_name: 'cs_hotel',
+            database_name: 'railway',
             environment: 'testing',
         );
 
@@ -65,7 +65,7 @@ final class TestDatabaseManagerTest extends TestCase
             port: 3306,
             username: 'root',
             password: '',
-            database_name: 'cs_hotel_test_backup',
+            database_name: 'railway_test_backup',
             environment: 'testing',
         );
 

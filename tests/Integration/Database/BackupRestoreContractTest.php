@@ -36,7 +36,8 @@ final class BackupRestoreContractTest extends MySqlTestCase
             self::assertStringContainsString($required, $backup_script);
         }
 
-        foreach (['cs_hotel_restore_', 'la base de restore no está vacía', 'age --decrypt'] as $required) {
+        foreach (['railway
+        _restore_', 'la base de restore no está vacía', 'age --decrypt'] as $required) {
             self::assertStringContainsString($required, $restore_script);
         }
 
