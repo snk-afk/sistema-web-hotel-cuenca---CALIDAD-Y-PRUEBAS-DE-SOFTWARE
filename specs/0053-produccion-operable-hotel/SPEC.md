@@ -519,7 +519,7 @@ tratar `{id}` como texto literal. Los 404 no autenticados de vistas deben rediri
 ### CA-22 — Backup y restore operables
 
 - **Given:** existen credenciales de MySQL por login-path, una clave pública `age` y
-  una base de restore vacía cuyo nombre comienza por `cs_hotel_restore_`.
+  una base de restore vacía cuyo nombre comienza por `railway_restore_`.
 - **When:** se ejecutan `backup.sh` y `restore-verify.sh`.
 - **Then:** el backup queda cifrado con checksum, el SQL temporal se elimina, el
   restore solo se realiza en la base aislada y la base operativa nunca se sobrescribe.

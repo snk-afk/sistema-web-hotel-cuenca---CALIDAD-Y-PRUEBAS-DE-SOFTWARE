@@ -17,7 +17,7 @@ final class TestDatabaseManagerTest extends TestCase
             port: 3306,
             username: 'root',
             password: '',
-            database_name: 'cs_hotel_test',
+            database_name: 'railway_test',
             environment: 'testing',
         );
 

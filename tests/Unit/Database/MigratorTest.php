@@ -22,7 +22,7 @@ final class MigratorTest extends TestCase
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         ]);
 
-        $this->migrations_dir = sys_get_temp_dir() . '/cs_hotel_migrator_' . bin2hex(random_bytes(8));
+        $this->migrations_dir = sys_get_temp_dir() . '/railway_migrator_' . bin2hex(random_bytes(8));
         if (!mkdir($this->migrations_dir, 0700, true) && !is_dir($this->migrations_dir)) {
             throw new \RuntimeException('No se pudo crear el directorio temporal del migrador.');
         }

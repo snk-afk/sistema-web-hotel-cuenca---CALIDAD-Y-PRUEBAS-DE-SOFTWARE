@@ -29,7 +29,7 @@ final class TestDatabaseManager
             port: Config::int('database.port', 3306),
             username: Config::string('database.username', 'root'),
             password: Config::string('database.password', ''),
-            database_name: Config::string('database.test_database', 'cs_hotel_test'),
+            database_name: Config::string('database.test_database', 'railway_test'),
             environment: Config::string('app.env', 'production'),
         );
     }
@@ -40,7 +40,7 @@ final class TestDatabaseManager
             throw new RuntimeException('La reconstrucción de la base de pruebas requiere APP_ENV=testing.');
         }
 
-        if (preg_match('/\\Acs_hotel_test(?:_[A-Za-z0-9_]+)?\\z/', $this->database_name) !== 1) {
+        if (preg_match('/\\Arailway_test(?:_[A-Za-z0-9_]+)?\\z/', $this->database_name) !== 1) {
             throw new RuntimeException('La base configurada no pertenece al conjunto seguro de pruebas.');
         }
     }
@@ -111,7 +111,7 @@ final class TestDatabaseManager
 
     private function quotedDatabaseName(): string
     {
-        if (preg_match('/\\Acs_hotel_test(?:_[A-Za-z0-9_]+)?\\z/', $this->database_name) !== 1) {
+        if (preg_match('/\\Arailway_test(?:_[A-Za-z0-9_]+)?\\z/', $this->database_name) !== 1) {
             throw new RuntimeException('La base configurada no pertenece al conjunto seguro de pruebas.');
         }
 

@@ -13,7 +13,7 @@ final class TestDatabaseLifecycleTest extends MySqlTestCase
     {
         $statement = $this->pdo()->query('SELECT DATABASE()');
 
-        self::assertSame('cs_hotel_test', $statement->fetchColumn());
+        self::assertSame('railway_test', $statement->fetchColumn());
     }
 
     public function testMigrationRegistryContainsEachMigrationOnce(): void

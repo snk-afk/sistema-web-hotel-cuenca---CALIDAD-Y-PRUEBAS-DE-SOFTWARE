@@ -21,7 +21,7 @@ final class Database
             /** @var int|string $port */
             $port = Config::get('database.port', 3306);
             /** @var string $db_name */
-            $db_name = Config::get('database.database', 'cs_hotel');
+            $db_name = Config::get('database.database', 'railway');
             /** @var string $charset */
             $charset = Config::get('database.charset', 'utf8mb4');
             /** @var string $username */

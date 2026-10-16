@@ -12,7 +12,7 @@ final class Migrator
     private PDO $db;
     private string $migrations_dir;
     private bool $lock_held = false;
-    private const string MIGRATION_LOCK_NAME = 'cs_hotel_migrations';
+    private const string MIGRATION_LOCK_NAME = 'railway_migrations';
 
     public function __construct(?PDO $db = null, ?string $migrations_dir = null)
     {

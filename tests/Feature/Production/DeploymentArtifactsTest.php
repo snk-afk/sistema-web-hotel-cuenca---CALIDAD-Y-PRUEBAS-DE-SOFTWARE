@@ -71,7 +71,7 @@ final class DeploymentArtifactsTest extends TestCase
         self::assertIsString($restore);
         self::assertIsString($deploy);
         self::assertStringContainsString('--single-transaction', $backup);
-        self::assertStringContainsString('cs_hotel_restore_', $restore);
+        self::assertStringContainsString('railway_restore_', $restore);
         self::assertStringContainsString('bin/verify-production-config.php', $deploy);
         self::assertStringNotContainsString('DROP DATABASE', $restore);
     }
