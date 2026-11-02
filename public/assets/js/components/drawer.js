@@ -245,11 +245,11 @@ function recalculateFutureReservationDates() {
 
     if (!tariffSelect || !futureInput || !futureInput.value || !previewText) return;
 
-    const tariffId = parseInt(tariffSelect.value, 10);
+    const tariffId = Number.parseInt(tariffSelect.value, 10);
     const tariff = globalTariffsCatalog.find(t => t.id === tariffId);
 
     const arrivalDate = new Date(futureInput.value);
-    if (isNaN(arrivalDate.getTime())) {
+    if (Number.isNaN(arrivalDate.getTime())) {
         previewText.textContent = 'Fecha inválida';
         return;
     }
@@ -351,7 +351,7 @@ function openRoomDrawer(roomId) {
                 if (gInEl) gInEl.textContent = checkinTime;
 
                 const advAmount = document.getElementById('drawer-res-advance-amount');
-                if (advAmount) advAmount.textContent = parseFloat(upcomingRes.advance_payment) > 0 ? `S/ ${parseFloat(upcomingRes.advance_payment).toFixed(2)}` : 'S/ 0.00 (Sin adelanto)';
+                if (advAmount) advAmount.textContent = Number.parseFloat(upcomingRes.advance_payment) > 0 ? `S/ ${parseFloat(upcomingRes.advance_payment).toFixed(2)}` : 'S/ 0.00 (Sin adelanto)';
             } else {
                 resBox.style.display = 'none';
             }
