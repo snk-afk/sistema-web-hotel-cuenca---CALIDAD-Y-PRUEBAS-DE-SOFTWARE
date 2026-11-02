@@ -1,0 +1,619 @@
+/* ==========================================
+   🏨 NS-ROOM-MODAL: MODAL DE GESTIÓN HOTELERA (SPEC-0045)
+   Diseño ultra estructurado, limpio y sin duplicidad.
+   ========================================== */
+
+/* Calendario Interactivo Dinámico (SPEC-0047) */
+.calendar-interactive-grid {
+    user-select: none;
+}
+
+.calendar-weekday-header {
+    text-align: center;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: #64748b;
+    padding: 6px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.calendar-day-cell {
+    min-height: 52px;
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 6px;
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.calendar-day-cell:hover {
+    border-color: rgba(56, 189, 248, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.calendar-day-cell.other-month {
+    opacity: 0.25;
+    background: transparent;
+    cursor: default;
+}
+
+.calendar-day-cell.today {
+    border-color: #38bdf8;
+    background: rgba(56, 189, 248, 0.08);
+}
+
+.calendar-day-cell.selected {
+    outline: 2px solid #38bdf8;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+}
+
+.calendar-day-number {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #f1f5f9;
+}
+
+.calendar-day-status-indicator {
+    font-size: 0.68rem;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 2px 4px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.indicator-free {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+}
+
+.indicator-pending {
+    background: rgba(245, 158, 11, 0.25);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.indicator-confirmed {
+    background: rgba(139, 92, 246, 0.25);
+    color: #c4b5fd;
+    border: 1px solid rgba(139, 92, 246, 0.4);
+}
+
+.ns-room-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(5, 8, 15, 0.88);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+/* Diálogo Panorámico Amplio y Ergonómico */
+.ns-room-modal__dialog {
+    width: 100%;
+    max-width: 1320px;
+    height: 94vh;
+    max-height: 94vh;
+    background: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 16px;
+    box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.98);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: nsRoomModalZoomIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes nsRoomModalZoomIn {
+    from { transform: scale(0.98); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* Header Limpio */
+.ns-room-modal__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 2rem;
+    background: #162035;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
+}
+
+.ns-room-modal__title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.ns-room-modal__title {
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: -0.4px;
+}
+
+.ns-room-modal__badges {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.ns-room-modal__badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1;
+}
+
+.ns-room-modal__badge--free { background: rgba(16, 185, 129, 0.18); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+.ns-room-modal__badge--occupied { background: rgba(59, 130, 246, 0.18); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+.ns-room-modal__badge--overdue { background: rgba(239, 68, 68, 0.22); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.55); font-weight: 800; }
+.ns-room-modal__badge--cleaning { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+.ns-room-modal__badge--category { background: rgba(148, 163, 184, 0.12); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.25); }
+
+.ns-room-modal__close {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    font-size: 1.4rem;
+    cursor: pointer;
+    line-height: 1;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.ns-room-modal__close:hover {
+    color: #ffffff;
+    background: rgba(239, 68, 68, 0.25);
+    border-color: rgba(239, 68, 68, 0.5);
+    transform: rotate(90deg);
+}
+
+/* Tabs Superiores Claros y Segmentados */
+.ns-room-modal__tabs {
+    display: flex;
+    background: #0b0f19;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 8px 16px;
+    gap: 8px;
+    flex-shrink: 0;
+    overflow-x: auto;
+}
+
+.ns-room-modal__tab {
+    flex: 1;
+    min-width: 120px;
+    padding: 0.75rem 1rem;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    color: #94a3b8;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.ns-room-modal__tab:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.ns-room-modal__tab.active {
+    color: #ffffff;
+    background: #1e293b;
+    border-color: rgba(59, 130, 246, 0.45);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Body Scrollable con Espaciado Generoso */
+.ns-room-modal__body {
+    flex: 1;
+    padding: 1.75rem 2rem;
+    overflow-y: auto;
+}
+
+.ns-room-modal__tab-content {
+    display: none;
+}
+
+.ns-room-modal__tab-content.active {
+    display: block;
+}
+
+/* Secciones y Tarjetas */
+.ns-room-modal__section {
+    margin-bottom: 1.5rem;
+}
+
+.ns-room-modal__card {
+    background: #141c2e;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    padding: 1.35rem;
+    margin-bottom: 1.25rem;
+}
+
+.ns-room-modal__card-title {
+    color: #60a5fa;
+    margin: 0 0 1rem 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ns-room-modal__info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+}
+
+.ns-room-modal__info-item {
+    background: #0b1120;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 10px 12px;
+    border-radius: 8px;
+}
+
+.ns-room-modal__info-item label {
+    display: block;
+    font-size: 0.72rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 3px;
+}
+
+.ns-room-modal__info-item strong {
+    color: #f8fafc;
+    font-size: 0.94rem;
+}
+
+/* Temporizador */
+.ns-room-modal__timer-box {
+    background: linear-gradient(180deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.04) 100%);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    border-radius: var(--radius-md);
+    padding: 1.35rem;
+    text-align: center;
+    margin-bottom: 1.25rem;
+}
+
+.ns-room-modal__timer-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #fbbf24;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+}
+
+.ns-room-modal__timer-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-top: 4px;
+}
+
+/* Tabla de Folio */
+.ns-room-modal__table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.ns-room-modal__table th {
+    background: #0b0f19;
+    color: #94a3b8;
+    font-size: 0.76rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: left;
+}
+
+.ns-room-modal__table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: #e2e8f0;
+    font-size: 0.9rem;
+}
+
+.ns-room-modal__balance-summary {
+    background: #0b1120;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ns-room-modal__balance-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #94a3b8;
+}
+
+.ns-room-modal__balance-row strong {
+    color: #f8fafc;
+}
+
+.ns-room-modal__balance-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.12);
+    font-weight: 800;
+    font-size: 1rem;
+    color: #ffffff;
+}
+
+/* Formularios con soporte de doble columna en pantallas grandes */
+.ns-room-modal__form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+@media (min-width: 860px) {
+    .ns-room-modal__form-grid-2 {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.ns-room-modal__form-group {
+    margin-bottom: 1.25rem;
+}
+
+.ns-room-modal__label {
+    display: block;
+    margin-bottom: 0.45rem;
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: #cbd5e1;
+}
+
+.ns-room-modal__input,
+.ns-room-modal__select {
+    width: 100%;
+    min-height: 44px;
+    padding: 0.65rem 0.95rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background-color: #0b1120;
+    color: #f8fafc;
+    font-size: 0.92rem;
+    outline: none;
+    transition: all 0.18s ease;
+    font-family: inherit;
+}
+
+.ns-room-modal__select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.85rem center;
+    background-size: 1rem;
+    padding-right: 2.25rem;
+}
+
+.ns-room-modal__input:focus,
+.ns-room-modal__select:focus {
+    border-color: #3b82f6;
+    background-color: #0f172a;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+.ns-room-modal__input-group {
+    display: flex;
+    gap: 8px;
+}
+
+.ns-room-modal__input-group .ns-room-modal__input {
+    flex: 1;
+}
+
+/* Switchers */
+.ns-room-modal__pill-group {
+    display: flex;
+    background-color: #0b0f19;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-sm);
+    padding: 4px;
+    gap: 4px;
+}
+
+.ns-room-modal__pill-option {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    user-select: none;
+}
+
+.ns-room-modal__pill-option input[type="radio"] {
+    display: none;
+}
+
+.ns-room-modal__pill-option.active,
+.ns-room-modal__pill-option:has(input:checked) {
+    background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+    color: #ffffff;
+    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.4);
+}
+
+/* Botones */
+.ns-room-modal__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-size: 0.92rem;
+    transition: all 0.18s ease;
+    user-select: none;
+    line-height: 1.3;
+    width: 100%;
+}
+
+.ns-room-modal__btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+}
+
+.ns-room-modal__btn--primary { background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%); color: #ffffff; }
+.ns-room-modal__btn--primary:hover { background: #1d4ed8; }
+
+.ns-room-modal__btn--success { background: linear-gradient(180deg, #10b981 0%, #059669 100%); color: #ffffff; }
+.ns-room-modal__btn--success:hover { background: #047857; }
+
+.ns-room-modal__btn--danger { background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%); color: #ffffff; }
+.ns-room-modal__btn--danger:hover { background: #b91c1c; }
+
+.ns-room-modal__btn--warning { background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%); color: #0b0f19; font-weight: 700; }
+.ns-room-modal__btn--warning:hover { color: #ffffff; }
+
+.ns-room-modal__btn--secondary { background: #1e293b; color: #f8fafc; border: 1px solid rgba(255, 255, 255, 0.1); }
+.ns-room-modal__btn--secondary:hover { background: #334155; }
+
+/* Presets */
+.ns-room-modal__presets {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.ns-room-modal__preset-btn {
+    flex: 1;
+    min-width: 90px;
+    padding: 8px 12px;
+    background: rgba(59, 130, 246, 0.12);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 6px;
+    color: #60a5fa;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: center;
+}
+
+.ns-room-modal__preset-btn:hover {
+    background: rgba(59, 130, 246, 0.25);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+/* Catálogo de Productos Tienda */
+.ns-room-modal__products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 14px;
+}
+
+.ns-room-modal__product-card {
+    background: #141c2e;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.18s ease;
+}
+
+.ns-room-modal__product-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(59, 130, 246, 0.4);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.ns-room-modal__product-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.ns-room-modal__product-icon {
+    font-size: 1.5rem;
+    background: rgba(59, 130, 246, 0.15);
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.ns-room-modal__product-name {
+    margin: 0;
+    font-size: 0.94rem;
+    font-weight: 600;
+    color: #f8fafc;
+}
+
+.ns-room-modal__product-stock {
+    font-size: 0.76rem;
+    color: #94a3b8;
+}
+
+.ns-room-modal__product-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-top: 10px;
+}
+
+.ns-room-modal__product-price {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #34d399;
+}

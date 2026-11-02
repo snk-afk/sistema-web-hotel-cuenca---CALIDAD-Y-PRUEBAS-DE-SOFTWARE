@@ -1,0 +1,35 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: hotelhuaylla
+      MYSQL_USER: hotel_user
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - hotel_db_data:/var/lib/mysql
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - MYSQL_PWD="$${MYSQL_PASSWORD}" mysqladmin ping -h 127.0.0.1 -u "$${MYSQL_USER}" --silent
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 30s
+
+volumes:
+  hotel_db_data:

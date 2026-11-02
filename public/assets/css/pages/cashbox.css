@@ -1,0 +1,160 @@
+/* CS-Hotel: Cashbox / Caja Chica Styling */
+
+.cashbox-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 1.5rem;
+}
+
+.cashbox-metric-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cashbox-metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.25);
+}
+
+/* Shift Info Card */
+.shift-status-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    margin-bottom: 1.5rem;
+}
+
+.shift-status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 14px;
+}
+
+.shift-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+}
+
+.shift-info-item label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 3px;
+}
+
+.shift-info-item strong {
+    font-size: 1.05rem;
+    color: #ffffff;
+}
+
+/* Welcome Box (No active shift) */
+.cashbox-welcome-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 2.5rem;
+    text-align: center;
+    max-width: 600px;
+    margin: 2rem auto;
+}
+
+.cashbox-welcome-box .welcome-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+.cashbox-welcome-box h3 {
+    color: #ffffff;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Arqueo Comparison Box */
+.arqueo-comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 1rem;
+}
+
+.arqueo-box {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    text-align: center;
+}
+
+.arqueo-box label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.arqueo-box strong {
+    font-size: 1.35rem;
+}
+
+.arqueo-difference-box {
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    margin-bottom: 1rem;
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+
+.arqueo-difference-box.balanced {
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid #22c55e;
+    color: #22c55e;
+}
+
+.arqueo-difference-box.shortage {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid #ef4444;
+    color: #ef4444;
+}
+
+.arqueo-difference-box.surplus {
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid #f59e0b;
+    color: #f59e0b;
+}
+
+/* Movement Type Badges */
+.badge-income {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.badge-expense {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-weight: 700;
+}

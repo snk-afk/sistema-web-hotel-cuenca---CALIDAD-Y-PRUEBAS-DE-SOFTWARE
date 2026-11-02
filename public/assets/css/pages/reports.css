@@ -1,0 +1,159 @@
+/* CS-Hotel: Executive Reports & KPIs Styling */
+
+.reports-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 1.5rem;
+}
+
+.reports-metric-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.reports-metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.25);
+}
+
+.reports-metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.reports-metric-title {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.reports-metric-icon {
+    font-size: 1.3rem;
+}
+
+.reports-metric-value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.2;
+    margin-bottom: 6px;
+}
+
+.reports-metric-subtitle {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+/* Progress bar for occupancy */
+.occupancy-progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(148, 163, 184, 0.2);
+    border-radius: 3px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.occupancy-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #38bdf8, #22c55e);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+}
+
+/* Filter controls bar */
+.reports-filter-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.quick-filter-group {
+    display: flex;
+    gap: 6px;
+}
+
+.quick-filter-btn {
+    background: rgba(148, 163, 184, 0.1);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.quick-filter-btn:hover, .quick-filter-btn.active {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+}
+
+.date-range-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.date-range-group input[type="date"] {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid var(--border-color);
+    color: #ffffff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.82rem;
+}
+
+/* Distribution Table */
+.financial-summary-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.financial-summary-table th {
+    background: rgba(15, 23, 42, 0.5);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.financial-summary-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.92rem;
+}
+
+.financial-summary-table tr.total-income-row {
+    background: rgba(34, 197, 94, 0.08);
+    font-weight: 700;
+}
+
+.financial-summary-table tr.net-profit-row {
+    background: rgba(56, 189, 248, 0.1);
+    font-weight: 800;
+    font-size: 1.05rem;
+}

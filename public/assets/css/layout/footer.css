@@ -1,0 +1,33 @@
+/* ==========================================
+   📄 NS-FOOTER — Pie de página (SPEC-0041)
+   Clases con namespace ns-footer__ exclusivas de este archivo.
+   No se reutilizan fuera de aquí.
+   ========================================== */
+
+.ns-footer {
+    padding: 1rem 2rem;
+    background-color: #0b1120;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.ns-footer__text {
+    margin: 0;
+}
+
+.ns-footer__text strong {
+    color: var(--primary-color);
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 767px) {
+    .ns-footer {
+        padding: 0.85rem 1rem;
+        font-size: 0.78rem;
+    }
+}

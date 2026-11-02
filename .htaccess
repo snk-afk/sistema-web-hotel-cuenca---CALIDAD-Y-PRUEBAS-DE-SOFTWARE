@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Bloquear acceso directo a archivos y carpetas sensibles de seguridad en Hostinger
+    RewriteRule ^(\.env|\.git|composer\.|src/|config/|database/|storage/|specs/|tests/|views/|Makefile) - [F,L,NC]
+
+    # Redirigir todo el tráfico a la carpeta public/
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

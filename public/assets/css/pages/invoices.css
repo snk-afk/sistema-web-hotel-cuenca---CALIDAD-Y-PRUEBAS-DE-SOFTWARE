@@ -1,0 +1,189 @@
+/* CS-Hotel: Invoices & SUNAT Billing Styling */
+
+.invoices-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 1.5rem;
+}
+
+.invoices-metric-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.invoices-metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.25);
+}
+
+/* Tabs Bar */
+.invoices-tabs-bar {
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: 1.25rem;
+    overflow-x: auto;
+}
+
+/* SUNAT Badges */
+.badge-sunat-accepted {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+    border: 1px solid #22c55e;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.badge-sunat-pending {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.badge-sunat-rejected {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+/* Invoice Voucher Card */
+.voucher-breakdown-card {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-top: 1rem;
+}
+
+.voucher-breakdown-card .row-total {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 0.95rem;
+}
+
+.voucher-breakdown-card .row-total.grand-total {
+    border-top: 1px solid var(--border-color);
+    padding-top: 8px;
+    margin-top: 6px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #22c55e;
+}
+
+/* Thermal Voucher Receipt / PDF printable format */
+.thermal-receipt-container {
+    background: #ffffff;
+    color: #111827;
+    font-family: 'Courier New', Courier, monospace;
+    padding: 20px;
+    border-radius: 4px;
+    max-width: 420px;
+    margin: 0 auto 1.5rem auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    border: 1px solid #e5e7eb;
+}
+
+.thermal-receipt-header {
+    text-align: center;
+    border-bottom: 1px dashed #4b5563;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.thermal-receipt-header h3 {
+    margin: 0;
+    color: #111827;
+    font-size: 1.15rem;
+    font-weight: 900;
+}
+
+.thermal-receipt-header p {
+    margin: 2px 0;
+    font-size: 0.78rem;
+    color: #4b5563;
+}
+
+.thermal-receipt-doc-box {
+    border: 1px solid #111827;
+    padding: 6px;
+    margin: 8px 0;
+    text-align: center;
+    font-weight: 800;
+    font-size: 0.95rem;
+}
+
+.thermal-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 0.8rem;
+}
+
+.thermal-table th {
+    border-bottom: 1px dashed #4b5563;
+    text-align: left;
+    padding: 4px 2px;
+    color: #111827;
+}
+
+.thermal-table td {
+    padding: 4px 2px;
+    color: #1f2937;
+}
+
+.thermal-totals {
+    border-top: 1px dashed #4b5563;
+    padding-top: 6px;
+    margin-top: 6px;
+    font-size: 0.85rem;
+}
+
+.thermal-totals .row-t {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 0;
+}
+
+.thermal-totals .grand-t {
+    font-size: 1.05rem;
+    font-weight: 900;
+    border-top: 1px solid #111827;
+    margin-top: 4px;
+    padding-top: 4px;
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #thermal-print-area, #thermal-print-area * {
+        visibility: visible;
+    }
+    #thermal-print-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        border: none;
+    }
+}

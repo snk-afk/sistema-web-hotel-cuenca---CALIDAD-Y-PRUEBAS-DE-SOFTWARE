@@ -1,0 +1,123 @@
+/* CS-Hotel: Folios / Estados de Cuenta Styling */
+
+.folio-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 1.5rem;
+}
+
+.folio-metric-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.folio-metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.25);
+}
+
+/* Tabs */
+.folios-tabs-bar {
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: 1.25rem;
+    overflow-x: auto;
+}
+
+/* Folio detail modal */
+.folio-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 1.25rem;
+}
+
+.folio-summary-box {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    text-align: center;
+}
+
+.folio-summary-box .summary-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.folio-summary-box .summary-value {
+    font-size: 1.4rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.folio-summary-box .summary-value.text-charges {
+    color: #f59e0b;
+}
+
+.folio-summary-box .summary-value.text-payments {
+    color: #22d3ee;
+}
+
+.folio-summary-box .summary-value.text-balance-positive {
+    color: #ef4444;
+}
+
+.folio-summary-box .summary-value.text-balance-zero {
+    color: #22c55e;
+}
+
+/* Charges & Payments detail tables */
+.folio-detail-section {
+    margin-bottom: 1.25rem;
+}
+
+.folio-detail-section h4 {
+    color: var(--text-main);
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.badge-reversal {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.folio-status-open {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.folio-status-closed {
+    background: rgba(148, 163, 184, 0.15);
+    color: #94a3b8;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    font-weight: 700;
+}

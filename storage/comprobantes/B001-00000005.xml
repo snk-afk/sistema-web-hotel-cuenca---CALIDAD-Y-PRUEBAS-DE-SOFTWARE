@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+  <ID>B001-00000005</ID>
+  <IssueDate>2026-08-23</IssueDate>
+  <Customer>ronald</Customer>
+  <TotalAmount>34</TotalAmount>
+</Invoice>
