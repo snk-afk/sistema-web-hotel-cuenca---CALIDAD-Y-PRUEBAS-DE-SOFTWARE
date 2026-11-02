@@ -4,7 +4,7 @@ let globalTariffsCatalog = [];
 let drawerTimerInterval = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadTariffsCatalog();
+    void loadTariffsCatalog();
 });
 
 async function loadTariffsCatalog() {
@@ -23,8 +23,8 @@ function calculateAdvanceBalance() {
     const advanceInput = document.getElementById('drawer-checkin-advance-amount');
     const balanceDisplay = document.getElementById('drawer-checkin-remaining-balance');
 
-    const price = parseFloat(priceInput.value) || 0.0;
-    const advance = parseFloat(advanceInput.value) || 0.0;
+    const price = Number.parseFloat(priceInput.value) || 0.0;
+    const advance = Number.parseFloat(advanceInput.value) || 0.0;
     const remaining = Math.max(0, price - advance);
 
     if (balanceDisplay) {
@@ -42,7 +42,7 @@ function setExtensionPreset(hours, price) {
     const priceInput = document.getElementById('drawer-extension-price');
 
     if (hoursInput) hoursInput.value = hours;
-    if (priceInput) priceInput.value = parseFloat(price).toFixed(2);
+    if (priceInput) priceInput.value = Number.parseFloat(price).toFixed(2);
 }
 
 function populateTariffSelectForCategory(categoryId) {
@@ -59,7 +59,7 @@ function populateTariffSelectForCategory(categoryId) {
             const opt = document.createElement('option');
             opt.value = t.id;
             opt.setAttribute('data-price', t.price);
-            opt.textContent = `${t.category_name} - ${t.name} (${t.duration_hours}h) - S/ ${parseFloat(t.price).toFixed(2)}`;
+            opt.textContent = `${t.category_name} - ${t.name} (${t.duration_hours}h) - S/ ${Number.parseFloat(t.price).toFixed(2)}`;
             select.appendChild(opt);
         });
         updateDrawerTariffPrice();
@@ -254,7 +254,7 @@ function recalculateFutureReservationDates() {
         return;
     }
 
-    const durationHours = tariff ? (parseInt(tariff.duration_hours, 10) || 24) : 24;
+    const durationHours = tariff ? (Number.parseInt(tariff.duration_hours, 10) || 24) : 24;
     const checkoutDate = new Date(arrivalDate.getTime() + (durationHours * 60 * 60 * 1000));
 
     const y = checkoutDate.getFullYear();
@@ -274,8 +274,8 @@ function openRoomDrawer(roomId) {
     const roomNumber = card.getAttribute('data-room-number') || '---';
     const status = card.getAttribute('data-status') || 'free';
     const categoryName = card.getAttribute('data-category-name') || 'General';
-    const categoryId = parseInt(card.getAttribute('data-category-id') || '1', 10);
-    const isOverdue = card.getAttribute('data-is-overdue') === '1' || parseInt(card.getAttribute('data-seconds-remaining') || '1', 10) <= 0;
+    const categoryId = Number.parseInt(card.getAttribute('data-category-id') || '1', 10);
+    const isOverdue = card.getAttribute('data-is-overdue') === '1' || Number.parseInt(card.getAttribute('data-seconds-remaining') || '1', 10) <= 0;
     currentRoomCategoryId = categoryId;
 
     const elRoomNum = document.getElementById('drawer-room-number');
@@ -329,7 +329,7 @@ function openRoomDrawer(roomId) {
             let upcomingRes = null;
             if (window.allReservationsCatalog && Array.isArray(window.allReservationsCatalog)) {
                 upcomingRes = window.allReservationsCatalog.find(r => 
-                    parseInt(r.room_id, 10) === parseInt(roomId, 10) && 
+                    Number.parseInt(r.room_id, 10) === Number.parseInt(roomId, 10) && 
                     (r.status === 'confirmed' || r.status === 'pending')
                 );
             }
@@ -351,7 +351,7 @@ function openRoomDrawer(roomId) {
                 if (gInEl) gInEl.textContent = checkinTime;
 
                 const advAmount = document.getElementById('drawer-res-advance-amount');
-                if (advAmount) advAmount.textContent = Number.parseFloat(upcomingRes.advance_payment) > 0 ? `S/ ${parseFloat(upcomingRes.advance_payment).toFixed(2)}` : 'S/ 0.00 (Sin adelanto)';
+                if (advAmount) advAmount.textContent = Number.parseFloat(upcomingRes.advance_payment) > 0 ? `S/ ${Number.parseFloat(upcomingRes.advance_payment).toFixed(2)}` : 'S/ 0.00 (Sin adelanto)';
             } else {
                 resBox.style.display = 'none';
             }
@@ -377,7 +377,7 @@ function openRoomDrawer(roomId) {
         const guestDoc = card.getAttribute('data-guest-doc') || '---';
         const checkinAt = card.getAttribute('data-checkin-at') || '---';
         const checkoutAt = card.getAttribute('data-checkout-at') || '---';
-        const secondsRemaining = parseInt(card.getAttribute('data-seconds-remaining') || '0', 10);
+        const secondsRemaining = Number.parseInt(card.getAttribute('data-seconds-remaining') || '0', 10);
 
         const elGuestName = document.getElementById('drawer-guest-name');
         if (elGuestName) elGuestName.textContent = guestName;
@@ -477,7 +477,7 @@ function renderRoomCalendarList() {
 
     // Filtrar reservas activas y confirmadas de la habitación actual
     const roomReservations = (window.allReservationsCatalog || []).filter(r => 
-        parseInt(r.room_id, 10) === parseInt(currentDrawerRoomId, 10) && 
+        Number.parseInt(r.room_id, 10) === Number.parseInt(currentDrawerRoomId, 10) && 
         (r.status === 'confirmed' || r.status === 'pending')
     );
 
@@ -486,7 +486,7 @@ function renderRoomCalendarList() {
         const isConfirmed = r.status === 'confirmed';
         const start = r.check_in_date || r.reserved_check_in_at;
         const end = r.check_out_date || r.reserved_check_out_at;
-        const advance = parseFloat(r.advance_payment || 0);
+        const advance = Number.parseFloat(r.advance_payment || 0);
 
         return {
             id: 'res-' + r.id,
@@ -597,7 +597,7 @@ function renderRoomCalendarList() {
         const isConfirmed = r.status === 'confirmed';
         const inDate = r.check_in_date ? r.check_in_date.replace('T', ' ') : (r.reserved_check_in_at || '---');
         const outDate = r.check_out_date ? r.check_out_date.replace('T', ' ') : (r.reserved_check_out_at || '---');
-        const advance = parseFloat(r.advance_payment || 0);
+        const advance = Number.parseFloat(r.advance_payment || 0);
 
         html += `
             <div style="background: #1e293b; border: 1px solid rgba(255,255,255,0.08); border-left: 4px solid ${isConfirmed ? '#8b5cf6' : '#f59e0b'}; border-radius: 8px; padding: 10px 12px;">
@@ -710,9 +710,9 @@ async function loadDrawerFolioData(roomId) {
                 const stay = room.current_stay;
                 document.getElementById('drawer-folio-id').textContent = stay.id || '1';
 
-                const totalCharges = parseFloat(stay.total_charges || 0);
-                const totalPayments = parseFloat(stay.total_payments || 0);
-                const pendingBalance = parseFloat(stay.pending_balance || 0);
+                const totalCharges = Number.parseFloat(stay.total_charges || 0);
+                const totalPayments = Number.parseFloat(stay.total_payments || 0);
+                const pendingBalance = Number.parseFloat(stay.pending_balance || 0);
 
                 if (totalChargesEl) totalChargesEl.textContent = `S/ ${totalCharges.toFixed(2)}`;
                 if (totalPaymentsEl) totalPaymentsEl.textContent = `S/ ${totalPayments.toFixed(2)}`;
@@ -746,7 +746,7 @@ async function loadDrawerFolioData(roomId) {
                             <tr>
                                 <td>${c.description}</td>
                                 <td>${c.quantity}</td>
-                                <td>S/ ${parseFloat(c.total_amount).toFixed(2)}</td>
+                                <td>S/ ${Number.parseFloat(c.total_amount).toFixed(2)}</td>
                             </tr>
                         `;
                     });
@@ -755,7 +755,7 @@ async function loadDrawerFolioData(roomId) {
                         <tr>
                             <td>Hospedaje (${room.category_name || 'Habitación'})</td>
                             <td>1</td>
-                            <td>S/ ${parseFloat(stay.applied_price || 0).toFixed(2)}</td>
+                            <td>S/ ${Number.parseFloat(stay.applied_price || 0).toFixed(2)}</td>
                         </tr>
                     `;
                 }
@@ -766,7 +766,7 @@ async function loadDrawerFolioData(roomId) {
                             <tr class="text-success">
                                 <td>💳 Abono (${p.payment_method.toUpperCase()})</td>
                                 <td>1</td>
-                                <td>- S/ ${parseFloat(p.amount).toFixed(2)}</td>
+                                <td>- S/ ${Number.parseFloat(p.amount).toFixed(2)}</td>
                             </tr>
                         `;
                     });
@@ -835,13 +835,13 @@ async function lookupDrawerGuestDocument() {
 
 async function handleDrawerActionSubmit(e) {
     e.preventDefault();
-    const roomId = parseInt(document.getElementById('drawer-checkin-room-id').value, 10);
-    const tariffId = parseInt(document.getElementById('drawer-checkin-tariff-id').value, 10);
-    const appliedPrice = parseFloat(document.getElementById('drawer-checkin-applied-price').value);
+    const roomId = Number.parseInt(document.getElementById('drawer-checkin-room-id').value, 10);
+    const tariffId = Number.parseInt(document.getElementById('drawer-checkin-tariff-id').value, 10);
+    const appliedPrice = Number.parseFloat(document.getElementById('drawer-checkin-applied-price').value);
     const discountReasonEl = document.getElementById('drawer-checkin-discount-reason');
     let discountReason = discountReasonEl ? discountReasonEl.value.trim() : '';
 
-    const advanceAmount = parseFloat(document.getElementById('drawer-checkin-advance-amount').value) || 0.0;
+    const advanceAmount = Number.parseFloat(document.getElementById('drawer-checkin-advance-amount').value) || 0.0;
     const advanceMethod = document.getElementById('drawer-checkin-advance-method').value;
 
     const docNumber = document.getElementById('drawer-checkin-doc-number').value.trim();
@@ -968,12 +968,12 @@ async function handleDrawerActionSubmit(e) {
 
 async function handleDrawerCheckout(e) {
     e.preventDefault();
-    const roomId = parseInt(document.getElementById('drawer-checkout-room-id').value, 10);
+    const roomId = Number.parseInt(document.getElementById('drawer-checkout-room-id').value, 10);
     const docType = document.getElementById('drawer-checkout-doc-type').value;
     const paymentMethod = document.getElementById('drawer-checkout-payment-method').value;
     const reference = document.getElementById('drawer-checkout-reference') ? document.getElementById('drawer-checkout-reference').value.trim() : null;
     const pendingAmountText = document.getElementById('drawer-checkout-amount')?.textContent || '';
-    const pendingAmount = parseFloat(pendingAmountText.replace(/[^0-9.-]/g, '')) || 0;
+    const pendingAmount = Number.parseFloat(pendingAmountText.replace(/[^0-9.-]/g, '')) || 0;
     const ruc = document.getElementById('drawer-checkout-ruc') ? document.getElementById('drawer-checkout-ruc').value.trim() : '';
     const company = document.getElementById('drawer-checkout-company') ? document.getElementById('drawer-checkout-company').value.trim() : '';
 
@@ -1057,7 +1057,7 @@ async function handleDrawerTransfer() {
             body: JSON.stringify({
                 action: 'transfer',
                 from_room_id: currentDrawerRoomId,
-                to_room_id: parseInt(targetRoomId, 10),
+                to_room_id: Number.parseInt(targetRoomId, 10),
                 reason: 'Transferencia solicitada en recepción',
             })
         });
@@ -1075,8 +1075,8 @@ async function handleDrawerTransfer() {
 }
 
 async function handleDrawerExtension() {
-    const hours = parseInt(document.getElementById('drawer-extension-hours').value, 10);
-    const price = parseFloat(document.getElementById('drawer-extension-price').value);
+    const hours = Number.parseInt(document.getElementById('drawer-extension-hours').value, 10);
+    const price = Number.parseFloat(document.getElementById('drawer-extension-price').value);
 
     try {
         const res = await apiFetch('/api/rooms', {
