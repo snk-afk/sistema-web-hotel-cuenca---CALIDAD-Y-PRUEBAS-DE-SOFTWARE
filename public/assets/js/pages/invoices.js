@@ -6,7 +6,11 @@ let activeInvoiceTab = 'all';
 let allInvoicesList = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadInvoicesData();
+    
+loadInvoicesData().catch(error => {
+    console.error('Error al cargar los comprobantes:', error);
+});
+
 });
 
 async function loadInvoicesData() {
@@ -283,7 +287,11 @@ async function handleIssueInvoiceSubmit(event) {
             if (typeof showToast === 'function') {
                 showToast(`✅ Comprobante ${result.data.data?.full_number || ''} emitido y aceptado por SUNAT.`, 'success');
             }
-            loadInvoicesData();
+            
+loadInvoicesData().catch(error => {
+    console.error('Error al cargar los comprobantes:', error);
+});
+
         } else {
             if (typeof showToast === 'function') {
                 showToast(`❌ ${result.data.message || 'Error al emitir comprobante.'}`, 'error');

@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+.git
+.vscode
+vendor
+node_modules
+storage/comprobantes/*
+storage/app/comprobantes/*
+*.log

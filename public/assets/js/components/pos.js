@@ -45,9 +45,13 @@ async function handleDrawerAddPOSProduct(productId, productName, salePrice) {
 
         if (res.ok) {
             showToast(`✅ Cargado a Habitación: ${productName} (S/ ${Number.parseFloat(salePrice).toFixed(2)})`);
-            if (typeof loadDrawerFolioData === 'function') {
-                loadDrawerFolioData(currentDrawerRoomId);
-            }
+            
+        if (typeof loadDrawerFolioData === 'function') {
+            loadDrawerFolioData(currentDrawerRoomId).catch(error => {
+            console.error('Error al actualizar los datos del folio:', error);
+        });
+}
+
         } else {
             showToast(res.data.message || 'Error al cargar producto a la habitación', 'error');
         }

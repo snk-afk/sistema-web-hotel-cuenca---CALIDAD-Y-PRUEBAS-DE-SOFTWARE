@@ -9,7 +9,11 @@ let occupiedRooms = [];
 let selectedChargeRoomId = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadStoreCatalog();
+    
+loadStoreCatalog().catch(error => {
+    console.error('Error al cargar el catálogo de productos:', error);
+});
+
 });
 
 // ─── CATALOG ───────────────────────────────────────────────
@@ -301,7 +305,11 @@ async function executeStoreCheckout(event) {
                 showToast(`✅ Venta #${saleData?.id || ''} procesada exitosamente. Comprobante ${invoiceData?.full_number || ''} emitido.`, 'success');
             }
             clearCart();
-            loadStoreCatalog();
+            
+loadStoreCatalog().catch(error => {
+    console.error('Error al cargar el catálogo de productos:', error);
+});
+
 
             // Abrir automáticamente el modal del voucher térmico generado y guardado
             if (voucherUrl) {
@@ -437,7 +445,11 @@ async function confirmChargeToRoom() {
                 showToast('✅ Consumo cargado a la habitación exitosamente.', 'success');
             }
             clearCart();
-            loadStoreCatalog();
+            
+loadStoreCatalog().catch(error => {
+    console.error('Error al cargar el catálogo de productos:', error);
+});
+
         } else {
             if (typeof showToast === 'function') {
                 showToast(`❌ ${result.data.message || 'Error al cargar a la habitación.'}`, 'error');
@@ -492,7 +504,11 @@ async function handleCreateProduct(event) {
             if (typeof showToast === 'function') {
                 showToast(`✅ Producto "${name}" registrado exitosamente.`, 'success');
             }
-            loadStoreCatalog();
+            
+loadStoreCatalog().catch(error => {
+    console.error('Error al cargar el catálogo de productos:', error);
+});
+
         } else {
             if (typeof showToast === 'function') {
                 showToast(`❌ ${result.data.message || 'Error al crear el producto.'}`, 'error');

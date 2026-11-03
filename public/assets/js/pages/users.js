@@ -5,7 +5,11 @@
 let systemUsersList = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadUsersData();
+    
+loadUsersData().catch(error => {
+    console.error('Error al cargar los usuarios:', error);
+});
+
 });
 
 async function loadUsersData() {
@@ -131,7 +135,11 @@ async function handleCreateUserSubmit(event) {
             if (typeof showToast === 'function') {
                 showToast('✅ Usuario creado exitosamente.', 'success');
             }
-            loadUsersData();
+            
+loadUsersData().catch(error => {
+    console.error('Error al cargar los usuarios:', error);
+});
+
         } else {
             if (typeof showToast === 'function') {
                 showToast(`❌ ${result.data.message || 'Error al crear usuario.'}`, 'error');

@@ -5,7 +5,13 @@
 let currentReportFilter = { from: null, to: null, label: 'Todo el Histórico' };
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadReportsData();
+    
+document.addEventListener('DOMContentLoaded', () => {
+    loadReportsData().catch(error => {
+        console.error('Error al cargar los reportes:', error);
+    });
+});
+
 });
 
 async function loadReportsData() {
@@ -137,7 +143,13 @@ function applyQuickReportFilter(range, btn) {
     document.getElementById('report-filter-to').value = currentReportFilter.to || '';
     document.getElementById('report-period-label').textContent = `Período: ${currentReportFilter.label}`;
 
-    loadReportsData();
+    
+document.addEventListener('DOMContentLoaded', () => {
+    loadReportsData().catch(error => {
+        console.error('Error al cargar los reportes:', error);
+    });
+});
+
 }
 
 function handleCustomDateReportFilter(event) {
@@ -156,5 +168,11 @@ function handleCustomDateReportFilter(event) {
     };
 
     document.getElementById('report-period-label').textContent = `Período: ${currentReportFilter.label}`;
-    loadReportsData();
+    
+document.addEventListener('DOMContentLoaded', () => {
+    loadReportsData().catch(error => {
+        console.error('Error al cargar los reportes:', error);
+    });
+});
+
 }

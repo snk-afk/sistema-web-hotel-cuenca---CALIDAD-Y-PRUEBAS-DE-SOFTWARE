@@ -1,6 +1,7 @@
 <?php declare(strict_types=1); ?>
-<div id="room-drawer-overlay" class="ns-drawer" style="display: none;" onclick="closeRoomDrawer(event)">
-    <div class="ns-drawer__panel" onclick="event.stopPropagation()">
+
+<div id="room-drawer-overlay" class="ns-drawer" style="display: none;" role="button" tabindex="0" aria-label="Cerrar panel de habitación" onclick="closeRoomDrawer(event)" onkeydown="if (event.target === this && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); closeRoomDrawer(event); }">
+    <div class="ns-drawer__panel">
         <!-- Header -->
         <div class="ns-drawer__header">
             <div class="ns-drawer__title-group">
@@ -10,7 +11,7 @@
                     <span id="drawer-room-category" class="ns-drawer__badge ns-drawer__badge--category">---</span>
                 </div>
             </div>
-            <button type="button" class="ns-drawer__close" onclick="closeRoomDrawer()">&times;</button>
+            <button type="button" class="ns-drawer__close" onclick="closeRoomDrawer()" aria-label="Cerrar panel de habitación">&times;</button>
         </div>
 
         <!-- Tab Navigation -->
@@ -41,10 +42,10 @@
                                 <span class="ns-drawer__badge ns-drawer__badge--cleaning" id="drawer-res-status-badge">PENDIENTE</span>
                             </div>
                             <div class="ns-drawer__info-grid">
-                                <div class="ns-drawer__info-item"><label>Huésped:</label> <strong id="drawer-res-guest-name">---</strong></div>
-                                <div class="ns-drawer__info-item"><label>Documento:</label> <strong id="drawer-res-guest-doc">---</strong></div>
-                                <div class="ns-drawer__info-item"><label>Ingreso:</label> <strong id="drawer-res-checkin-time">---</strong></div>
-                                <div class="ns-drawer__info-item"><label>Anticipo:</label> <strong id="drawer-res-advance-amount" style="color: #34d399;">S/ 0.00</strong></div>
+                                <div class="ns-drawer__info-item"><span style="display: block; font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 3px; letter-spacing: 0.4px;">Huésped:</span> <strong id="drawer-res-guest-name">---</strong></div>
+                                <div class="ns-drawer__info-item"><span style="display: block; font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 3px; letter-spacing: 0.4px;">Documento:</span> <strong id="drawer-res-guest-doc">---</strong></div>
+                                <div class="ns-drawer__info-item"><span style="display: block; font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 3px; letter-spacing: 0.4px;">Ingreso:</span> <strong id="drawer-res-checkin-time">---</strong></div>
+                                <div class="ns-drawer__info-item"><span style="display: block; font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 3px; letter-spacing: 0.4px;">Anticipo:</span> <strong id="drawer-res-advance-amount" style="color: #34d399;">S/ 0.00</strong></div>
                             </div>
                             <div style="margin-top: 14px;">
                                 <button type="button" class="ns-drawer__btn ns-drawer__btn--success" id="drawer-btn-execute-res-checkin" onclick="executeDrawerReservationCheckin()">🏨 Check-In de esta Reserva</button>
@@ -58,10 +59,10 @@
                     <div class="ns-drawer__card">
                         <h4 class="ns-drawer__card-title">👤 Datos del Huésped Alojado</h4>
                         <div class="ns-drawer__info-grid">
-                            <div class="ns-drawer__info-item"><label>Nombre:</label> <strong id="drawer-guest-name">---</strong></div>
-                            <div class="ns-drawer__info-item"><label>Documento:</label> <strong id="drawer-guest-doc">---</strong></div>
-                            <div class="ns-drawer__info-item"><label>Ingreso:</label> <strong id="drawer-checkin-time">---</strong></div>
-                            <div class="ns-drawer__info-item"><label>Salida Prevista:</label> <strong id="drawer-checkout-time">---</strong></div>
+                            <div class="ns-drawer__info-item"><span style="display: block; font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 3px; letter-spacing: 0.4px;">Nombre:</span> <strong id="drawer-guest-name">---</strong></div>
+                            <div class="ns-drawer__info-item"><span style="display: block; font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 3px; letter-spacing: 0.4px;">Documento:</span> <strong id="drawer-guest-doc">---</strong></div>
+                            <div class="ns-drawer__info-item"><span style="display: block; font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 3px; letter-spacing: 0.4px;">Ingreso:</span> <strong id="drawer-checkin-time">---</strong></div>
+                            <div class="ns-drawer__info-item"><span style="display: block; font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 3px; letter-spacing: 0.4px;">Salida Prevista:</span> <strong id="drawer-checkout-time">---</strong></div>
                         </div>
                     </div>
 
@@ -115,8 +116,8 @@
 
                     <!-- Selector de Modo Operativo: Check-In Inmediato vs Reserva Futura -->
                     <div class="ns-drawer__form-group">
-                        <label class="ns-drawer__label">Tipo de Operación:</label>
-                        <div class="ns-drawer__pill-group">
+                        <div class="ns-drawer__label" id="drawer-op-group">Tipo de Operación:</div>
+                        <div class="ns-drawer__pill-group" role="group" aria-labelledby="drawer-op-group">
                             <label class="ns-drawer__pill-option active" id="drawer-pill-op-checkin">
                                 <input type="radio" name="operation_mode" value="checkin" checked onchange="toggleDrawerOperationMode('checkin')"> ⚡ Check-In Inmediato
                             </label>
@@ -133,14 +134,14 @@
 
                         <!-- Campo de Fecha de Llegada Futura (Condicional si es Reserva) -->
                         <div id="field-future-arrival" class="ns-drawer__card" style="display: none; border-color: rgba(245, 158, 11, 0.4); margin-bottom: 1rem;">
-                            <label class="ns-drawer__label" style="color: #fde68a;">📅 Fecha y Hora de Llegada Prevista:</label>
+                            <label for="drawer-future-checkin-at" class="ns-drawer__label" style="color: #fde68a;">📅 Fecha y Hora de Llegada Prevista:</label>
                             <input type="datetime-local" id="drawer-future-checkin-at" class="ns-drawer__input" onchange="recalculateFutureReservationDates()">
                             <small style="color: #94a3b8; display: block; margin-top: 4px; font-size: 0.8rem;">La salida se calculará automáticamente según la tarifa elegida.</small>
                         </div>
 
                         <!-- Selector de Huésped Existente (Padrón Central) -->
                         <div class="ns-drawer__form-group">
-                            <label class="ns-drawer__label">Elegir de Huéspedes Registrados:</label>
+                            <label for="drawer-guest-select" class="ns-drawer__label">Elegir de Huéspedes Registrados:</label>
                             <select id="drawer-guest-select" class="ns-drawer__select" onchange="handleDrawerGuestSelectChange(this)">
                                 <option value="">-- Seleccionar Huésped Registrado (Opcional) --</option>
                                 <?php if (!empty($guests)): ?>
@@ -160,8 +161,8 @@
 
                         <!-- Tipo de Documento Switcher -->
                         <div class="ns-drawer__form-group">
-                            <label class="ns-drawer__label">Tipo de Huésped:</label>
-                            <div class="ns-drawer__pill-group">
+                            <div class="ns-drawer__label" id="drawer-doc-group">Tipo de Huésped:</div>
+                            <div class="ns-drawer__pill-group" role="group" aria-labelledby="drawer-doc-group">
                                 <label class="ns-drawer__pill-option active" id="drawer-pill-dni">
                                     <input type="radio" name="doc_type_mode" value="DNI" checked onchange="toggleGuestDocType('DNI')"> 🪪 Persona (DNI)
                                 </label>
@@ -172,7 +173,7 @@
                         </div>
                         
                         <div class="ns-drawer__form-group">
-                            <label id="lbl-doc-number" class="ns-drawer__label">DNI del Huésped (8 dígitos):</label>
+                            <label for="drawer-checkin-doc-number" id="lbl-doc-number" class="ns-drawer__label">DNI del Huésped (8 dígitos):</label>
                             <div class="ns-drawer__input-group">
                                 <input type="text" id="drawer-checkin-doc-number" class="ns-drawer__input" placeholder="Ingrese DNI" maxlength="8" required>
                                 <button type="button" class="ns-drawer__btn ns-drawer__btn--secondary" style="width: auto; min-width: 100px;" onclick="lookupDrawerGuestDocument()">🔍 Buscar</button>
@@ -180,20 +181,20 @@
                         </div>
 
                         <div class="ns-drawer__form-group">
-                            <label id="lbl-guest-name" class="ns-drawer__label">Nombre Completo:</label>
+                            <label for="drawer-checkin-guest-name" id="lbl-guest-name" class="ns-drawer__label">Nombre Completo:</label>
                             <input type="text" id="drawer-checkin-guest-name" class="ns-drawer__input" placeholder="Nombres y apellidos del huésped" required>
                         </div>
 
                         <!-- Campo Condicional Empresa (RUC) -->
                         <div id="field-company-address" class="ns-drawer__form-group" style="display: none;">
-                            <label class="ns-drawer__label">Dirección Fiscal de la Empresa:</label>
+                            <label for="drawer-checkin-company-address" class="ns-drawer__label">Dirección Fiscal de la Empresa:</label>
                             <input type="text" id="drawer-checkin-company-address" class="ns-drawer__input" placeholder="Ej: Av. Principal 123, Lima">
                         </div>
 
                         <!-- Modo de Hospedaje Switcher -->
                         <div class="ns-drawer__form-group">
-                            <label class="ns-drawer__label">Modo de Estancia:</label>
-                            <div class="ns-drawer__pill-group">
+                            <div class="ns-drawer__label" id="drawer-stay-group">Modo de Estancia:</div>
+                            <div class="ns-drawer__pill-group" role="group" aria-labelledby="drawer-stay-group">
                                 <label class="ns-drawer__pill-option active">
                                     <input type="radio" name="stay_mode" value="tariff" checked onchange="toggleStayMode('tariff')"> ⚡ Tarifa Estándar
                                 </label>
@@ -204,7 +205,7 @@
                         </div>
 
                         <div id="field-tariff-select" class="ns-drawer__form-group">
-                            <label class="ns-drawer__label">Tarifa de Hospedaje (<span id="drawer-tariff-category-label">Categoría</span>):</label>
+                            <label for="drawer-checkin-tariff-id" class="ns-drawer__label">Tarifa de Hospedaje (<span id="drawer-tariff-category-label">Categoría</span>):</label>
                             <select id="drawer-checkin-tariff-id" class="ns-drawer__select" onchange="updateDrawerTariffPrice()">
                                 <option value="">Cargando tarifas...</option>
                             </select>
@@ -216,20 +217,20 @@
                         <!-- Campos Condicionales Horario Manual -->
                         <div id="fields-custom-datetime" style="display: none;">
                             <div class="ns-drawer__form-group">
-                                <label class="ns-drawer__label">📅 Fecha/Hora de Entrada Manual:</label>
+                                <label for="drawer-checkin-custom-in" class="ns-drawer__label">📅 Fecha/Hora de Entrada Manual:</label>
                                 <input type="datetime-local" id="drawer-checkin-custom-in" class="ns-drawer__input">
                             </div>
 
                             <div class="ns-drawer__form-group">
-                                <label class="ns-drawer__label">⌛ Fecha/Hora de Salida Libre:</label>
+                                <label for="drawer-checkin-custom-out" class="ns-drawer__label">⌛ Fecha/Hora de Salida Libre:</label>
                                 <input type="datetime-local" id="drawer-checkin-custom-out" class="ns-drawer__input">
                             </div>
                         </div>
 
                         <!-- Modo de Precio Switcher -->
                         <div class="ns-drawer__form-group">
-                            <label class="ns-drawer__label">Modo de Precio:</label>
-                            <div class="ns-drawer__pill-group">
+                            <div class="ns-drawer__label" id="drawer-price-group">Modo de Precio:</div>
+                            <div class="ns-drawer__pill-group" role="group" aria-labelledby="drawer-price-group">
                                 <label class="ns-drawer__pill-option active">
                                     <input type="radio" name="price_mode" value="normal" checked onchange="togglePriceMode('normal')"> 💵 Precio Oficial
                                 </label>
@@ -240,13 +241,13 @@
                         </div>
 
                         <div class="ns-drawer__form-group">
-                            <label class="ns-drawer__label">Precio de Hospedaje (S/):</label>
+                            <label for="drawer-checkin-applied-price" class="ns-drawer__label">Precio de Hospedaje (S/):</label>
                             <input type="number" step="0.50" id="drawer-checkin-applied-price" class="ns-drawer__input" value="35.00" oninput="calculateAdvanceBalance()" required>
                         </div>
 
                         <!-- Campo Condicional Motivo Descuento/Modificación -->
                         <div id="field-discount-reason" class="ns-drawer__form-group" style="display: none;">
-                            <label class="ns-drawer__label" style="color: #fbbf24;">Motivo del Ajuste de Precio:</label>
+                            <label for="drawer-checkin-discount-reason" class="ns-drawer__label" style="color: #fbbf24;">Motivo del Ajuste de Precio:</label>
                             <input type="text" id="drawer-checkin-discount-reason" class="ns-drawer__input" placeholder="Ej: Tarifa corporativa, cliente frecuente...">
                         </div>
 
@@ -255,13 +256,13 @@
                             <h4 class="ns-drawer__card-title" style="color: #38bdf8;">💳 Pago / Adelanto en Recepción</h4>
                             
                             <div class="ns-drawer__form-group">
-                                <label class="ns-drawer__label">Monto de Adelanto Pagado (S/):</label>
+                                <label for="drawer-checkin-advance-amount" class="ns-drawer__label">Monto de Adelanto Pagado (S/):</label>
                                 <input type="number" step="0.50" id="drawer-checkin-advance-amount" class="ns-drawer__input" value="0.00" min="0" oninput="calculateAdvanceBalance()">
                                 <small style="color: #94a3b8; display: block; margin-top: 4px; font-size: 0.8rem;">Ingrese 0.00 si paga el 100% al salir, o el total si cancela completo.</small>
                             </div>
 
                             <div class="ns-drawer__form-group">
-                                <label class="ns-drawer__label">Método de Pago del Adelanto:</label>
+                                <label for="drawer-checkin-advance-method" class="ns-drawer__label">Método de Pago del Adelanto:</label>
                                 <select id="drawer-checkin-advance-method" class="ns-drawer__select">
                                     <option value="cash">💵 Efectivo</option>
                                     <option value="yape">📱 Yape / Plin</option>
@@ -297,7 +298,7 @@
                         </div>
 
                         <div class="ns-drawer__form-group">
-                            <label class="ns-drawer__label">Emitir Comprobante SUNAT:</label>
+                            <label for="drawer-checkout-doc-type" class="ns-drawer__label">Emitir Comprobante SUNAT:</label>
                             <select id="drawer-checkout-doc-type" class="ns-drawer__select" onchange="toggleCheckoutInvoiceFields()">
                                 <option value="NOTA_VENTA">Nota de Venta Interna</option>
                                 <option value="BOLETA">Boleta de Venta Electrónica (B001)</option>
@@ -307,16 +308,16 @@
 
                         <!-- Campo Condicional Factura SUNAT -->
                         <div id="field-factura-ruc" class="ns-drawer__form-group" style="display: none;">
-                            <label class="ns-drawer__label" style="color: #38bdf8;">RUC del Cliente Factura (11 dígitos):</label>
+                            <label for="drawer-checkout-ruc" class="ns-drawer__label" style="color: #38bdf8;">RUC del Cliente Factura (11 dígitos):</label>
                             <input type="text" id="drawer-checkout-ruc" class="ns-drawer__input" placeholder="Ej: 20601234567" maxlength="11">
                             
-                            <label class="ns-drawer__label" style="color: #38bdf8; margin-top: 8px;">Razón Social:</label>
+                            <label for="drawer-checkout-company" class="ns-drawer__label" style="color: #38bdf8; margin-top: 8px;">Razón Social:</label>
                             <input type="text" id="drawer-checkout-company" class="ns-drawer__input" placeholder="Razón social empresa">
                         </div>
 
                         <div id="checkout-payment-fields">
                             <div class="ns-drawer__form-group">
-                                <label class="ns-drawer__label">Método de Pago de Liquidación:</label>
+                                <label for="drawer-checkout-payment-method" class="ns-drawer__label">Método de Pago de Liquidación:</label>
                                 <select id="drawer-checkout-payment-method" class="ns-drawer__select">
                                     <option value="cash">💵 Efectivo</option>
                                     <option value="yape">📱 Yape / Plin</option>
@@ -326,7 +327,7 @@
                             </div>
 
                             <div class="ns-drawer__form-group">
-                                <label class="ns-drawer__label">N° de Operación / Referencia (Opcional):</label>
+                                <label for="drawer-checkout-reference" class="ns-drawer__label">N° de Operación / Referencia (Opcional):</label>
                                 <input type="text" id="drawer-checkout-reference" class="ns-drawer__input" placeholder="Ej: 981240 / POS-4412">
                             </div>
                         </div>
@@ -352,7 +353,7 @@
                     <h4 class="ns-drawer__card-title">🔄 Transferir Habitación</h4>
                     <p style="color: #94a3b8; font-size: 0.88rem; margin: 0 0 10px 0;">Mover el huésped actual a otra habitación libre.</p>
                     <div class="ns-drawer__form-group">
-                        <select id="drawer-transfer-target-room" class="ns-drawer__select">
+                        <select id="drawer-transfer-target-room" class="ns-drawer__select" aria-label="Habitación de destino">
                             <option value="">Seleccione habitación libre...</option>
                         </select>
                     </div>
@@ -371,17 +372,17 @@
                     </div>
 
                     <div class="ns-drawer__form-group">
-                        <label class="ns-drawer__label">Horas a adicionar:</label>
+                        <label for="drawer-extension-hours" class="ns-drawer__label">Horas a adicionar:</label>
                         <input type="number" id="drawer-extension-hours" class="ns-drawer__input" value="2" min="1" max="24">
                     </div>
                     <div class="ns-drawer__form-group">
-                        <label class="ns-drawer__label">Monto Adicional (S/):</label>
+                        <label for="drawer-extension-price" class="ns-drawer__label">Monto Adicional (S/):</label>
                         <input type="number" step="1.00" id="drawer-extension-price" class="ns-drawer__input" value="15.00">
                     </div>
                     <button class="ns-drawer__btn ns-drawer__btn--primary" onclick="handleDrawerExtension()">Adicionar Horas</button>
                 </div>
 
-                <div class="ns-drawer__card" style="margin-top: 1rem;">
+                <div class="ns-drawer__card">
                     <h4 class="ns-drawer__card-title">🧹 Estado de Limpieza / Mantenimiento</h4>
                     <button class="ns-drawer__btn ns-drawer__btn--secondary" onclick="handleDrawerSetCleaning()">Marcar para Limpieza</button>
                     <button class="ns-drawer__btn ns-drawer__btn--success" style="margin-top: 8px;" onclick="handleDrawerReleaseCleaning()">Liberar Habitación (Limpia)</button>
@@ -394,7 +395,7 @@
 <!-- MODAL: RECIBO / VOUCHER TÉRMICO TRAS CHECKOUT DE HABITACIÓN -->
 <div id="modal-checkout-receipt" class="modal">
     <div class="modal-content" style="max-width: 520px; background: var(--bg-card);">
-        <span class="close" onclick="closeCheckoutReceiptModal()">&times;</span>
+        <button type="button" class="close" onclick="closeCheckoutReceiptModal()" aria-label="Cerrar comprobante">&times;</button>
         <h3 style="color: #ffffff; margin-bottom: 0.8rem; font-size: 1.1rem;">🧾 Liquidación de Salida / Comprobante</h3>
 
         <iframe id="checkout-receipt-pdf-frame" src="" style="width: 100%; height: 60vh; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: #ffffff;"></iframe>

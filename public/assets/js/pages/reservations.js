@@ -302,21 +302,39 @@ async function quickNoShowReservation(reservationId) {
 function executeModalCheckinReservation() {
     const resId = Number.parseInt(document.getElementById('view-res-id').value, 10);
     const roomNumber = document.getElementById('view-res-room-number').value;
-    if (resId) {
-        quickCheckinReservation(resId, roomNumber);
-    }
+    
+if (resId) {
+    quickCheckinReservation(resId, roomNumber).catch(error => {
+        console.error('Error al realizar el check-in de la reserva:', error);
+    });
+}
+
 }
 
 function executeModalCancelReservation() {
     const resId = Number.parseInt(document.getElementById('view-res-id').value, 10);
     if (resId) {
-        quickCancelReservation(resId);
+        
+if (resId) {
+    quickCancelReservation(resId).catch(error => {
+        console.error('Error al cancelar la reserva:', error);
+        showToast('No se pudo completar la cancelación. Verifique el estado de la reserva.', 'error');
+    });
+}
+
     }
 }
 
 function executeModalNoShowReservation() {
     const resId = Number.parseInt(document.getElementById('view-res-id').value, 10);
     if (resId) {
-        quickNoShowReservation(resId);
+        
+if (resId) {
+    quickCancelReservation(resId).catch(error => {
+        console.error('Error al cancelar la reserva:', error);
+        showToast('No se pudo completar la cancelación. Verifique el estado de la reserva.', 'error');
+    });
+}
+
     }
 }

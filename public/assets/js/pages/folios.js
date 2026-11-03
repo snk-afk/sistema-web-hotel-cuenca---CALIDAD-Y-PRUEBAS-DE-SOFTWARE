@@ -203,8 +203,8 @@ function applyUrlParams() {
     // Deep-link stay_id
     const stayIdParam = params.get('stay_id');
     if (stayIdParam) {
-        const targetId = parseInt(stayIdParam, 10);
-        if (!isNaN(targetId)) {
+        const targetId = Number.parseInt(stayIdParam, 10);
+        if (!Number.isNaN(targetId)) {
             openFolioDetailModal(targetId, false);
         }
     }

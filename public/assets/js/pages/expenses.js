@@ -7,7 +7,13 @@ let expensesList = [];
 let otherIncomesList = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadExpensesAndIncomesData();
+    
+document.addEventListener('DOMContentLoaded', () => {
+    loadExpensesAndIncomesData().catch(error => {
+        console.error('Error al cargar los egresos e ingresos:', error);
+    });
+});
+
 });
 
 async function loadExpensesAndIncomesData() {
@@ -216,7 +222,13 @@ async function handleCreateExpenseSubmit(event) {
             if (typeof showToast === 'function') {
                 showToast('✅ Egreso registrado exitosamente.', 'success');
             }
-            loadExpensesAndIncomesData();
+            
+document.addEventListener('DOMContentLoaded', () => {
+    loadExpensesAndIncomesData().catch(error => {
+        console.error('Error al cargar los egresos e ingresos:', error);
+    });
+});
+
         } else {
             const errorMsg = result.data.message || 'Error al registrar el egreso.';
             if (typeof showToast === 'function') {
@@ -246,7 +258,7 @@ async function handleCreateIncomeSubmit(event) {
 
     const category = document.getElementById('income-category').value;
     const concept = document.getElementById('income-concept').value.trim();
-    const amount = parseFloat(document.getElementById('income-amount').value) || 0;
+    const amount = Number.parseFloat(document.getElementById('income-amount').value) || 0;
     const paymentMethod = document.getElementById('income-payment-method').value;
     const notes = document.getElementById('income-notes').value.trim() || null;
 
@@ -283,7 +295,13 @@ async function handleCreateIncomeSubmit(event) {
             if (typeof showToast === 'function') {
                 showToast('✅ Otro ingreso registrado exitosamente.', 'success');
             }
-            loadExpensesAndIncomesData();
+            
+document.addEventListener('DOMContentLoaded', () => {
+    loadExpensesAndIncomesData().catch(error => {
+        console.error('Error al cargar los egresos e ingresos:', error);
+    });
+});
+
         } else {
             const errorMsg = result.data.message || 'Error al registrar el ingreso.';
             if (typeof showToast === 'function') {

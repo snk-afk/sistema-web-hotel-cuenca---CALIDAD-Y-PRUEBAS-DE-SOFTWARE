@@ -391,8 +391,10 @@ function openRoomDrawer(roomId) {
         const elCheckoutTime = document.getElementById('drawer-checkout-time');
         if (elCheckoutTime) elCheckoutTime.textContent = checkoutAt;
 
+      
         initDrawerTimer(secondsRemaining);
-        loadDrawerFolioData(roomId);
+        void loadDrawerFolioData(roomId);
+
     } else if (status === 'reserved') {
         if (badge) {
             badge.textContent = 'RESERVADA';
@@ -427,9 +429,11 @@ function openRoomDrawer(roomId) {
     }
 
     populateTransferTargetRooms(roomId);
+    
     if (typeof loadDrawerPOSProducts === 'function') {
-        loadDrawerPOSProducts();
+    void loadDrawerPOSProducts();
     }
+
 
     // Ocultar o mostrar exclusivamente los BOTONES de pestañas en la barra superior
     const tabButtons = document.querySelectorAll('.ns-room-modal__tabs .ns-room-modal__tab');

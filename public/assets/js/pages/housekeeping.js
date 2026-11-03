@@ -7,8 +7,16 @@ let housekeepingTasks = [];
 let allRoomsList = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadHousekeepingData();
-    loadRoomsCatalog();
+    
+loadHousekeepingData().catch(error => {
+    console.error('Error al cargar los datos de limpieza:', error);
+});
+
+    
+loadRoomsCatalog().catch(error => {
+    console.error('Error al cargar el catálogo de habitaciones:', error);
+});
+
 });
 
 async function loadHousekeepingData() {
@@ -174,7 +182,11 @@ async function startHousekeepingTask(taskId) {
             if (typeof showToast === 'function') {
                 showToast('✅ Tarea de limpieza iniciada.', 'success');
             }
-            loadHousekeepingData();
+            
+loadHousekeepingData().catch(error => {
+    console.error('Error al cargar los datos de limpieza:', error);
+});
+
         } else {
             if (typeof showToast === 'function') {
                 showToast(`❌ ${result.data.message || 'Error al iniciar tarea.'}`, 'error');
@@ -203,7 +215,11 @@ async function completeHousekeepingTask(taskId) {
             if (typeof showToast === 'function') {
                 showToast('✅ Tarea completada y habitación liberada a DISPONIBLE.', 'success');
             }
-            loadHousekeepingData();
+            
+loadHousekeepingData().catch(error => {
+    console.error('Error al cargar los datos de limpieza:', error);
+});
+
         } else {
             if (typeof showToast === 'function') {
                 showToast(`❌ ${result.data.message || 'Error al completar tarea.'}`, 'error');
@@ -258,7 +274,11 @@ async function handleCreateTaskSubmit(event) {
             if (typeof showToast === 'function') {
                 showToast('✅ Tarea registrada exitosamente.', 'success');
             }
-            loadHousekeepingData();
+            
+loadHousekeepingData().catch(error => {
+    console.error('Error al cargar los datos de limpieza:', error);
+});
+
         } else {
             if (typeof showToast === 'function') {
                 showToast(`❌ ${result.data.message || 'Error al registrar tarea.'}`, 'error');

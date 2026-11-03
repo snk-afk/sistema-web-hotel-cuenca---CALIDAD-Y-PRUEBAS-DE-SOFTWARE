@@ -5,10 +5,17 @@
 
 let currentCashboxShift = null;
 
+
 document.addEventListener('DOMContentLoaded', () => {
-    loadCashboxShift();
-    loadCashboxHistory();
+    loadCashboxShift().catch(error => {
+        console.error('Error al cargar el turno de caja:', error);
+    });
+
+    loadCashboxHistory().catch(error => {
+        console.error('Error al cargar el historial de caja:', error);
+    });
 });
+
 
 // ─── LOAD CURRENT SHIFT ────────────────────────────────────
 
@@ -154,7 +161,11 @@ async function handleOpenShiftSubmit(event) {
             if (typeof showToast === 'function') {
                 showToast('✅ Turno de caja aperturado exitosamente.', 'success');
             }
-            loadCashboxShift();
+            
+            loadCashboxShift().catch(error => {
+            console.error('Error al actualizar el turno de caja:', error);
+            });
+
         } else {
             if (typeof showToast === 'function') {
                 showToast(`❌ ${result.data.message || 'Error al abrir el turno.'}`, 'error');
@@ -199,7 +210,7 @@ async function handleNewMovementSubmit(event) {
     const type = document.getElementById('movement-type').value;
     const category = document.getElementById('movement-category').value;
     const concept = document.getElementById('movement-concept').value.trim();
-    const amount = parseFloat(document.getElementById('movement-amount').value) || 0;
+    const amount = Number.parseFloat(document.getElementById('movement-amount').value) || 0;
     const paymentMethod = document.getElementById('movement-payment-method').value;
 
     if (!concept || amount <= 0) {
@@ -235,7 +246,11 @@ async function handleNewMovementSubmit(event) {
             if (typeof showToast === 'function') {
                 showToast('✅ Movimiento registrado exitosamente.', 'success');
             }
-            loadCashboxShift();
+            
+            loadCashboxShift().catch(error => {
+            console.error('Error al actualizar el turno de caja:', error);
+            });
+
         } else {
             if (typeof showToast === 'function') {
                 showToast(`❌ ${result.data.message || 'Error al registrar movimiento.'}`, 'error');
@@ -338,7 +353,11 @@ async function handleCloseShiftModalSubmit(event) {
             if (typeof showToast === 'function') {
                 showToast(`🔒 ${balanceMsg}`, 'success');
             }
-            loadCashboxShift();
+            
+loadCashboxShift().catch(error => {
+    console.error('Error al actualizar el turno de caja:', error);
+});
+
         } else {
             if (typeof showToast === 'function') {
                 showToast(`❌ ${result.data.message || 'Error al cerrar el turno.'}`, 'error');

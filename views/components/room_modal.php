@@ -1,6 +1,7 @@
 <?php declare(strict_types=1); ?>
-<div id="room-drawer-overlay" class="ns-room-modal" style="display: none;" onclick="closeRoomDrawer(event)">
-    <div class="ns-room-modal__dialog" onclick="event.stopPropagation()">
+
+<div id="room-drawer-overlay" class="ns-room-modal" style="display: none;" role="button" tabindex="0" aria-label="Cerrar panel de habitación" onclick="closeRoomDrawer(event)" onkeydown="if (event.target === this && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); closeRoomDrawer(event); }">
+    <div class="ns-room-modal__dialog">
         <!-- Header con Título, Badges de Estado y Categoría y Botón de Cierre -->
         <div class="ns-room-modal__header">
             <div class="ns-room-modal__title-group">
@@ -10,7 +11,7 @@
                     <span id="drawer-room-category" class="ns-room-modal__badge ns-room-modal__badge--category">---</span>
                 </div>
             </div>
-            <button type="button" class="ns-room-modal__close" onclick="closeRoomDrawer()">&times;</button>
+            <button type="button" class="ns-room-modal__close" onclick="closeRoomDrawer()" aria-label="Cerrar panel de habitación">&times;</button>
         </div>
 
         <!-- Barra de Pestañas Contextuales Rigurosas por Estado -->
@@ -52,10 +53,10 @@
                             <span class="ns-room-modal__badge ns-room-modal__badge--cleaning" id="drawer-res-status-badge">PENDIENTE</span>
                         </div>
                         <div class="ns-room-modal__info-grid">
-                            <div class="ns-room-modal__info-item"><label>Huésped:</label> <strong id="drawer-res-guest-name">---</strong></div>
-                            <div class="ns-room-modal__info-item"><label>Documento:</label> <strong id="drawer-res-guest-doc">---</strong></div>
-                            <div class="ns-room-modal__info-item"><label>Fecha Llegada:</label> <strong id="drawer-res-checkin-time">---</strong></div>
-                            <div class="ns-room-modal__info-item"><label>Adelanto:</label> <strong id="drawer-res-advance-amount" style="color: #34d399;">S/ 0.00</strong></div>
+                            <div class="ns-room-modal__info-item"><span style="display: block; font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 3px;">Huésped:</span> <strong id="drawer-res-guest-name">---</strong></div>
+                            <div class="ns-room-modal__info-item"><span style="display: block; font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 3px;">Documento:</span> <strong id="drawer-res-guest-doc">---</strong></div>
+                            <div class="ns-room-modal__info-item"><span style="display: block; font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 3px;">Fecha Llegada:</span> <strong id="drawer-res-checkin-time">---</strong></div>
+                            <div class="ns-room-modal__info-item"><span style="display: block; font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 3px;">Adelanto:</span> <strong id="drawer-res-advance-amount" style="color: #34d399;">S/ 0.00</strong></div>
                         </div>
                         <div style="margin-top: 12px;">
                             <button type="button" class="ns-room-modal__btn ns-room-modal__btn--success" id="drawer-btn-execute-res-checkin" onclick="executeDrawerReservationCheckin()">🏨 Ocupar Habitación con esta Reserva</button>
@@ -65,8 +66,8 @@
 
                 <!-- Selector de Modalidad -->
                 <div class="ns-room-modal__form-group">
-                    <label class="ns-room-modal__label">Modalidad de Registro:</label>
-                    <div class="ns-room-modal__pill-group">
+                    <div class="ns-room-modal__label">Modalidad de Registro:</div>
+                    <div class="ns-room-modal__pill-group" role="group" aria-label="Modalidad de Registro">
                         <label class="ns-room-modal__pill-option active" id="drawer-pill-op-checkin">
                             <input type="radio" name="operation_mode" value="checkin" checked onchange="toggleDrawerOperationMode('checkin')"> ⚡ Check-In Inmediato
                         </label>
@@ -83,14 +84,14 @@
 
                     <!-- Fecha de Llegada Futura (Solo si es Reserva Futura) -->
                     <div id="field-future-arrival" class="ns-room-modal__card" style="display: none; border-color: rgba(245, 158, 11, 0.4); margin-bottom: 1rem;">
-                        <label class="ns-room-modal__label" style="color: #fde68a;">📅 Fecha y Hora de Llegada Prevista:</label>
+                        <label for="drawer-future-checkin-at" class="ns-room-modal__label" style="color: #fde68a;">📅 Fecha y Hora de Llegada Prevista:</label>
                         <input type="datetime-local" id="drawer-future-checkin-at" class="ns-room-modal__input" onchange="recalculateFutureReservationDates()">
                         <small style="color: #94a3b8; display: block; margin-top: 4px; font-size: 0.8rem;">La salida estimada se calculará automáticamente con la tarifa elegida.</small>
                     </div>
 
                     <!-- Selector de Huésped Existente -->
                     <div class="ns-room-modal__form-group">
-                        <label class="ns-room-modal__label">Huésped Registrado en Padrón (Opcional):</label>
+                        <label for="drawer-guest-select" class="ns-room-modal__label">Huésped Registrado en Padrón (Opcional):</label>
                         <select id="drawer-guest-select" class="ns-room-modal__select" onchange="handleDrawerGuestSelectChange(this)">
                             <option value="">-- Seleccionar de la lista o digitar abajo --</option>
                             <?php if (!empty($guests)): ?>
@@ -111,8 +112,8 @@
                     <!-- Datos del Huésped en Grid de 2 Columnas -->
                     <div class="ns-room-modal__form-grid-2">
                         <div class="ns-room-modal__form-group">
-                            <label class="ns-room-modal__label">Tipo de Huésped:</label>
-                            <div class="ns-room-modal__pill-group">
+                            <div class="ns-room-modal__label">Tipo de Huésped:</div>
+                            <div class="ns-room-modal__pill-group" role="group" aria-label="Tipo de Huésped">
                                 <label class="ns-room-modal__pill-option active" id="drawer-pill-dni">
                                     <input type="radio" name="doc_type_mode" value="DNI" checked onchange="toggleGuestDocType('DNI')"> 🪪 Persona (DNI)
                                 </label>
@@ -123,7 +124,7 @@
                         </div>
 
                         <div class="ns-room-modal__form-group">
-                            <label id="lbl-doc-number" class="ns-room-modal__label">DNI del Huésped (8 dígitos):</label>
+                            <label for="drawer-checkin-doc-number" id="lbl-doc-number" class="ns-room-modal__label">DNI del Huésped (8 dígitos):</label>
                             <div class="ns-room-modal__input-group">
                                 <input type="text" id="drawer-checkin-doc-number" class="ns-room-modal__input" placeholder="Ingrese DNI" maxlength="8" required>
                                 <button type="button" class="ns-room-modal__btn ns-room-modal__btn--secondary" style="width: auto; min-width: 110px;" onclick="lookupDrawerGuestDocument()">🔍 Buscar</button>
@@ -132,21 +133,21 @@
                     </div>
 
                     <div class="ns-room-modal__form-group">
-                        <label id="lbl-guest-name" class="ns-room-modal__label">Nombre Completo:</label>
+                        <label for="drawer-checkin-guest-name" id="lbl-guest-name" class="ns-room-modal__label">Nombre Completo:</label>
                         <input type="text" id="drawer-checkin-guest-name" class="ns-room-modal__input" placeholder="Nombres y apellidos" required>
                     </div>
 
                     <!-- Campo Condicional Empresa (RUC) -->
                     <div id="field-company-address" class="ns-room-modal__form-group" style="display: none;">
-                        <label class="ns-room-modal__label">Dirección Fiscal de la Empresa:</label>
+                        <label for="drawer-checkin-company-address" class="ns-room-modal__label">Dirección Fiscal de la Empresa:</label>
                         <input type="text" id="drawer-checkin-company-address" class="ns-room-modal__input" placeholder="Ej: Av. Principal 123, Lima">
                     </div>
 
                     <!-- Régimen y Tarifa en Grid de 2 Columnas -->
                     <div class="ns-room-modal__form-grid-2">
                         <div class="ns-room-modal__form-group">
-                            <label class="ns-room-modal__label">Régimen de Tiempo:</label>
-                            <div class="ns-room-modal__pill-group">
+                            <div class="ns-room-modal__label">Régimen de Tiempo:</div>
+                            <div class="ns-room-modal__pill-group" role="group" aria-label="Régimen de Tiempo">
                                 <label class="ns-room-modal__pill-option active">
                                     <input type="radio" name="stay_mode" value="tariff" checked onchange="toggleStayMode('tariff')"> ⚡ Tarifa Estándar
                                 </label>
@@ -157,7 +158,7 @@
                         </div>
 
                         <div id="field-tariff-select" class="ns-room-modal__form-group">
-                            <label class="ns-room-modal__label">Tarifa de Hospedaje (<span id="drawer-tariff-category-label">Categoría</span>):</label>
+                            <label for="drawer-checkin-tariff-id" class="ns-room-modal__label">Tarifa de Hospedaje (<span id="drawer-tariff-category-label">Categoría</span>):</label>
                             <select id="drawer-checkin-tariff-id" class="ns-room-modal__select" onchange="updateDrawerTariffPrice()">
                                 <option value="">Cargando tarifas...</option>
                             </select>
@@ -170,12 +171,12 @@
                     <!-- Campos Condicionales Horario Manual -->
                     <div id="fields-custom-datetime" style="display: none;">
                         <div class="ns-room-modal__form-group">
-                            <label class="ns-room-modal__label">📅 Fecha/Hora de Entrada:</label>
+                            <label for="drawer-checkin-custom-in" class="ns-room-modal__label">📅 Fecha/Hora de Entrada:</label>
                             <input type="datetime-local" id="drawer-checkin-custom-in" class="ns-room-modal__input">
                         </div>
 
                         <div class="ns-room-modal__form-group">
-                            <label class="ns-room-modal__label">⌛ Fecha/Hora de Salida:</label>
+                            <label for="drawer-checkin-custom-out" class="ns-room-modal__label">⌛ Fecha/Hora de Salida:</label>
                             <input type="datetime-local" id="drawer-checkin-custom-out" class="ns-room-modal__input">
                         </div>
                     </div>
@@ -183,8 +184,8 @@
                     <!-- Modo de Precio y Monto en Grid de 2 Columnas -->
                     <div class="ns-room-modal__form-grid-2">
                         <div class="ns-room-modal__form-group">
-                            <label class="ns-room-modal__label">Modalidad de Precio:</label>
-                            <div class="ns-room-modal__pill-group">
+                            <div class="ns-room-modal__label">Modalidad de Precio:</div>
+                            <div class="ns-room-modal__pill-group" role="group" aria-label="Modalidad de Precio">
                                 <label class="ns-room-modal__pill-option active">
                                     <input type="radio" name="price_mode" value="normal" checked onchange="togglePriceMode('normal')"> 💵 Precio Oficial
                                 </label>
@@ -195,14 +196,14 @@
                         </div>
 
                         <div class="ns-room-modal__form-group">
-                            <label class="ns-room-modal__label">Precio de Hospedaje (S/):</label>
+                            <label for="drawer-checkin-applied-price" class="ns-room-modal__label">Precio de Hospedaje (S/):</label>
                             <input type="number" step="0.50" id="drawer-checkin-applied-price" class="ns-room-modal__input" value="35.00" oninput="calculateAdvanceBalance()" required>
                         </div>
                     </div>
 
                     <!-- Campo Condicional Motivo Descuento -->
                     <div id="field-discount-reason" class="ns-room-modal__form-group" style="display: none;">
-                        <label class="ns-room-modal__label" style="color: #fbbf24;">Motivo del Ajuste de Precio:</label>
+                        <label for="drawer-checkin-discount-reason" class="ns-room-modal__label" style="color: #fbbf24;">Motivo del Ajuste de Precio:</label>
                         <input type="text" id="drawer-checkin-discount-reason" class="ns-room-modal__input" placeholder="Ej: Tarifa corporativa, cliente frecuente...">
                     </div>
 
@@ -212,13 +213,13 @@
                         
                         <div class="ns-room-modal__form-grid-2">
                             <div class="ns-room-modal__form-group">
-                                <label class="ns-room-modal__label">Monto de Adelanto Pagado (S/):</label>
+                                <label for="drawer-checkin-advance-amount" class="ns-room-modal__label">Monto de Adelanto Pagado (S/):</label>
                                 <input type="number" step="0.50" id="drawer-checkin-advance-amount" class="ns-room-modal__input" value="0.00" min="0" oninput="calculateAdvanceBalance()">
                                 <small style="color: #94a3b8; display: block; margin-top: 4px; font-size: 0.8rem;">Ingrese 0.00 si paga el 100% al salir, o el total si cancela completo.</small>
                             </div>
 
                             <div class="ns-room-modal__form-group">
-                                <label class="ns-room-modal__label">Método de Pago del Adelanto:</label>
+                                <label for="drawer-checkin-advance-method" class="ns-room-modal__label">Método de Pago del Adelanto:</label>
                                 <select id="drawer-checkin-advance-method" class="ns-room-modal__select">
                                     <option value="cash">💵 Efectivo</option>
                                     <option value="yape">📱 Yape / Plin</option>
@@ -318,10 +319,10 @@
                 <div class="ns-room-modal__card">
                     <h4 class="ns-room-modal__card-title">👤 Datos del Huésped Actual</h4>
                     <div class="ns-room-modal__info-grid">
-                        <div class="ns-room-modal__info-item"><label>Huésped:</label> <strong id="drawer-guest-name">---</strong></div>
-                        <div class="ns-room-modal__info-item"><label>Documento:</label> <strong id="drawer-guest-doc">---</strong></div>
-                        <div class="ns-room-modal__info-item"><label>Ingreso:</label> <strong id="drawer-checkin-time">---</strong></div>
-                        <div class="ns-room-modal__info-item"><label>Salida Prevista:</label> <strong id="drawer-checkout-time">---</strong></div>
+                        <div class="ns-room-modal__info-item"><span style="display: block; font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 3px;">Huésped:</span> <strong id="drawer-guest-name">---</strong></div>
+                        <div class="ns-room-modal__info-item"><span style="display: block; font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 3px;">Documento:</span> <strong id="drawer-guest-doc">---</strong></div>
+                        <div class="ns-room-modal__info-item"><span style="display: block; font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 3px;">Ingreso:</span> <strong id="drawer-checkin-time">---</strong></div>
+                        <div class="ns-room-modal__info-item"><span style="display: block; font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 3px;">Salida Prevista:</span> <strong id="drawer-checkout-time">---</strong></div>
                     </div>
                 </div>
 
@@ -384,7 +385,7 @@
                         </div>
 
                         <div class="ns-room-modal__form-group">
-                            <label class="ns-room-modal__label">Tipo de Comprobante SUNAT:</label>
+                            <label for="drawer-checkout-doc-type" class="ns-room-modal__label">Tipo de Comprobante SUNAT:</label>
                             <select id="drawer-checkout-doc-type" class="ns-room-modal__select" onchange="toggleCheckoutInvoiceFields()">
                                 <option value="NOTA_VENTA">Nota de Venta Interna</option>
                                 <option value="BOLETA">Boleta de Venta Electrónica (B001)</option>
@@ -394,16 +395,16 @@
 
                         <!-- Campo Condicional Factura SUNAT -->
                         <div id="field-factura-ruc" class="ns-room-modal__form-group" style="display: none;">
-                            <label class="ns-room-modal__label" style="color: #38bdf8;">RUC del Cliente Factura (11 dígitos):</label>
+                            <label for="drawer-checkout-ruc" class="ns-room-modal__label" style="color: #38bdf8;">RUC del Cliente Factura (11 dígitos):</label>
                             <input type="text" id="drawer-checkout-ruc" class="ns-room-modal__input" placeholder="Ej: 20601234567" maxlength="11">
                             
-                            <label class="ns-room-modal__label" style="color: #38bdf8; margin-top: 8px;">Razón Social:</label>
+                            <label for="drawer-checkout-company" class="ns-room-modal__label" style="color: #38bdf8; margin-top: 8px;">Razón Social:</label>
                             <input type="text" id="drawer-checkout-company" class="ns-room-modal__input" placeholder="Razón social empresa">
                         </div>
 
                         <div id="checkout-payment-fields">
                             <div class="ns-room-modal__form-group">
-                                <label class="ns-room-modal__label">Método de Pago de Liquidación:</label>
+                                <label for="drawer-checkout-payment-method" class="ns-room-modal__label">Método de Pago de Liquidación:</label>
                                 <select id="drawer-checkout-payment-method" class="ns-room-modal__select">
                                     <option value="cash">💵 Efectivo</option>
                                     <option value="yape">📱 Yape / Plin</option>
@@ -413,7 +414,7 @@
                             </div>
 
                             <div class="ns-room-modal__form-group">
-                                <label class="ns-room-modal__label">N° de Operación / Referencia (Opcional):</label>
+                                <label for="drawer-checkout-reference" class="ns-room-modal__label">N° de Operación / Referencia (Opcional):</label>
                                 <input type="text" id="drawer-checkout-reference" class="ns-room-modal__input" placeholder="Ej: 981240 / POS-4412">
                             </div>
                         </div>
@@ -445,11 +446,11 @@
                     </div>
 
                     <div class="ns-room-modal__form-group">
-                        <label class="ns-room-modal__label">Horas a adicionar:</label>
+                        <label for="drawer-extension-hours" class="ns-room-modal__label">Horas a adicionar:</label>
                         <input type="number" id="drawer-extension-hours" class="ns-room-modal__input" value="2" min="1" max="24">
                     </div>
                     <div class="ns-room-modal__form-group">
-                        <label class="ns-room-modal__label">Importe Adicional (S/):</label>
+                        <label for="drawer-extension-price" class="ns-room-modal__label">Importe Adicional (S/):</label>
                         <input type="number" step="1.00" id="drawer-extension-price" class="ns-room-modal__input" value="15.00">
                     </div>
                     <button class="ns-room-modal__btn ns-room-modal__btn--primary" onclick="handleDrawerExtension()">Confirmar y Adicionar Horas</button>
@@ -459,7 +460,7 @@
                     <h4 class="ns-room-modal__card-title">🔄 Transferencia de Habitación</h4>
                     <p style="color: #94a3b8; font-size: 0.88rem; margin: 0 0 10px 0;">Mover al huésped actual con todo su folio a otra habitación libre disponible.</p>
                     <div class="ns-room-modal__form-group">
-                        <select id="drawer-transfer-target-room" class="ns-room-modal__select">
+                        <select id="drawer-transfer-target-room" class="ns-room-modal__select" aria-label="Habitación de destino">
                             <option value="">Seleccione habitación libre...</option>
                         </select>
                     </div>
@@ -474,7 +475,7 @@
 <!-- MODAL: RECIBO / VOUCHER TÉRMICO TRAS CHECKOUT DE HABITACIÓN -->
 <div id="modal-checkout-receipt" class="modal">
     <div class="modal-content" style="max-width: 520px; background: var(--bg-card);">
-        <span class="close" onclick="closeCheckoutReceiptModal()">&times;</span>
+        <button type="button" class="close" onclick="closeCheckoutReceiptModal()" aria-label="Cerrar comprobante">&times;</button>
         <h3 style="color: #ffffff; margin-bottom: 0.8rem; font-size: 1.1rem;">🧾 Liquidación de Salida / Comprobante</h3>
 
         <iframe id="checkout-receipt-pdf-frame" src="" style="width: 100%; height: 60vh; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: #ffffff;"></iframe>
