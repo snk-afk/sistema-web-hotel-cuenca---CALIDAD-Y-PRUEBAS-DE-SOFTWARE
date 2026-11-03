@@ -1,3 +1,4 @@
+
 FROM php:8.4-apache
 
 # Instalar dependencias
@@ -32,8 +33,16 @@ COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
 WORKDIR /var/www/html
 
-# Copiar el proyecto
-COPY . .
+# Copiar solo los archivos y carpetas necesarios
+COPY composer.json composer.lock .htaccess router.php ./
+
+COPY config/ ./config/
+COPY database/ ./database/
+COPY public/ ./public/
+COPY routes/ ./routes/
+COPY src/ ./src/
+COPY storage/ ./storage/
+COPY views/ ./views/
 
 # Instalar dependencias PHP
 RUN composer install \

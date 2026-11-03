@@ -66,6 +66,7 @@ require __DIR__ . '/../layouts/sidebar.php';
     <div class="reservations-filter-bar mb-3">
         <div class="search-box flex-1">
             <span class="search-icon">🔍</span>
+            <label for="filter-expenses-input">Buscar en egresos y otros ingresos</label>
             <input type="text" id="filter-expenses-input" class="search-input" placeholder="Buscar por concepto, categoría, proveedor o N° comprobante..." onkeyup="filterExpensesTables()">
         </div>
     </div>
@@ -115,12 +116,12 @@ require __DIR__ . '/../layouts/sidebar.php';
 <!-- MODAL: REGISTRAR EGRESO -->
 <div id="modal-create-expense" class="modal">
     <div class="modal-content" style="max-width: 560px;">
-        <span class="close" onclick="closeModal('modal-create-expense')">&times;</span>
+        <button type="button" class="close" aria-label="Cerrar ventana" onclick="closeModal('modal-create-expense')">&times;</button>
         <h3 style="color: #ffffff; margin-bottom: 1rem;">🔴 Registrar Egreso / Gasto</h3>
 
         <form id="form-create-expense" onsubmit="handleCreateExpenseSubmit(event)">
             <div class="form-group">
-                <label>Categoría de Gasto *</label>
+                <label for="expense-category">Categoría de Gasto *</label>
                 <select id="expense-category" class="form-control">
                     <option value="supplies">Artículos de Limpieza / Insumos</option>
                     <option value="maintenance">Mantenimiento de Infraestructura</option>
@@ -132,28 +133,28 @@ require __DIR__ . '/../layouts/sidebar.php';
             </div>
 
             <div class="form-group">
-                <label>Concepto / Justificación del Gasto *</label>
+                <label for="expense-concept">Concepto / Justificación del Gasto *</label>
                 <input type="text" id="expense-concept" class="form-control" placeholder="Ej: Compra de focos, lejía y ambientadores" required>
             </div>
 
             <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                 <div class="form-group">
-                    <label>Proveedor / Establecimiento</label>
+                    <label for="expense-supplier">Proveedor / Establecimiento</label>
                     <input type="text" id="expense-supplier" class="form-control" placeholder="Ej: Ferretería El Sol">
                 </div>
                 <div class="form-group">
-                    <label>N° Boleta / Factura / Ticket</label>
+                    <label for="expense-receipt">N° Boleta / Factura / Ticket</label>
                     <input type="text" id="expense-receipt" class="form-control" placeholder="Ej: B001-4421">
                 </div>
             </div>
 
             <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                 <div class="form-group">
-                    <label>Monto Pagado (S/) *</label>
+                    <label for="expense-amount">Monto Pagado (S/) *</label>
                     <input type="number" step="0.50" id="expense-amount" class="form-control" placeholder="0.00" min="0.50" required>
                 </div>
                 <div class="form-group">
-                    <label>Método de Pago</label>
+                    <label for="expense-payment-method">Método de Pago</label>
                     <select id="expense-payment-method" class="form-control">
                         <option value="cash">💵 Efectivo (Caja Chica)</option>
                         <option value="yape">🟣 Yape / Plin</option>
@@ -171,12 +172,12 @@ require __DIR__ . '/../layouts/sidebar.php';
 <!-- MODAL: REGISTRAR OTRO INGRESO -->
 <div id="modal-create-income" class="modal">
     <div class="modal-content" style="max-width: 560px;">
-        <span class="close" onclick="closeModal('modal-create-income')">&times;</span>
+        <button type="button" class="close" aria-label="Cerrar ventana" onclick="closeModal('modal-create-income')">&times;</button>
         <h3 style="color: #ffffff; margin-bottom: 1rem;">🟢 Registrar Otro Ingreso (No Operativo)</h3>
 
         <form id="form-create-income" onsubmit="handleCreateIncomeSubmit(event)">
             <div class="form-group">
-                <label>Categoría de Ingreso *</label>
+                <label for="income-category">Categoría de Ingreso *</label>
                 <select id="income-category" class="form-control">
                     <option value="parking">Alquiler Cochera Independiente</option>
                     <option value="laundry_external">Servicio de Lavandería Externo</option>
@@ -187,17 +188,17 @@ require __DIR__ . '/../layouts/sidebar.php';
             </div>
 
             <div class="form-group">
-                <label>Concepto / Detalle del Ingreso *</label>
+                <label for="income-concept">Concepto / Detalle del Ingreso *</label>
                 <input type="text" id="income-concept" class="form-control" placeholder="Ej: Cochera camioneta noche completa" required>
             </div>
 
             <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                 <div class="form-group">
-                    <label>Monto Cobrado (S/) *</label>
+                    <label for="income-amount">Monto Cobrado (S/) *</label>
                     <input type="number" step="0.50" id="income-amount" class="form-control" placeholder="0.00" min="0.50" required>
                 </div>
                 <div class="form-group">
-                    <label>Método de Cobro</label>
+                    <label for="income-payment-method">Método de Cobro</label>
                     <select id="income-payment-method" class="form-control">
                         <option value="cash">💵 Efectivo</option>
                         <option value="yape">🟣 Yape / Plin</option>
@@ -208,7 +209,7 @@ require __DIR__ . '/../layouts/sidebar.php';
             </div>
 
             <div class="form-group">
-                <label>Notas / Observaciones (Opcional):</label>
+                <label for="income-notes">Notas / Observaciones (Opcional):</label>
                 <input type="text" id="income-notes" class="form-control" placeholder="Ej: Placa ABC-123">
             </div>
 

@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+
 $page_title = 'Estados de Cuenta / Folios';
 $page_styles = ['/assets/css/pages/folios.css'];
 require __DIR__ . '/../layouts/header.php';
@@ -67,6 +68,7 @@ require __DIR__ . '/../layouts/sidebar.php';
 
     <!-- Search Bar -->
     <div class="reservations-filter-bar mb-3">
+        <label for="filter-folios-input">Buscar folios</label>
         <div class="search-box flex-1">
             <span class="search-icon">🔍</span>
             <input type="text" id="filter-folios-input" class="search-input" placeholder="Buscar por habitación, huésped, ID de folio..." onkeyup="filterFoliosTable()">
@@ -100,7 +102,7 @@ require __DIR__ . '/../layouts/sidebar.php';
 <!-- MODAL: DETALLE DEL FOLIO -->
 <div id="modal-folio-detail" class="modal">
     <div class="modal-content" style="max-width: 720px;">
-        <span class="close" onclick="closeModal('modal-folio-detail'); clearFolioUrlParams();">&times;</span>
+        <button type="button" class="close" aria-label="Cerrar detalle del folio" onclick="closeModal('modal-folio-detail'); clearFolioUrlParams();">&times;</button>
         <h3 id="folio-detail-title" style="color: #ffffff; margin-bottom: 1rem;">📋 Detalle del Folio</h3>
 
         <!-- Financial Summary -->

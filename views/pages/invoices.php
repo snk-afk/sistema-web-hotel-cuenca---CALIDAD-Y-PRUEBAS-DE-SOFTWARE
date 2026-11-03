@@ -73,6 +73,7 @@ require __DIR__ . '/../layouts/sidebar.php';
     <div class="reservations-filter-bar mb-3">
         <div class="search-box flex-1">
             <span class="search-icon">🔍</span>
+            <label for="filter-invoices-input">Buscar comprobantes</label>
             <input type="text" id="filter-invoices-input" class="search-input" placeholder="Buscar por número de comprobante, cliente o DNI/RUC..." onkeyup="filterInvoicesTable()">
         </div>
     </div>
@@ -102,7 +103,7 @@ require __DIR__ . '/../layouts/sidebar.php';
 <!-- MODAL: DETALLE / VOUCHER DE COMPROBANTE OFICIAL SUNAT -->
 <div id="modal-invoice-detail" class="modal">
     <div class="modal-content" style="max-width: 550px; background: var(--bg-card);">
-        <span class="close" onclick="closeModal('modal-invoice-detail')">&times;</span>
+        <button type="button" class="close" aria-label="Cerrar ventana" onclick="closeModal('modal-invoice-detail')">&times;</button>
 
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 style="color: #ffffff; margin: 0; font-size: 1.1rem;">🧾 Comprobante Electrónico</h3>
@@ -127,13 +128,13 @@ require __DIR__ . '/../layouts/sidebar.php';
 <!-- MODAL: EMITIR COMPROBANTE MANUAL -->
 <div id="modal-issue-invoice" class="modal">
     <div class="modal-content" style="max-width: 600px;">
-        <span class="close" onclick="closeModal('modal-issue-invoice')">&times;</span>
+        <button type="button" class="close" aria-label="Cerrar ventana" onclick="closeModal('modal-issue-invoice')">&times;</button>
         <h3 style="color: #ffffff; margin-bottom: 1rem;">➕ Emitir Comprobante Manual</h3>
 
         <form id="form-issue-invoice" onsubmit="handleIssueInvoiceSubmit(event)">
             <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                 <div class="form-group">
-                    <label>Tipo de Comprobante *</label>
+                    <label for="issue-doc-type">Tipo de Comprobante *</label>
                     <select id="issue-doc-type" class="form-control" onchange="toggleManualInvoiceDocFields()">
                         <option value="BOLETA">📄 Boleta Electrónica (B001)</option>
                         <option value="FACTURA">🏢 Factura Electrónica (F001)</option>
@@ -141,7 +142,7 @@ require __DIR__ . '/../layouts/sidebar.php';
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Tipo Doc. Cliente</label>
+                    <label for="issue-customer-doc-type">Tipo Doc. Cliente</label>
                     <select id="issue-customer-doc-type" class="form-control">
                         <option value="DNI">DNI (8 dígitos)</option>
                         <option value="RUC">RUC (11 dígitos)</option>
@@ -153,32 +154,32 @@ require __DIR__ . '/../layouts/sidebar.php';
 
             <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                 <div class="form-group">
-                    <label>N° Documento *</label>
+                    <label for="issue-customer-doc-num">N° Documento *</label>
                     <input type="text" id="issue-customer-doc-num" class="form-control" placeholder="Ej: 72345678" required>
                 </div>
                 <div class="form-group">
-                    <label>Cliente / Razón Social *</label>
+                    <label for="issue-customer-name">Cliente / Razón Social *</label>
                     <input type="text" id="issue-customer-name" class="form-control" placeholder="Ej: Juan Pérez" required>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Dirección Fiscal (Opcional):</label>
+                <label for="issue-customer-address">Dirección Fiscal (Opcional):</label>
                 <input type="text" id="issue-customer-address" class="form-control" placeholder="Ej: Av. Principal 123, Lima">
             </div>
 
             <div class="form-group">
-                <label>Descripción del Servicio / Ítem Facturado *</label>
+                <label for="issue-item-description">Descripción del Servicio / Ítem Facturado *</label>
                 <input type="text" id="issue-item-description" class="form-control" placeholder="Ej: Hospedaje Habitación 201 - 2 Noches" required>
             </div>
 
             <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                 <div class="form-group">
-                    <label>Cantidad</label>
+                    <label for="issue-item-qty">Cantidad</label>
                     <input type="number" id="issue-item-qty" class="form-control" value="1" min="1" required oninput="recalculateManualInvoiceTotal()">
                 </div>
                 <div class="form-group">
-                    <label>Precio Unitario (S/) *</label>
+                    <label for="issue-item-price">Precio Unitario (S/) *</label>
                     <input type="number" step="0.50" id="issue-item-price" class="form-control" placeholder="0.00" min="1.00" required oninput="recalculateManualInvoiceTotal()">
                 </div>
             </div>

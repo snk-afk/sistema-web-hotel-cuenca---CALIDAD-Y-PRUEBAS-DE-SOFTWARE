@@ -55,9 +55,11 @@ require __DIR__ . '/../layouts/sidebar.php';
     <div class="guests-filter-bar mb-3">
         <div class="search-box flex-1">
             <span class="search-icon">🔍</span>
+            <label for="filter-guests-input">Buscar huéspedes</label>
             <input type="text" id="filter-guests-input" class="search-input" placeholder="Buscar por DNI/RUC, nombre del cliente, teléfono o notas..." onkeyup="filterGuestsTable()">
         </div>
         <div class="d-flex gap-2">
+            <label for="filter-guests-type">Filtrar por tipo de documento</label>
             <select id="filter-guests-type" class="form-control" onchange="filterGuestsTable()" style="width: auto;">
                 <option value="">Todos los Documentos</option>
                 <option value="DNI">Solo DNI</option>
@@ -154,14 +156,14 @@ require __DIR__ . '/../layouts/sidebar.php';
 <!-- MODAL 1: CREAR / EDITAR HUÉSPED -->
 <div id="modal-guest-form" class="modal">
     <div class="modal-content" style="max-width: 540px;">
-        <span class="close" onclick="closeModal('modal-guest-form')">&times;</span>
+        <button type="button" class="close" aria-label="Cerrar ventana" onclick="closeModal('modal-guest-form')">&times;</button>
         <h3 id="modal-guest-title">➕ Registrar Nuevo Huésped</h3>
         <form onsubmit="handleGuestFormSubmit(event)">
             <input type="hidden" id="guest-form-id">
 
             <div class="form-row d-flex gap-2">
                 <div class="form-group flex-1">
-                    <label>Tipo Documento:</label>
+                    <label for="guest-form-doc-type">Tipo Documento:</label>
                     <select id="guest-form-doc-type" class="form-control" onchange="toggleGuestModalDocType()">
                         <option value="DNI">DNI (8 dígitos)</option>
                         <option value="RUC">RUC (11 dígitos)</option>
@@ -170,7 +172,7 @@ require __DIR__ . '/../layouts/sidebar.php';
                     </select>
                 </div>
                 <div class="form-group flex-1">
-                    <label id="lbl-modal-doc-num">Número de Documento:</label>
+                    <label id="lbl-modal-doc-num" for="guest-form-doc-num">Número de Documento:</label>
                     <div class="d-flex gap-1">
                         <input type="text" id="guest-form-doc-num" class="form-control" placeholder="Ej: 74819203" required>
                         <button type="button" class="btn btn-secondary" onclick="lookupGuestDocumentInModal()" title="Consultar Padrón RENIEC/SUNAT">🔍</button>
@@ -179,28 +181,28 @@ require __DIR__ . '/../layouts/sidebar.php';
             </div>
 
             <div class="form-group">
-                <label id="lbl-modal-name">Nombre Completo / Razón Social:</label>
+                <label id="lbl-modal-name" for="guest-form-name">Nombre Completo / Razón Social:</label>
                 <input type="text" id="guest-form-name" class="form-control" placeholder="Nombres y Apellidos" required>
             </div>
 
             <div class="form-row d-flex gap-2">
                 <div class="form-group flex-1">
-                    <label>Teléfono / Celular:</label>
+                    <label for="guest-form-phone">Teléfono / Celular:</label>
                     <input type="tel" id="guest-form-phone" class="form-control" placeholder="Ej: 987654321">
                 </div>
                 <div class="form-group flex-1">
-                    <label>Correo Electrónico:</label>
+                    <label for="guest-form-email">Correo Electrónico:</label>
                     <input type="email" id="guest-form-email" class="form-control" placeholder="cliente@correo.com">
                 </div>
             </div>
 
             <div class="form-group">
-                <label>Dirección / Procedencia:</label>
+                <label for="guest-form-address">Dirección / Procedencia:</label>
                 <input type="text" id="guest-form-address" class="form-control" placeholder="Ej: Av. Las Flores 123, Lima">
             </div>
 
             <div class="form-group">
-                <label>Notas Internas / Clasificación (VIP, Preferencias, etc.):</label>
+                <label for="guest-form-notes">Notas Internas / Clasificación (VIP, Preferencias, etc.):</label>
                 <input type="text" id="guest-form-notes" class="form-control" placeholder="Ej: Cliente VIP - solicita toallas extra">
             </div>
 
@@ -212,7 +214,7 @@ require __DIR__ . '/../layouts/sidebar.php';
 <!-- MODAL 2: FICHA HISTÓRICA DEL HUÉSPED -->
 <div id="modal-guest-profile" class="modal">
     <div class="modal-content" style="max-width: 680px;">
-        <span class="close" onclick="closeModal('modal-guest-profile')">&times;</span>
+        <button type="button" class="close" aria-label="Cerrar ventana" onclick="closeModal('modal-guest-profile')">&times;</button>
         <div class="profile-header mb-3 d-flex justify-content-between align-items-center">
             <div>
                 <h3 id="profile-guest-name" style="color: #ffffff; margin-bottom: 4px;">Ficha del Huésped</h3>

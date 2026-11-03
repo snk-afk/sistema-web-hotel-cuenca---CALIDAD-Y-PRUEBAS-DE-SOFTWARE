@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+
 $page_title = 'Caja Chica y Turnos';
 $page_styles = ['/assets/css/pages/cashbox.css'];
 require __DIR__ . '/../layouts/header.php';
@@ -26,12 +27,12 @@ require __DIR__ . '/../layouts/sidebar.php';
 
     <form id="form-open-shift" onsubmit="handleOpenShiftSubmit(event)">
         <div class="form-group text-left mb-3">
-            <label class="font-bold">Monto Inicial de Caja Chica (Fondo Fijo S/):</label>
+            <label for="open-initial-cash" class="font-bold">Monto Inicial de Caja Chica (Fondo Fijo S/):</label>
             <input type="number" step="0.50" id="open-initial-cash" class="form-control" value="100.00" min="0" required>
         </div>
 
         <div class="form-group text-left mb-3">
-            <label>Notas / Observaciones de Apertura (Opcional):</label>
+            <label for="open-shift-notes">Notas / Observaciones de Apertura (Opcional):</label>
             <input type="text" id="open-shift-notes" class="form-control" placeholder="Ej: Fondo inicial en billetes de 20 y 10">
         </div>
 
@@ -91,15 +92,15 @@ require __DIR__ . '/../layouts/sidebar.php';
 
         <div class="shift-info-grid">
             <div class="shift-info-item">
-                <label>Responsable:</label>
+                <span style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 3px;">Responsable:</span>
                 <strong id="shift-user-display">Recepcionista (Turno #1)</strong>
             </div>
             <div class="shift-info-item">
-                <label>Total Movimientos:</label>
+                <span style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 3px;">Total Movimientos:</span>
                 <strong id="shift-movements-count">0 registrados</strong>
             </div>
             <div class="shift-info-item">
-                <label>Cobros Digitales (Yape/Card):</label>
+                <span style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 3px;">Cobros Digitales (Yape/Card):</span>
                 <strong id="shift-digital-payments" class="text-info">S/ 0.00</strong>
             </div>
         </div>
@@ -148,7 +149,7 @@ require __DIR__ . '/../layouts/sidebar.php';
     <!-- Barra de Filtros del Historial -->
     <div class="history-filters-bar mb-3" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px;">
         <div class="form-group" style="margin: 0;">
-            <label style="font-size: 0.75rem; color: #a0aec0;">Estado:</label>
+            <label for="history-filter-status" style="font-size: 0.75rem; color: #a0aec0;">Estado:</label>
             <select id="history-filter-status" class="form-control form-control-sm" onchange="loadCashboxHistory()">
                 <option value="">Todos los Estados</option>
                 <option value="closed">🔒 Cerrados</option>
@@ -156,15 +157,15 @@ require __DIR__ . '/../layouts/sidebar.php';
             </select>
         </div>
         <div class="form-group" style="margin: 0;">
-            <label style="font-size: 0.75rem; color: #a0aec0;">ID Responsable:</label>
+            <label for="history-filter-user-id" style="font-size: 0.75rem; color: #a0aec0;">ID Responsable:</label>
             <input type="number" id="history-filter-user-id" class="form-control form-control-sm" placeholder="Ej: 1" min="1" oninput="loadCashboxHistory()">
         </div>
         <div class="form-group" style="margin: 0;">
-            <label style="font-size: 0.75rem; color: #a0aec0;">Desde:</label>
+            <label for="history-filter-from" style="font-size: 0.75rem; color: #a0aec0;">Desde:</label>
             <input type="date" id="history-filter-from" class="form-control form-control-sm" onchange="loadCashboxHistory()">
         </div>
         <div class="form-group" style="margin: 0;">
-            <label style="font-size: 0.75rem; color: #a0aec0;">Hasta:</label>
+            <label for="history-filter-to" style="font-size: 0.75rem; color: #a0aec0;">Hasta:</label>
             <input type="date" id="history-filter-to" class="form-control form-control-sm" onchange="loadCashboxHistory()">
         </div>
     </div>
@@ -197,12 +198,12 @@ require __DIR__ . '/../layouts/sidebar.php';
 <!-- MODAL: REGISTRAR MOVIMIENTO EXTRAORDINARIO -->
 <div id="modal-new-movement" class="modal">
     <div class="modal-content" style="max-width: 520px;">
-        <span class="close" onclick="closeModal('modal-new-movement')">&times;</span>
+        <button type="button" class="close" onclick="closeModal('modal-new-movement')" aria-label="Cerrar registro de movimiento">&times;</button>
         <h3 style="color: #ffffff; margin-bottom: 1rem;">➕ Registrar Movimiento de Caja</h3>
 
         <form id="form-new-movement" onsubmit="handleNewMovementSubmit(event)">
             <div class="form-group">
-                <label>Tipo de Movimiento *</label>
+                <label for="movement-type">Tipo de Movimiento *</label>
                 <select id="movement-type" class="form-control" onchange="updateMovementCategories()">
                     <option value="expense">💸 Egreso / Salida de Dinero</option>
                     <option value="income">💰 Ingreso / Entrada Extraordinaria</option>
@@ -210,7 +211,7 @@ require __DIR__ . '/../layouts/sidebar.php';
             </div>
 
             <div class="form-group">
-                <label>Categoría</label>
+                <label for="movement-category">Categoría</label>
                 <select id="movement-category" class="form-control">
                     <option value="petty_expense">Gasto Menor / Insumos Urgentes</option>
                     <option value="delivery_taxi">Movilidad / Envíos</option>
@@ -220,17 +221,17 @@ require __DIR__ . '/../layouts/sidebar.php';
             </div>
 
             <div class="form-group">
-                <label>Concepto / Detalle *</label>
+                <label for="movement-concept">Concepto / Detalle *</label>
                 <input type="text" id="movement-concept" class="form-control" placeholder="Ej: Compra de focos para recepción" required>
             </div>
 
             <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                 <div class="form-group">
-                    <label>Monto (S/) *</label>
+                    <label for="movement-amount">Monto (S/) *</label>
                     <input type="number" step="0.10" id="movement-amount" class="form-control" placeholder="0.00" min="0.10" required>
                 </div>
                 <div class="form-group">
-                    <label>Método de Pago</label>
+                    <label for="movement-payment-method">Método de Pago</label>
                     <select id="movement-payment-method" class="form-control">
                         <option value="cash">💵 Efectivo</option>
                         <option value="yape">🟣 Yape / Plin</option>
@@ -248,43 +249,43 @@ require __DIR__ . '/../layouts/sidebar.php';
 <!-- MODAL: CERRAR TURNO / ARQUEO -->
 <div id="modal-close-shift" class="modal">
     <div class="modal-content" style="max-width: 560px;">
-        <span class="close" onclick="closeModal('modal-close-shift')">&times;</span>
+        <button type="button" class="close" onclick="closeModal('modal-close-shift')" aria-label="Cerrar arqueo de caja">&times;</button>
         <h3 style="color: #ffffff; margin-bottom: 1rem;">🔒 Cierre de Turno y Arqueo de Caja</h3>
 
         <div class="arqueo-comparison-grid">
             <div class="arqueo-box">
-                <label>Fondo Inicial:</label>
+                <span style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">Fondo Inicial:</span>
                 <strong id="arqueo-initial-cash" class="text-info">S/ 0.00</strong>
             </div>
             <div class="arqueo-box">
-                <label>Efectivo Esperado:</label>
+                <span style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">Efectivo Esperado:</span>
                 <strong id="arqueo-expected-cash" class="text-success">S/ 0.00</strong>
             </div>
         </div>
 
         <form id="form-close-shift-modal" onsubmit="handleCloseShiftModalSubmit(event)">
             <div class="form-group">
-                <label class="font-bold">Efectivo Real Contado en Gaveta (S/) *</label>
+                <label for="close-real-cash-declared" class="font-bold">Efectivo Real Contado en Gaveta (S/) *</label>
                 <input type="number" step="0.01" id="close-real-cash-declared" class="form-control" placeholder="0.00" min="0" required oninput="calculateArqueoDifference()">
             </div>
 
             <div class="form-group">
-                <label>Yape Real Verificado (S/) *</label>
+                <label for="close-real-yape-declared">Yape Real Verificado (S/) *</label>
                 <input type="number" step="0.01" id="close-real-yape-declared" class="form-control" placeholder="0.00" min="0" required>
             </div>
 
             <div class="form-group">
-                <label>Plin Real Verificado (S/) *</label>
+                <label for="close-real-plin-declared">Plin Real Verificado (S/) *</label>
                 <input type="number" step="0.01" id="close-real-plin-declared" class="form-control" placeholder="0.00" min="0" required>
             </div>
 
             <div class="form-group">
-                <label>Tarjeta Real Verificada (S/) *</label>
+                <label for="close-real-card-declared">Tarjeta Real Verificada (S/) *</label>
                 <input type="number" step="0.01" id="close-real-card-declared" class="form-control" placeholder="0.00" min="0" required>
             </div>
 
             <div class="form-group">
-                <label>Transferencia Real Verificada (S/) *</label>
+                <label for="close-real-transfer-declared">Transferencia Real Verificada (S/) *</label>
                 <input type="number" step="0.01" id="close-real-transfer-declared" class="form-control" placeholder="0.00" min="0" required>
             </div>
 
@@ -293,7 +294,7 @@ require __DIR__ . '/../layouts/sidebar.php';
             </div>
 
             <div class="form-group">
-                <label>Observaciones de Cierre (Opcional):</label>
+                <label for="close-shift-notes">Observaciones de Cierre (Opcional):</label>
                 <textarea id="close-shift-notes" class="form-control" rows="2" placeholder="Ej: Se deja sencillo para el siguiente turno."></textarea>
             </div>
 
@@ -305,32 +306,32 @@ require __DIR__ . '/../layouts/sidebar.php';
 <!-- MODAL: DETALLE DE TURNO CERRADO (SPEC-0040) -->
 <div id="modal-shift-detail" class="modal">
     <div class="modal-content" style="max-width: 760px;">
-        <span class="close" onclick="closeModal('modal-shift-detail')">&times;</span>
+        <button type="button" class="close" onclick="closeModal('modal-shift-detail')" aria-label="Cerrar detalle del turno">&times;</button>
         <h3 style="color: #ffffff; margin-bottom: 1rem;">🔍 Detalle de Turno #<span id="detail-shift-id">---</span></h3>
 
         <div class="shift-detail-header-grid mb-3" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
             <div class="arqueo-box">
-                <label>Responsable:</label>
+                <span style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">Responsable:</span>
                 <strong id="detail-shift-user">---</strong>
             </div>
             <div class="arqueo-box">
-                <label>Apertura:</label>
+                <span style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">Apertura:</span>
                 <strong id="detail-shift-opened-at">---</strong>
             </div>
             <div class="arqueo-box">
-                <label>Cierre:</label>
+                <span style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">Cierre:</span>
                 <strong id="detail-shift-closed-at">---</strong>
             </div>
             <div class="arqueo-box">
-                <label>Fondo Inicial:</label>
+                <span style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">Fondo Inicial:</span>
                 <strong id="detail-shift-initial-cash" class="text-info">S/ 0.00</strong>
             </div>
             <div class="arqueo-box">
-                <label>Efectivo Esperado:</label>
+                <span style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">Efectivo Esperado:</span>
                 <strong id="detail-shift-expected-cash" class="text-success">S/ 0.00</strong>
             </div>
             <div class="arqueo-box">
-                <label>Efectivo Declarado:</label>
+                <span style="display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 4px;">Efectivo Declarado:</span>
                 <strong id="detail-shift-declared-cash">S/ 0.00</strong>
             </div>
         </div>
