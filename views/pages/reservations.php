@@ -79,6 +79,7 @@ require __DIR__ . '/../layouts/sidebar.php';
     <div class="reservations-filter-bar mb-3">
         <div class="search-box flex-1">
             <span class="search-icon">🔍</span>
+            <label for="filter-reservations-input">Buscar reservas</label>
             <input type="text" id="filter-reservations-input" class="search-input" placeholder="Buscar por huésped, documento, habitación o ID de reserva..." onkeyup="filterReservationsTable()">
         </div>
     </div>
@@ -187,7 +188,7 @@ require __DIR__ . '/../layouts/sidebar.php';
 <!-- MODAL: FICHA, AUDITORÍA Y DETALLE DE RESERVA -->
 <div id="modal-view-reservation" class="modal">
     <div class="modal-content" style="max-width: 600px;">
-        <span class="close" onclick="closeModal('modal-view-reservation'); clearModalUrlParams();">&times;</span>
+        <button type="button" class="close" aria-label="Cerrar detalle de la reserva" onclick="closeModal('modal-view-reservation'); clearModalUrlParams();">&times;</button>
         <h3 id="view-res-title" style="color: #ffffff; margin-bottom: 1rem;">📜 Detalle de la Reserva</h3>
         
         <input type="hidden" id="view-res-id">

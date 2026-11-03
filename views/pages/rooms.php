@@ -29,9 +29,11 @@ require __DIR__ . '/../layouts/sidebar.php';
         <div class="rooms-filter-bar mb-3">
             <div class="search-box flex-1">
                 <span class="search-icon">🔍</span>
+                <label for="filter-rooms-input">Buscar habitaciones</label>
                 <input type="text" id="filter-rooms-input" class="search-input" placeholder="Buscar por número de habitación, piso o categoría..." onkeyup="filterRoomsTable()">
             </div>
             <div class="d-flex gap-2">
+                <label for="filter-rooms-category">Filtrar habitaciones por categoría</label>
                 <select id="filter-rooms-category" class="form-control" onchange="filterRoomsTable()" style="width: auto;">
                     <option value="">Todas las Categorías</option>
                     <?php foreach ($categories as $cat): ?>
@@ -108,6 +110,7 @@ require __DIR__ . '/../layouts/sidebar.php';
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="search-box" style="max-width: 400px;">
                 <span class="search-icon">🔍</span>
+                <label for="filter-cats-input">Buscar categorías</label>
                 <input type="text" id="filter-cats-input" class="search-input" placeholder="Buscar categoría..." onkeyup="filterCategoriesTable()">
             </div>
             <button class="btn btn-primary" onclick="openCreateCategoryModal()">➕ Nueva Categoría</button>
@@ -156,6 +159,7 @@ require __DIR__ . '/../layouts/sidebar.php';
         <div class="rooms-filter-bar mb-3">
             <div class="search-box flex-1">
                 <span class="search-icon">🔍</span>
+                <label for="filter-tariffs-input">Buscar tarifas</label>
                 <input type="text" id="filter-tariffs-input" class="search-input" placeholder="Buscar tarifa o precio..." onkeyup="filterTariffsTable()">
             </div>
             <button class="btn btn-primary" onclick="openCreateTariffModal()">➕ Nueva Tarifa</button>
@@ -203,23 +207,23 @@ require __DIR__ . '/../layouts/sidebar.php';
 <!-- MODAL 1: CREAR / EDITAR HABITACIÓN -->
 <div id="modal-room-form" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeModal('modal-room-form')">&times;</span>
+        <button type="button" class="close" aria-label="Cerrar formulario" onclick="closeModal('modal-room-form')">&times;</button>
         <h3 id="modal-room-title">➕ Registrar Nueva Habitación</h3>
         <form onsubmit="handleRoomFormSubmit(event)">
             <input type="hidden" id="room-form-id">
 
             <div class="form-group">
-                <label>Número de Habitación:</label>
+                <label for="room-form-number">Número de Habitación:</label>
                 <input type="text" id="room-form-number" class="form-control" placeholder="Ej: 101, 204, 305" required>
             </div>
 
             <div class="form-group">
-                <label>Piso / Nivel:</label>
+                <label for="room-form-floor">Piso / Nivel:</label>
                 <input type="text" id="room-form-floor" class="form-control" placeholder="Ej: 1, 2, 3" required>
             </div>
 
             <div class="form-group">
-                <label>Categoría de Habitación:</label>
+                <label for="room-form-category-id">Categoría de Habitación:</label>
                 <select id="room-form-category-id" class="form-control" required>
                     <?php foreach ($categories as $cat): ?>
                         <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name'], ENT_QUOTES | ENT_HTML5, 'UTF-8') ?></option>
@@ -228,7 +232,7 @@ require __DIR__ . '/../layouts/sidebar.php';
             </div>
 
             <div class="form-group">
-                <label>Descripción / Características (Opcional):</label>
+                <label for="room-form-description">Descripción / Características (Opcional):</label>
                 <input type="text" id="room-form-description" class="form-control" placeholder="Ej: Cama King, vista a la calle, TV 55'">
             </div>
 
@@ -240,23 +244,23 @@ require __DIR__ . '/../layouts/sidebar.php';
 <!-- MODAL 2: CREAR / EDITAR CATEGORÍA -->
 <div id="modal-category-form" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeModal('modal-category-form')">&times;</span>
+        <button type="button" class="close" aria-label="Cerrar formulario" onclick="closeModal('modal-category-form')">&times;</button>
         <h3 id="modal-cat-title">🏷️ Registrar Nueva Categoría</h3>
         <form onsubmit="handleCategoryFormSubmit(event)">
             <input type="hidden" id="cat-form-id">
 
             <div class="form-group">
-                <label>Nombre de la Categoría:</label>
+                <label for="cat-form-name">Nombre de la Categoría:</label>
                 <input type="text" id="cat-form-name" class="form-control" placeholder="Ej: Matrimonial Deluxe" required>
             </div>
 
             <div class="form-group">
-                <label>Descripción:</label>
+                <label for="cat-form-desc">Descripción:</label>
                 <input type="text" id="cat-form-desc" class="form-control" placeholder="Detalles o equipamiento de esta categoría">
             </div>
 
             <div class="form-group" id="group-cat-active" style="display: none;">
-                <label>Estado:</label>
+                <label for="cat-form-active">Estado:</label>
                 <select id="cat-form-active" class="form-control">
                     <option value="1">Activa</option>
                     <option value="0">Inactiva</option>
@@ -271,13 +275,13 @@ require __DIR__ . '/../layouts/sidebar.php';
 <!-- MODAL 3: CREAR / EDITAR TARIFA -->
 <div id="modal-tariff-form" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeModal('modal-tariff-form')">&times;</span>
+        <button type="button" class="close" aria-label="Cerrar formulario" onclick="closeModal('modal-tariff-form')">&times;</button>
         <h3 id="modal-tariff-title">💵 Registrar Nueva Tarifa</h3>
         <form onsubmit="handleTariffFormSubmit(event)">
             <input type="hidden" id="tariff-form-id">
 
             <div class="form-group">
-                <label>Categoría Asociada:</label>
+                <label for="tariff-form-cat-id">Categoría Asociada:</label>
                 <select id="tariff-form-cat-id" class="form-control" required>
                     <?php foreach ($categories as $cat): ?>
                         <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name'], ENT_QUOTES | ENT_HTML5, 'UTF-8') ?></option>
@@ -286,22 +290,22 @@ require __DIR__ . '/../layouts/sidebar.php';
             </div>
 
             <div class="form-group">
-                <label>Nombre de la Tarifa:</label>
+                <label for="tariff-form-name">Nombre de la Tarifa:</label>
                 <input type="text" id="tariff-form-name" class="form-control" placeholder="Ej: Tarifa Noche, Estándar 12h" required>
             </div>
 
             <div class="form-group">
-                <label>Duración en Horas:</label>
+                <label for="tariff-form-hours">Duración en Horas:</label>
                 <input type="number" id="tariff-form-hours" class="form-control" value="12" min="1" max="72" required>
             </div>
 
             <div class="form-group">
-                <label>Precio Base Oficial (S/):</label>
+                <label for="tariff-form-price">Precio Base Oficial (S/):</label>
                 <input type="number" step="0.50" id="tariff-form-price" class="form-control" value="45.00" min="1" required>
             </div>
 
             <div class="form-group" id="group-tariff-active" style="display: none;">
-                <label>Estado:</label>
+                <label for="tariff-form-active">Estado:</label>
                 <select id="tariff-form-active" class="form-control">
                     <option value="1">Activa</option>
                     <option value="0">Inactiva</option>

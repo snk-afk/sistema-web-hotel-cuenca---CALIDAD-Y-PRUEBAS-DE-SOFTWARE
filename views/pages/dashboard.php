@@ -9,18 +9,18 @@ require __DIR__ . '/../layouts/sidebar.php';
 
 <div class="dashboard-header-bar">
     <div class="search-box">
-        <span class="search-icon">🔍</span>
+        <label class="search-icon" for="rack-search-input" aria-label="Buscar habitaciones"><span aria-hidden="true">🔍</span></label>
         <input type="text" id="rack-search-input" class="search-input" placeholder="Buscar por N° habitación, DNI, RUC o Nombre..." onkeyup="filterRackRooms()">
     </div>
 
     <div class="rack-stats-pills">
-        <span class="stat-pill pill-all active-filter" onclick="filterRackByStatus('all', this)">🏨 Todos (<strong id="count-all"><?= count($rooms) ?></strong>)</span>
-        <span class="stat-pill pill-free" onclick="filterRackByStatus('free', this)">🟢 Libres (<strong id="count-free">0</strong>)</span>
-        <span class="stat-pill pill-occupied" onclick="filterRackByStatus('occupied', this)">🔵 Ocupadas (<strong id="count-occupied">0</strong>)</span>
-        <span class="stat-pill pill-overdue" onclick="filterRackByStatus('overdue', this)">⚠️ Vencidas (<strong id="count-overdue">0</strong>)</span>
-        <span class="stat-pill pill-cleaning" onclick="filterRackByStatus('cleaning', this)">🧹 Limpieza (<strong id="count-cleaning">0</strong>)</span>
-        <span class="stat-pill pill-reserved" onclick="filterRackByStatus('reserved', this)">📅 Reservadas (<strong id="count-reserved">0</strong>)</span>
-        <span class="stat-pill pill-maintenance" onclick="filterRackByStatus('maintenance', this)">🔧 Avería (<strong id="count-maintenance">0</strong>)</span>
+        <button type="button" class="stat-pill pill-all active-filter" onclick="filterRackByStatus('all', this)">🏨 Todos (<strong id="count-all"><?= count($rooms) ?></strong>)</button>
+        <button type="button" class="stat-pill pill-free" onclick="filterRackByStatus('free', this)">🟢 Libres (<strong id="count-free">0</strong>)</button>
+        <button type="button" class="stat-pill pill-occupied" onclick="filterRackByStatus('occupied', this)">🔵 Ocupadas (<strong id="count-occupied">0</strong>)</button>
+        <button type="button" class="stat-pill pill-overdue" onclick="filterRackByStatus('overdue', this)">⚠️ Vencidas (<strong id="count-overdue">0</strong>)</button>
+        <button type="button" class="stat-pill pill-cleaning" onclick="filterRackByStatus('cleaning', this)">🧹 Limpieza (<strong id="count-cleaning">0</strong>)</button>
+        <button type="button" class="stat-pill pill-reserved" onclick="filterRackByStatus('reserved', this)">📅 Reservadas (<strong id="count-reserved">0</strong>)</button>
+        <button type="button" class="stat-pill pill-maintenance" onclick="filterRackByStatus('maintenance', this)">🔧 Avería (<strong id="count-maintenance">0</strong>)</button>
     </div>
 </div>
 
@@ -103,7 +103,7 @@ require __DIR__ . '/../layouts/sidebar.php';
             }
         ?>
 
-        <div class="room-card <?= $status_class ?>" 
+        <div class="room-card <?= $status_class ?>" style="position: relative;" 
              data-room-id="<?= $room_id ?>" 
              data-room-number="<?= htmlspecialchars($room_number, ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>"
              data-category-id="<?= $category_id ?>"
@@ -114,8 +114,11 @@ require __DIR__ . '/../layouts/sidebar.php';
              data-guest-doc="<?= htmlspecialchars($guest_doc ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>"
              data-checkin-at="<?= htmlspecialchars($check_in_at ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>"
              data-checkout-at="<?= htmlspecialchars($expected_check_out_at ?? '', ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>"
-             data-seconds-remaining="<?= $seconds_remaining ?? '' ?>"
-             onclick="openRoomDrawer(<?= $room_id ?>)">
+             data-seconds-remaining="<?= $seconds_remaining ?? '' ?>">
+            <button type="button"
+                    style="position: absolute; inset: 0; z-index: 1; background: transparent; border: 0; border-radius: inherit; cursor: pointer;"
+                    aria-label="Ver detalle de la habitación <?= htmlspecialchars($room_number, ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>"
+                    onclick="openRoomDrawer(<?= $room_id ?>)"></button>
 
             <div class="room-card-header">
                 <div class="room-number-box">
@@ -204,7 +207,7 @@ require __DIR__ . '/../layouts/sidebar.php';
                 <?php endif; ?>
             </div>
 
-            <div class="room-card-footer" onclick="event.stopPropagation()">
+            <div class="room-card-footer" style="position: relative; z-index: 2;">
                 <?php if ($room_status === 'free'): ?>
                     <button class="btn btn-success btn-card-action" onclick="openRoomDrawer(<?= $room_id ?>); switchToCheckinForm();">
                         ⚡ Check-In Express

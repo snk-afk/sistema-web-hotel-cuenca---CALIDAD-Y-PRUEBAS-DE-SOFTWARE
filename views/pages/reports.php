@@ -28,9 +28,9 @@ require __DIR__ . '/../layouts/sidebar.php';
     </div>
 
     <form id="form-report-date-filter" class="date-range-group" onsubmit="handleCustomDateReportFilter(event)">
-        <span class="text-muted" style="font-size: 0.82rem;">Desde:</span>
+        <label for="report-filter-from" class="text-muted" style="font-size: 0.82rem;">Desde:</label>
         <input type="date" id="report-filter-from">
-        <span class="text-muted" style="font-size: 0.82rem;">Hasta:</span>
+        <label for="report-filter-to" class="text-muted" style="font-size: 0.82rem;">Hasta:</label>
         <input type="date" id="report-filter-to">
         <button type="submit" class="btn btn-sm btn-primary">🔍 Filtrar</button>
     </form>

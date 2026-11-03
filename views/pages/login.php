@@ -26,7 +26,7 @@
         <form id="form-login" action="/login" method="POST" onsubmit="handleLoginSubmit(event)">
             <div class="form-group">
                 <label for="username">Usuario:</label>
-                <input type="text" id="username" name="username" class="form-control" placeholder="Usuario" required autofocus>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Usuario" required>
             </div>
 
             <div class="form-group">

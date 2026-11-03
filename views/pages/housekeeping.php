@@ -74,6 +74,7 @@ require __DIR__ . '/../layouts/sidebar.php';
     <div class="reservations-filter-bar mb-3">
         <div class="search-box flex-1">
             <span class="search-icon">🔍</span>
+            <label for="filter-tasks-input">Buscar tareas</label>
             <input type="text" id="filter-tasks-input" class="search-input" placeholder="Buscar por habitación, notas, tipo o prioridad..." onkeyup="filterTasksTable()">
         </div>
     </div>
@@ -102,19 +103,19 @@ require __DIR__ . '/../layouts/sidebar.php';
 <!-- MODAL: NUEVA TAREA / AVERÍA -->
 <div id="modal-create-task" class="modal">
     <div class="modal-content" style="max-width: 540px;">
-        <span class="close" onclick="closeModal('modal-create-task')">&times;</span>
+        <button type="button" class="close" aria-label="Cerrar formulario de tarea" onclick="closeModal('modal-create-task')">&times;</button>
         <h3 style="color: #ffffff; margin-bottom: 1rem;">➕ Registrar Tarea / Reporte de Avería</h3>
 
         <form id="form-create-task" onsubmit="handleCreateTaskSubmit(event)">
             <div class="form-group">
-                <label>Habitación Destino *</label>
+                <label for="task-room-id">Habitación Destino *</label>
                 <select id="task-room-id" class="form-control" required>
                     <option value="">Cargando habitaciones...</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label>Tipo de Tarea *</label>
+                <label for="task-type">Tipo de Tarea *</label>
                 <select id="task-type" class="form-control" required>
                     <option value="checkout_cleaning">🧹 Limpieza Post-Checkout</option>
                     <option value="deep_cleaning">🧼 Limpieza Profunda / Desinfección</option>
@@ -124,7 +125,7 @@ require __DIR__ . '/../layouts/sidebar.php';
             </div>
 
             <div class="form-group">
-                <label>Nivel de Prioridad *</label>
+                <label for="task-priority">Nivel de Prioridad *</label>
                 <select id="task-priority" class="form-control" required>
                     <option value="normal">⚪ Normal</option>
                     <option value="high">🟡 Alta</option>
@@ -134,7 +135,7 @@ require __DIR__ . '/../layouts/sidebar.php';
             </div>
 
             <div class="form-group">
-                <label>Descripción / Observaciones del Trabajo:</label>
+                <label for="task-notes">Descripción / Observaciones del Trabajo:</label>
                 <textarea id="task-notes" class="form-control" rows="3" placeholder="Ej: Grifería de ducha gotea, cambiar empaque..."></textarea>
             </div>
 

@@ -25,14 +25,12 @@ final class Session
             return;
         }
 
-        $is_https = self::isHttpsRequest();
-
         session_set_cookie_params([
             'lifetime' => 0,
             'path' => '/',
             'httponly' => true,
             'samesite' => 'Lax',
-            'secure' => $is_https,
+            'secure' => true,
         ]);
 
         session_start();
@@ -145,7 +143,7 @@ final class Session
                     time() - 42000,
                     $params['path'],
                     $params['domain'],
-                    $params['secure'],
+                    true,
                     $params['httponly'],
                 );
             }

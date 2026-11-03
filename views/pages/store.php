@@ -52,6 +52,7 @@ require __DIR__ . '/../layouts/sidebar.php';
         <div class="catalog-search-bar">
             <div class="search-box flex-1">
                 <span class="search-icon">🔍</span>
+                <label for="filter-products-input">Buscar productos por nombre o SKU</label>
                 <input type="text" id="filter-products-input" class="search-input" placeholder="Buscar producto por nombre o SKU..." onkeyup="filterProductsCatalog()">
             </div>
         </div>
@@ -84,44 +85,44 @@ require __DIR__ . '/../layouts/sidebar.php';
 <!-- MODAL: CREATE PRODUCT -->
 <div id="modal-create-product" class="modal">
     <div class="modal-content" style="max-width: 560px;">
-        <span class="close" onclick="closeModal('modal-create-product')">&times;</span>
+        <button type="button" class="close" aria-label="Cerrar ventana" onclick="closeModal('modal-create-product')">&times;</button>
         <h3 style="color: #ffffff; margin-bottom: 1rem;">➕ Registrar Nuevo Producto</h3>
 
         <form id="form-create-product" onsubmit="handleCreateProduct(event)">
             <div class="form-group">
-                <label>Nombre del Producto *</label>
+                <label for="product-name">Nombre del Producto *</label>
                 <input type="text" id="product-name" class="form-control" placeholder="Ej: Coca-Cola 500ml" required>
             </div>
 
             <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                 <div class="form-group">
-                    <label>SKU (Opcional)</label>
+                    <label for="product-sku">SKU (Opcional)</label>
                     <input type="text" id="product-sku" class="form-control" placeholder="Ej: BEB-001">
                 </div>
                 <div class="form-group">
-                    <label>Descripción (Opcional)</label>
+                    <label for="product-description">Descripción (Opcional)</label>
                     <input type="text" id="product-description" class="form-control" placeholder="Breve descripción">
                 </div>
             </div>
 
             <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                 <div class="form-group">
-                    <label>Precio de Venta (S/) *</label>
+                    <label for="product-sale-price">Precio de Venta (S/) *</label>
                     <input type="number" id="product-sale-price" class="form-control" step="0.01" min="0" placeholder="0.00" required>
                 </div>
                 <div class="form-group">
-                    <label>Precio de Costo (S/)</label>
+                    <label for="product-cost-price">Precio de Costo (S/)</label>
                     <input type="number" id="product-cost-price" class="form-control" step="0.01" min="0" placeholder="0.00" value="0">
                 </div>
             </div>
 
             <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                 <div class="form-group">
-                    <label>Stock Inicial</label>
+                    <label for="product-stock">Stock Inicial</label>
                     <input type="number" id="product-stock" class="form-control" min="0" placeholder="0" value="0">
                 </div>
                 <div class="form-group">
-                    <label>Stock Mínimo (Alerta)</label>
+                    <label for="product-min-stock">Stock Mínimo (Alerta)</label>
                     <input type="number" id="product-min-stock" class="form-control" min="0" placeholder="5" value="5">
                 </div>
             </div>
@@ -140,7 +141,7 @@ require __DIR__ . '/../layouts/sidebar.php';
 <!-- MODAL: SELECT ROOM FOR CHARGE -->
 <div id="modal-charge-room" class="modal">
     <div class="modal-content" style="max-width: 520px;">
-        <span class="close" onclick="closeModal('modal-charge-room')">&times;</span>
+        <button type="button" class="close" aria-label="Cerrar ventana" onclick="closeModal('modal-charge-room')">&times;</button>
         <h3 style="color: #ffffff; margin-bottom: 1rem;">🏨 Seleccionar Habitación para Cargar Consumo</h3>
 
         <div class="room-select-list" id="room-select-list">
@@ -156,7 +157,7 @@ require __DIR__ . '/../layouts/sidebar.php';
 <!-- MODAL: STORE DIRECT SALE CHECKOUT (Comprobante y Métodos de Pago) -->
 <div id="modal-store-checkout" class="modal">
     <div class="modal-content" style="max-width: 540px;">
-        <span class="close" onclick="closeModal('modal-store-checkout')">&times;</span>
+        <button type="button" class="close" aria-label="Cerrar ventana" onclick="closeModal('modal-store-checkout')">&times;</button>
         <h3 style="color: #ffffff; margin-bottom: 1rem;">💵 Finalizar Venta Directa POS</h3>
 
         <div class="checkout-balance-box mb-3" style="background: rgba(15, 23, 42, 0.6); padding: 14px; border-radius: 6px; text-align: center; border: 1px solid var(--border-color);">
@@ -166,7 +167,7 @@ require __DIR__ . '/../layouts/sidebar.php';
 
         <form id="form-store-checkout" onsubmit="executeStoreCheckout(event)">
             <div class="form-group">
-                <label>Emitir Comprobante:</label>
+                <label for="store-checkout-doc-type">Emitir Comprobante:</label>
                 <select id="store-checkout-doc-type" class="form-control" onchange="toggleStoreInvoiceFields()">
                     <option value="NOTA_VENTA">Nota de Venta Interna</option>
                     <option value="BOLETA">Boleta de Venta Electrónica (B001)</option>
@@ -176,15 +177,15 @@ require __DIR__ . '/../layouts/sidebar.php';
 
             <!-- Campos Dinámicos para Factura SUNAT -->
             <div id="field-store-factura-ruc" class="form-group" style="display: none;">
-                <label class="text-info">RUC del Cliente (11 dígitos):</label>
+                <label for="store-checkout-ruc" class="text-info">RUC del Cliente (11 dígitos):</label>
                 <input type="text" id="store-checkout-ruc" class="form-control" placeholder="Ej: 20601234567" maxlength="11">
                 
-                <label class="text-info mt-2">Razón Social:</label>
+                <label for="store-checkout-company" class="text-info mt-2">Razón Social:</label>
                 <input type="text" id="store-checkout-company" class="form-control" placeholder="Razón Social de la Empresa">
             </div>
 
             <div class="form-group">
-                <label>Método de Pago:</label>
+                <label for="store-checkout-payment-method">Método de Pago:</label>
                 <select id="store-checkout-payment-method" class="form-control">
                     <option value="cash">💵 Efectivo</option>
                     <option value="yape">🟣 Yape / Plin</option>
@@ -194,7 +195,7 @@ require __DIR__ . '/../layouts/sidebar.php';
             </div>
 
             <div class="form-group">
-                <label>N° de Operación / Referencia (Opcional):</label>
+                <label for="store-checkout-reference">N° de Operación / Referencia (Opcional):</label>
                 <input type="text" id="store-checkout-reference" class="form-control" placeholder="Ej: 981240 / POS-4412">
             </div>
 
@@ -208,7 +209,7 @@ require __DIR__ . '/../layouts/sidebar.php';
 <!-- MODAL: RECIBO / VOUCHER TÉRMICO TRAS VENTA DIRECTA POS -->
 <div id="modal-store-receipt" class="modal">
     <div class="modal-content" style="max-width: 520px; background: var(--bg-card);">
-        <span class="close" onclick="closeModal('modal-store-receipt')">&times;</span>
+        <button type="button" class="close" aria-label="Cerrar ventana" onclick="closeModal('modal-store-receipt')">&times;</button>
         <h3 style="color: #ffffff; margin-bottom: 0.8rem; font-size: 1.1rem;">🧾 Comprobante de Venta Emitido</h3>
 
         <iframe id="store-receipt-pdf-frame" src="" style="width: 100%; height: 60vh; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: #ffffff;"></iframe>
