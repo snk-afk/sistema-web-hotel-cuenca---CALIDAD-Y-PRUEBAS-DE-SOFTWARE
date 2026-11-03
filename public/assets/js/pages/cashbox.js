@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ─── LOAD CURRENT SHIFT ────────────────────────────────────
 
+
 async function loadCashboxShift() {
     try {
         const result = await apiFetch('/api/cashbox/current');
@@ -49,8 +50,8 @@ function renderActiveShift() {
     if (headerActions) headerActions.style.display = 'flex';
 
     const s = currentCashboxShift;
-    const initialCash = parseFloat(s.initial_cash) || 0;
-    const expectedCash = parseFloat(s.expected_cash) || 0;
+    const initialCash = Number.parseFloat(s.initial_cash) || 0;
+    const expectedCash = Number.parseFloat(s.expected_cash) || 0;
     const movements = s.movements || [];
 
     // Calculate Incomes & Expenses
@@ -59,7 +60,7 @@ function renderActiveShift() {
     let totalDigital = 0;
 
     movements.forEach(m => {
-        const amt = parseFloat(m.amount) || 0;
+        const amt = Number.parseFloat(m.amount) || 0;
         if (m.type === 'income') {
             totalIncomes += amt;
             if (m.payment_method !== 'cash') {
@@ -98,7 +99,7 @@ function renderActiveShift() {
 
         const amountClass = isIncome ? 'text-success' : 'text-danger';
         const sign = isIncome ? '+' : '−';
-        const amt = parseFloat(m.amount) || 0;
+        const amt = Number.parseFloat(m.amount) || 0;
 
         const methodLabels = {
             'cash': '💵 Efectivo',
@@ -129,7 +130,7 @@ function renderActiveShift() {
 async function handleOpenShiftSubmit(event) {
     event.preventDefault();
 
-    const initialCash = parseFloat(document.getElementById('open-initial-cash').value) || 0;
+    const initialCash = Number.parseFloat(document.getElementById('open-initial-cash').value) || 0;
     const notes = document.getElementById('open-shift-notes').value.trim() || null;
 
     const btn = document.getElementById('btn-submit-open-shift');
@@ -257,18 +258,18 @@ async function handleNewMovementSubmit(event) {
 function openCloseShiftModal() {
     if (!currentCashboxShift) return;
 
-    const initialCash = parseFloat(currentCashboxShift.initial_cash) || 0;
-    const expectedCash = parseFloat(currentCashboxShift.expected_cash) || 0;
+    const initialCash = Number.parseFloat(currentCashboxShift.initial_cash) || 0;
+    const expectedCash = Number.parseFloat(currentCashboxShift.expected_cash) || 0;
 
     document.getElementById('arqueo-initial-cash').textContent = `S/ ${initialCash.toFixed(2)}`;
     document.getElementById('arqueo-expected-cash').textContent = `S/ ${expectedCash.toFixed(2)}`;
 
     const declaredInput = document.getElementById('close-real-cash-declared');
     declaredInput.value = expectedCash.toFixed(2);
-    document.getElementById('close-real-yape-declared').value = (parseFloat(currentCashboxShift.expected_yape) || 0).toFixed(2);
-    document.getElementById('close-real-plin-declared').value = (parseFloat(currentCashboxShift.expected_plin) || 0).toFixed(2);
-    document.getElementById('close-real-card-declared').value = (parseFloat(currentCashboxShift.expected_card) || 0).toFixed(2);
-    document.getElementById('close-real-transfer-declared').value = (parseFloat(currentCashboxShift.expected_transfer) || 0).toFixed(2);
+    document.getElementById('close-real-yape-declared').value = (Number.parseFloat(currentCashboxShift.expected_yape) || 0).toFixed(2);
+    document.getElementById('close-real-plin-declared').value = (Number.parseFloat(currentCashboxShift.expected_plin) || 0).toFixed(2);
+    document.getElementById('close-real-card-declared').value = (Number.parseFloat(currentCashboxShift.expected_card) || 0).toFixed(2);
+    document.getElementById('close-real-transfer-declared').value = (Number.parseFloat(currentCashboxShift.expected_transfer) || 0).toFixed(2);
 
     calculateArqueoDifference();
     openModal('modal-close-shift');
@@ -277,9 +278,9 @@ function openCloseShiftModal() {
 function calculateArqueoDifference() {
     if (!currentCashboxShift) return;
 
-    const expectedCash = parseFloat(currentCashboxShift.expected_cash) || 0;
+    const expectedCash = Number.parseFloat(currentCashboxShift.expected_cash) || 0;
     const declaredInput = document.getElementById('close-real-cash-declared');
-    const declaredCash = parseFloat(declaredInput.value) || 0;
+    const declaredCash = Number.parseFloat(declaredInput.value) || 0;
 
     const diff = declaredCash - expectedCash;
     const displayBox = document.getElementById('arqueo-diff-display');
@@ -299,11 +300,11 @@ function calculateArqueoDifference() {
 async function handleCloseShiftModalSubmit(event) {
     event.preventDefault();
 
-    const declaredCash = parseFloat(document.getElementById('close-real-cash-declared').value) || 0;
-    const declaredYape = parseFloat(document.getElementById('close-real-yape-declared').value) || 0;
-    const declaredPlin = parseFloat(document.getElementById('close-real-plin-declared').value) || 0;
-    const declaredCard = parseFloat(document.getElementById('close-real-card-declared').value) || 0;
-    const declaredTransfer = parseFloat(document.getElementById('close-real-transfer-declared').value) || 0;
+    const declaredCash = Number.parseFloat(document.getElementById('close-real-cash-declared').value) || 0;
+    const declaredYape = Number.parseFloat(document.getElementById('close-real-yape-declared').value) || 0;
+    const declaredPlin = Number.parseFloat(document.getElementById('close-real-plin-declared').value) || 0;
+    const declaredCard = Number.parseFloat(document.getElementById('close-real-card-declared').value) || 0;
+    const declaredTransfer = Number.parseFloat(document.getElementById('close-real-transfer-declared').value) || 0;
     const notes = document.getElementById('close-shift-notes').value.trim() || null;
 
     const btn = document.getElementById('btn-submit-close-shift');
@@ -413,10 +414,10 @@ function renderShiftsHistory(shifts) {
             }
         }
 
-        const initialCash = parseFloat(s.initial_cash) || 0;
-        const expectedCash = parseFloat(s.expected_cash) || 0;
-        const declaredCash = s.real_cash_declared !== null ? parseFloat(s.real_cash_declared) : null;
-        const diff = s.difference !== null ? parseFloat(s.difference) : null;
+        const initialCash = Number.parseFloat(s.initial_cash) || 0;
+        const expectedCash = Number.parseFloat(s.expected_cash) || 0;
+        const declaredCash = s.real_cash_declared !== null ? Number.parseFloat(s.real_cash_declared) : null;
+        const diff = s.difference !== null ? Number.parseFloat(s.difference) : null;
 
         let diffHtml = '<span class="text-muted">---</span>';
         if (diff !== null) {
@@ -466,15 +467,15 @@ async function openShiftDetailModal(shiftId) {
         document.getElementById('detail-shift-user').textContent = `Usuario #${s.user_id}`;
         document.getElementById('detail-shift-opened-at').textContent = s.opened_at || '---';
         document.getElementById('detail-shift-closed-at').textContent = s.closed_at || 'En curso (Abierto)';
-        document.getElementById('detail-shift-initial-cash').textContent = `S/ ${(parseFloat(s.initial_cash) || 0).toFixed(2)}`;
-        document.getElementById('detail-shift-expected-cash').textContent = `S/ ${(parseFloat(s.expected_cash) || 0).toFixed(2)}`;
+        document.getElementById('detail-shift-initial-cash').textContent = `S/ ${(Number.parseFloat(s.initial_cash) || 0).toFixed(2)}`;
+        document.getElementById('detail-shift-expected-cash').textContent = `S/ ${(Number.parseFloat(s.expected_cash) || 0).toFixed(2)}`;
         document.getElementById('detail-shift-declared-cash').textContent = s.real_cash_declared !== null
-            ? `S/ ${(parseFloat(s.real_cash_declared) || 0).toFixed(2)}`
+            ? `S/ ${(Number.parseFloat(s.real_cash_declared) || 0).toFixed(2)}`
             : 'No declarado';
 
         const diffBox = document.getElementById('detail-shift-diff-box');
         if (s.difference !== null) {
-            const diff = parseFloat(s.difference) || 0;
+            const diff = Number.parseFloat(s.difference) || 0;
             if (Math.abs(diff) < 0.01) {
                 diffBox.className = 'arqueo-difference-box balanced mb-3';
                 diffBox.textContent = '✅ DIFERENCIA: S/ 0.00 (CUADRADO PERFECTO)';
@@ -511,7 +512,7 @@ async function openShiftDetailModal(shiftId) {
                     ? '<span class="badge-income">💰 Ingreso (+)</span>'
                     : '<span class="badge-expense">💸 Egreso (−)</span>';
                 const sign = isIncome ? '+' : '−';
-                const amt = parseFloat(m.amount) || 0;
+                const amt = Number.parseFloat(m.amount) || 0;
                 const amtClass = isIncome ? 'text-success' : 'text-danger';
 
                 mHtml += `

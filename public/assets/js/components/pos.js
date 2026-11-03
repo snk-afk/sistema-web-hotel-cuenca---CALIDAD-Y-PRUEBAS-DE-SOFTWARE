@@ -15,8 +15,8 @@ async function loadDrawerPOSProducts() {
                         </div>
                     </div>
                     <div class="ns-room-modal__product-footer ns-drawer__product-footer">
-                        <div class="ns-room-modal__product-price ns-drawer__product-price">S/ ${parseFloat(p.sale_price).toFixed(2)}</div>
-                        <button class="ns-room-modal__btn ns-room-modal__btn--primary" style="width: auto; padding: 6px 14px; font-size: 0.82rem;" onclick="handleDrawerAddPOSProduct(${p.id}, '${p.name.replace(/'/g, "\\'")}', ${p.sale_price})">➕ Cargar</button>
+                        <div class="ns-room-modal__product-price ns-drawer__product-price">S/ ${Number.parseFloat(p.sale_price).toFixed(2)}</div>
+                        <button class="ns-room-modal__btn ns-room-modal__btn--primary" style="width: auto; padding: 6px 14px; font-size: 0.82rem;" onclick="handleDrawerAddPOSProduct(${p.id}, '${p.name.replace(/'/g, "\\'")}', ${Number.parseFloat(p.sale_price).toFixed(2)   })">➕ Cargar</button>
                     </div>
                 </div>
             `).join('');
@@ -44,7 +44,7 @@ async function handleDrawerAddPOSProduct(productId, productName, salePrice) {
         });
 
         if (res.ok) {
-            showToast(`✅ Cargado a Habitación: ${productName} (S/ ${parseFloat(salePrice).toFixed(2)})`);
+            showToast(`✅ Cargado a Habitación: ${productName} (S/ ${Number.parseFloat(salePrice).toFixed(2)})`);
             if (typeof loadDrawerFolioData === 'function') {
                 loadDrawerFolioData(currentDrawerRoomId);
             }

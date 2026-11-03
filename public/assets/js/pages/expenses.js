@@ -32,8 +32,8 @@ async function loadExpensesAndIncomesData() {
 }
 
 function updateExpensesMetrics() {
-    const totalExpenses = expensesList.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
-    const totalIncomes = otherIncomesList.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
+    const totalExpenses = expensesList.reduce((sum, item) => sum + (Number.parseFloat(item.amount) || 0), 0);
+    const totalIncomes = otherIncomesList.reduce((sum, item) => sum + (Number.parseFloat(item.amount) || 0), 0);
     const netBalance = totalIncomes - totalExpenses;
 
     document.getElementById('metric-total-expenses').textContent = `S/ ${totalExpenses.toFixed(2)}`;
@@ -95,7 +95,7 @@ function renderExpensesTable() {
     expensesList.forEach((exp, idx) => {
         const cat = categoryLabels[exp.category] || exp.category;
         const method = methodLabels[exp.payment_method] || exp.payment_method;
-        const amount = parseFloat(exp.amount) || 0;
+        const amount = Number.parseFloat(exp.amount) || 0;
         const searchStr = `${exp.id} ${exp.concept} ${exp.category} ${exp.supplier_name || ''} ${exp.receipt_number || ''}`.toLowerCase();
 
         html += `
@@ -141,7 +141,7 @@ function renderIncomesTable() {
     otherIncomesList.forEach((inc, idx) => {
         const cat = categoryLabels[inc.category] || inc.category;
         const method = methodLabels[inc.payment_method] || inc.payment_method;
-        const amount = parseFloat(inc.amount) || 0;
+        const amount = Number.parseFloat(inc.amount) || 0;
         const searchStr = `${inc.id} ${inc.concept} ${inc.category} ${inc.notes || ''}`.toLowerCase();
 
         html += `
@@ -179,7 +179,7 @@ async function handleCreateExpenseSubmit(event) {
     const concept = document.getElementById('expense-concept').value.trim();
     const supplier = document.getElementById('expense-supplier').value.trim() || null;
     const receipt = document.getElementById('expense-receipt').value.trim() || null;
-    const amount = parseFloat(document.getElementById('expense-amount').value) || 0;
+    const amount = Number.parseFloat(document.getElementById('expense-amount').value) || 0;
     const paymentMethod = document.getElementById('expense-payment-method').value;
 
     if (!concept || amount <= 0) {

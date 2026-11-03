@@ -15,8 +15,8 @@ function initStayTimers() {
         const display = container.querySelector('.timer-display');
         if (!display) return;
 
-        let secondsRemaining = parseInt(container.getAttribute('data-seconds'), 10);
-        if (isNaN(secondsRemaining)) {
+        let secondsRemaining = Number.parseInt(container.getAttribute('data-seconds'), 10);
+        if (Number.isNaN(secondsRemaining)) {
             display.textContent = '---';
             return;
         }

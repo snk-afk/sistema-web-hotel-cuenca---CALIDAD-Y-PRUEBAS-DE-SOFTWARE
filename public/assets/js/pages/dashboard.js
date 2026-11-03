@@ -13,7 +13,7 @@ function updateRackStatsCounts() {
 
     cards.forEach(card => {
         const st = card.getAttribute('data-status');
-        const isOverdue = card.getAttribute('data-is-overdue') === '1' || parseInt(card.getAttribute('data-seconds-remaining') || '1', 10) <= 0;
+        const isOverdue = card.getAttribute('data-is-overdue') === '1' || Number.parseInt(card.getAttribute('data-seconds-remaining') || '1', 10) <= 0;
 
         if (st === 'free') {
             free++;
@@ -71,7 +71,7 @@ function filterRackRooms() {
         const guestName = (card.getAttribute('data-guest-name') || '').toLowerCase();
         const guestDoc = (card.getAttribute('data-guest-doc') || '').toLowerCase();
         const status = (card.getAttribute('data-status') || '').toLowerCase();
-        const isOverdue = card.getAttribute('data-is-overdue') === '1' || parseInt(card.getAttribute('data-seconds-remaining') || '1', 10) <= 0;
+        const isOverdue = card.getAttribute('data-is-overdue') === '1' || Number.parseInt(card.getAttribute('data-seconds-remaining') || '1', 10) <= 0;
 
         const matchesQuery = query === '' || 
             roomNum.includes(query) || 
