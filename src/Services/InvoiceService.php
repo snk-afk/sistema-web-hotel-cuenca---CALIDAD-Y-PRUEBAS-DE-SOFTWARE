@@ -177,11 +177,14 @@ final class InvoiceService
         ];
         $pdf_content = PdfGenerator::generateInvoicePdf($document_data);
         $voucher_content = PdfGenerator::generateThermalVoucherPdf($document_data);
+        $xml_flags = ENT_XML1 | ENT_QUOTES | ENT_SUBSTITUTE | ENT_DISALLOWED;
+        $xml_number = htmlspecialchars($full_number, $xml_flags, 'UTF-8');
+        $xml_customer = htmlspecialchars($customer_name, $xml_flags, 'UTF-8');
         $xml_content = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
             . "<Invoice xmlns=\"urn:oasis:names:specification:ubl:schema:xsd:Invoice-2\">\n"
-            . "  <ID>{$full_number}</ID>\n"
+            . "  <ID>{$xml_number}</ID>\n"
             . '  <IssueDate>' . date('Y-m-d') . "</IssueDate>\n"
-            . "  <Customer>{$customer_name}</Customer>\n"
+            . "  <Customer>{$xml_customer}</Customer>\n"
             . "  <TotalAmount>{$total_amount}</TotalAmount>\n"
             . "</Invoice>";
 

@@ -58,6 +58,10 @@ final class StoreController
         }
 
         try {
+            if (preg_match("~\A[\p{L}\p{M}\p{N}\p{Zs}.,'’&()/°ºª#:+%_\p{Pd}]+\z~u", $customer_name) !== 1) {
+                throw new InvalidArgumentException('El nombre o razón social contiene caracteres no permitidos.');
+            }
+
             $sale = $this->store_service->sellDirectPOS(
                 user_id: $user_id,
                 items_payload: $items,

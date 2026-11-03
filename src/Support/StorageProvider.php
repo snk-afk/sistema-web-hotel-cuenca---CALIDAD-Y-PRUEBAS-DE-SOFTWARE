@@ -67,9 +67,9 @@ final class StorageProvider
         }
 
         $files = [
-            [$full_number . '.pdf', $pdf_content],
-            [$full_number . '.xml', $xml_content],
-            [$full_number . '_voucher.pdf', $voucher_content],
+            '.pdf' => $pdf_content,
+            '.xml' => $xml_content,
+            '_voucher.pdf' => $voucher_content,
         ];
         $written_paths = [];
         try {
@@ -77,8 +77,8 @@ final class StorageProvider
                 throw new RuntimeException('No se pudo preparar el almacenamiento local.');
             }
 
-            foreach ($files as [$filename, $content]) {
-                $target = $this->root_path . '/' . $filename;
+            foreach ($files as $suffix => $content) {
+                $target = $this->root_path . DIRECTORY_SEPARATOR . $full_number . $suffix;
                 $temporary = tempnam($this->root_path, '.upload-');
                 if ($temporary === false || file_put_contents($temporary, $content) !== strlen($content)) {
                     throw new RuntimeException('No se pudo escribir un archivo de comprobante.');

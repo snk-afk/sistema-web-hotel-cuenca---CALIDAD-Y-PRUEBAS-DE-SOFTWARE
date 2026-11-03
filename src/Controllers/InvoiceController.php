@@ -67,6 +67,10 @@ final class InvoiceController
         }
 
         try {
+            if (preg_match("~\\A[\\p{L}\\p{M}\\p{N}\\p{Zs}.,'’&()/°ºª#:+%_\\p{Pd}]*\\z~u", $customer_name) !== 1) {
+                throw new InvalidArgumentException('El nombre o razón social contiene caracteres no permitidos.');
+            }
+
             $invoice = $this->invoice_service->issueInvoice(
                 document_type: $document_type,
                 customer_document_type: $customer_document_type,
