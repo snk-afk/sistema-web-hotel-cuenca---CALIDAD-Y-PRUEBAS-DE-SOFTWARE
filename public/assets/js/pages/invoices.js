@@ -5,13 +5,13 @@
 let activeInvoiceTab = 'all';
 let allInvoicesList = [];
 
-document.addEventListener('DOMContentLoaded', () => {
-    
-loadInvoicesData().catch(error => {
-    console.error('Error al cargar los comprobantes:', error);
-});
+document.addEventListener('DOMContentLoaded', refreshInvoices);
 
-});
+function refreshInvoices() {
+    loadInvoicesData().catch(error => {
+        console.error('Error al cargar los comprobantes:', error);
+    });
+}
 
 async function loadInvoicesData() {
     try {
@@ -215,10 +215,15 @@ function toggleManualInvoiceDocFields() {
     }
 }
 
-function recalculateManualInvoiceTotal() {
+function getManualInvoiceAmounts() {
     const qty = Number.parseInt(document.getElementById('issue-item-qty').value, 10) || 1;
     const price = Number.parseFloat(document.getElementById('issue-item-price').value) || 0;
     const total = qty * price;
+    return { qty, price, total };
+}
+
+function recalculateManualInvoiceTotal() {
+    const { total } = getManualInvoiceAmounts();
 
     const taxable = total / 1.18;
     const igv = total - taxable;
@@ -238,9 +243,7 @@ async function handleIssueInvoiceSubmit(event) {
     const customerAddress = document.getElementById('issue-customer-address').value.trim() || null;
 
     const itemDesc = document.getElementById('issue-item-description').value.trim();
-    const itemQty = Number.parseInt(document.getElementById('issue-item-qty').value, 10) || 1;
-    const itemPrice = Number.parseFloat(document.getElementById('issue-item-price').value) || 0;
-    const totalAmount = itemQty * itemPrice;
+    const { qty: itemQty, price: itemPrice, total: totalAmount } = getManualInvoiceAmounts();
 
     if (!customerDocNum || !customerName || !itemDesc || totalAmount <= 0) {
         if (typeof showToast === 'function') {
@@ -287,10 +290,7 @@ async function handleIssueInvoiceSubmit(event) {
             if (typeof showToast === 'function') {
                 showToast(`✅ Comprobante ${result.data.data?.full_number || ''} emitido y aceptado por SUNAT.`, 'success');
             }
-            
-loadInvoicesData().catch(error => {
-    console.error('Error al cargar los comprobantes:', error);
-});
+            refreshInvoices();
 
         } else {
             if (typeof showToast === 'function') {

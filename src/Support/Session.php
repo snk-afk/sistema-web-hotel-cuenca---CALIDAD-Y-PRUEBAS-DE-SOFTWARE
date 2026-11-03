@@ -137,15 +137,14 @@ final class Session
             $params = session_get_cookie_params();
             $session_name = session_name();
             if (is_string($session_name)) {
-                setcookie(
-                    $session_name,
-                    '',
-                    time() - 42000,
-                    $params['path'],
-                    $params['domain'],
-                    true,
-                    $params['httponly'],
-                );
+                setcookie($session_name, '', [
+                    'expires' => time() - 42000,
+                    'path' => $params['path'],
+                    'domain' => $params['domain'],
+                    'secure' => true,
+                    'httponly' => true,
+                    'samesite' => 'Lax',
+                ]);
             }
         }
 

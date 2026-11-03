@@ -7,10 +7,8 @@ let housekeepingTasks = [];
 let allRoomsList = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-    
-loadHousekeepingData().catch(error => {
-    console.error('Error al cargar los datos de limpieza:', error);
-});
+
+    refreshHousekeepingTasks();
 
     
 loadRoomsCatalog().catch(error => {
@@ -18,6 +16,12 @@ loadRoomsCatalog().catch(error => {
 });
 
 });
+
+function refreshHousekeepingTasks() {
+    loadHousekeepingData().catch(error => {
+        console.error('Error al cargar los datos de limpieza:', error);
+    });
+}
 
 async function loadHousekeepingData() {
     try {
@@ -166,70 +170,34 @@ function filterTasksTable() {
 
 // ─── ACTIONS: START & COMPLETE ─────────────────────────────
 
-async function startHousekeepingTask(taskId) {
+function startHousekeepingTask(taskId) {
+    return updateHousekeepingTask(taskId, 'start', 'iniciar', '✅ Tarea de limpieza iniciada.');
+}
+
+function completeHousekeepingTask(taskId) {
+    return updateHousekeepingTask(taskId, 'complete', 'completar', '✅ Tarea completada y habitación liberada a DISPONIBLE.');
+}
+
+async function updateHousekeepingTask(taskId, action, verb, successMessage) {
     try {
-        const result = await apiFetch('/api/housekeeping/tasks', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                action: 'start',
-                task_id: taskId,
-            })
-        });
-
-
+        const result = await postHousekeepingTask({ action, task_id: taskId });
         if (result.ok && result.data.status === 'success') {
-            if (typeof showToast === 'function') {
-                showToast('✅ Tarea de limpieza iniciada.', 'success');
-            }
-            
-loadHousekeepingData().catch(error => {
-    console.error('Error al cargar los datos de limpieza:', error);
-});
-
-        } else {
-            if (typeof showToast === 'function') {
-                showToast(`❌ ${result.data.message || 'Error al iniciar tarea.'}`, 'error');
-            }
+            if (typeof showToast === 'function') showToast(successMessage, 'success');
+            refreshHousekeepingTasks();
+        } else if (typeof showToast === 'function') {
+            showToast(`❌ ${result.data.message || `Error al ${verb} tarea.`}`, 'error');
         }
     } catch (e) {
-        if (typeof showToast === 'function') {
-            showToast('❌ Error de conexión al iniciar tarea.', 'error');
-        }
+        if (typeof showToast === 'function') showToast(`❌ Error de conexión al ${verb} tarea.`, 'error');
     }
 }
 
-async function completeHousekeepingTask(taskId) {
-    try {
-        const result = await apiFetch('/api/housekeeping/tasks', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                action: 'complete',
-                task_id: taskId,
-            })
-        });
-
-
-        if (result.ok && result.data.status === 'success') {
-            if (typeof showToast === 'function') {
-                showToast('✅ Tarea completada y habitación liberada a DISPONIBLE.', 'success');
-            }
-            
-loadHousekeepingData().catch(error => {
-    console.error('Error al cargar los datos de limpieza:', error);
-});
-
-        } else {
-            if (typeof showToast === 'function') {
-                showToast(`❌ ${result.data.message || 'Error al completar tarea.'}`, 'error');
-            }
-        }
-    } catch (e) {
-        if (typeof showToast === 'function') {
-            showToast('❌ Error de conexión al completar tarea.', 'error');
-        }
-    }
+function postHousekeepingTask(payload) {
+    return apiFetch('/api/housekeeping/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+    });
 }
 
 // ─── CREATE TASK ───────────────────────────────────────────
@@ -256,17 +224,12 @@ async function handleCreateTaskSubmit(event) {
     }
 
     try {
-        const result = await apiFetch('/api/housekeeping/tasks', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                room_id: roomId,
-                task_type: taskType,
-                priority: priority,
-                notes: notes,
-            }),
+        const result = await postHousekeepingTask({
+            room_id: roomId,
+            task_type: taskType,
+            priority,
+            notes,
         });
-
 
         if (result.ok && result.data.status === 'success') {
             closeModal('modal-create-task');
@@ -274,10 +237,8 @@ async function handleCreateTaskSubmit(event) {
             if (typeof showToast === 'function') {
                 showToast('✅ Tarea registrada exitosamente.', 'success');
             }
-            
-loadHousekeepingData().catch(error => {
-    console.error('Error al cargar los datos de limpieza:', error);
-});
+
+            refreshHousekeepingTasks();
 
         } else {
             if (typeof showToast === 'function') {

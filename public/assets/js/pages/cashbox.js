@@ -377,22 +377,26 @@ loadCashboxShift().catch(error => {
 
 // ─── LOAD SHIFTS HISTORY (SPEC-0040) ──────────────────────
 
+function getCashboxHistoryQuery() {
+    const filters = {
+        status: document.getElementById('history-filter-status')?.value,
+        user_id: document.getElementById('history-filter-user-id')?.value.trim(),
+        from: document.getElementById('history-filter-from')?.value,
+        to: document.getElementById('history-filter-to')?.value,
+    };
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(filters)) {
+        if (value) params.set(key, value);
+    }
+    const query = params.toString();
+    return query ? `?${query}` : '';
+}
+
 async function loadCashboxHistory() {
     const tbody = document.getElementById('table-cashbox-history-body');
     if (!tbody) return;
 
-    const status = document.getElementById('history-filter-status') ? document.getElementById('history-filter-status').value : '';
-    const userId = document.getElementById('history-filter-user-id') ? document.getElementById('history-filter-user-id').value.trim() : '';
-    const from = document.getElementById('history-filter-from') ? document.getElementById('history-filter-from').value : '';
-    const to = document.getElementById('history-filter-to') ? document.getElementById('history-filter-to').value : '';
-
-    const params = new URLSearchParams();
-    if (status) params.append('status', status);
-    if (userId) params.append('user_id', userId);
-    if (from) params.append('from', from);
-    if (to) params.append('to', to);
-
-    const queryString = params.toString() ? `?${params.toString()}` : '';
+    const queryString = getCashboxHistoryQuery();
 
     try {
         const result = await apiFetch(`/api/cashbox/shifts${queryString}`);
@@ -557,34 +561,12 @@ async function openShiftDetailModal(shiftId) {
 }
 
 function exportCashboxHistoryCsv() {
-    const status = document.getElementById('history-filter-status') ? document.getElementById('history-filter-status').value : '';
-    const userId = document.getElementById('history-filter-user-id') ? document.getElementById('history-filter-user-id').value.trim() : '';
-    const from = document.getElementById('history-filter-from') ? document.getElementById('history-filter-from').value : '';
-    const to = document.getElementById('history-filter-to') ? document.getElementById('history-filter-to').value : '';
-
-    const params = new URLSearchParams();
-    if (status) params.append('status', status);
-    if (userId) params.append('user_id', userId);
-    if (from) params.append('from', from);
-    if (to) params.append('to', to);
-
-    const queryString = params.toString() ? `?${params.toString()}` : '';
+    const queryString = getCashboxHistoryQuery();
     window.location.href = `/api/cashbox/export/csv${queryString}`;
 }
 
 function exportCashboxHistoryPdf() {
-    const status = document.getElementById('history-filter-status') ? document.getElementById('history-filter-status').value : '';
-    const userId = document.getElementById('history-filter-user-id') ? document.getElementById('history-filter-user-id').value.trim() : '';
-    const from = document.getElementById('history-filter-from') ? document.getElementById('history-filter-from').value : '';
-    const to = document.getElementById('history-filter-to') ? document.getElementById('history-filter-to').value : '';
-
-    const params = new URLSearchParams();
-    if (status) params.append('status', status);
-    if (userId) params.append('user_id', userId);
-    if (from) params.append('from', from);
-    if (to) params.append('to', to);
-
-    const queryString = params.toString() ? `?${params.toString()}` : '';
+    const queryString = getCashboxHistoryQuery();
     window.open(`/api/cashbox/export/pdf${queryString}`, '_blank');
 }
 
