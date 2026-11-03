@@ -167,47 +167,7 @@ final class PdfGenerator
         $stream->text(40, 9, self::encode('HOTEL CS-HOTEL | Sistema de Gestión Hotelera'), 8);
         $stream->text($page_width - 200, 9, self::encode('¡Gracias por su preferencia!'), 8, 'F2');
 
-        $content_stream = $stream->getContent();
-        $stream_len = strlen($content_stream);
-
-        // === Build PDF objects ===
-        // 1: Catalog, 2: Pages, 3: Page, 4: Content stream,
-        // 5: Helvetica, 6: Helvetica-Bold, 7: QR Image XObject, 8: QR image data
-        $obj1 = "1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n";
-        $obj2 = "2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n";
-        $obj3 = "3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {$page_width} {$page_height}] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> /XObject << /QR1 7 0 R >> >> >>\nendobj\n";
-        $obj4 = "4 0 obj\n<< /Length {$stream_len} >>\nstream\n{$content_stream}\nendstream\nendobj\n";
-        $obj5 = "5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>\nendobj\n";
-        $obj6 = "6 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>\nendobj\n";
-        $obj7 = $qr_image_obj['header'];
-        $obj8 = $qr_image_obj['data'];
-
-        $header = "%PDF-1.4\n";
-        $offset1 = strlen($header);
-        $offset2 = $offset1 + strlen($obj1);
-        $offset3 = $offset2 + strlen($obj2);
-        $offset4 = $offset3 + strlen($obj3);
-        $offset5 = $offset4 + strlen($obj4);
-        $offset6 = $offset5 + strlen($obj5);
-        $offset7 = $offset6 + strlen($obj6);
-        $offset8 = $offset7 + strlen($obj7);
-        $xref_offset = $offset8 + strlen($obj8);
-
-        $xref = sprintf(
-            "xref\n0 9\n0000000000 65535 f \n%010d 00000 n \n%010d 00000 n \n%010d 00000 n \n%010d 00000 n \n%010d 00000 n \n%010d 00000 n \n%010d 00000 n \n%010d 00000 n \n",
-            $offset1,
-            $offset2,
-            $offset3,
-            $offset4,
-            $offset5,
-            $offset6,
-            $offset7,
-            $offset8
-        );
-
-        $trailer = "trailer\n<< /Size 9 /Root 1 0 R >>\nstartxref\n{$xref_offset}\n%%EOF";
-
-        return $header . $obj1 . $obj2 . $obj3 . $obj4 . $obj5 . $obj6 . $obj7 . $obj8 . $xref . $trailer;
+        return self::buildPagePdf($page_width, $page_height, $stream->getContent(), $qr_image_obj);
     }
 
     /**
@@ -400,45 +360,7 @@ final class PdfGenerator
         // -- Footer --
         $stream->text($margin, $cursor_y, self::encode('¡Gracias por su preferencia!'), 7, 'F2');
 
-        $content_stream = $stream->getContent();
-        $stream_len = strlen($content_stream);
-
-        // === Build PDF objects ===
-        $obj1 = "1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n";
-        $obj2 = "2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n";
-        $obj3 = "3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {$page_width} {$page_height}] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> /XObject << /QR1 7 0 R >> >> >>\nendobj\n";
-        $obj4 = "4 0 obj\n<< /Length {$stream_len} >>\nstream\n{$content_stream}\nendstream\nendobj\n";
-        $obj5 = "5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>\nendobj\n";
-        $obj6 = "6 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>\nendobj\n";
-        $obj7 = $qr_image_obj['header'];
-        $obj8 = $qr_image_obj['data'];
-
-        $header = "%PDF-1.4\n";
-        $offset1 = strlen($header);
-        $offset2 = $offset1 + strlen($obj1);
-        $offset3 = $offset2 + strlen($obj2);
-        $offset4 = $offset3 + strlen($obj3);
-        $offset5 = $offset4 + strlen($obj4);
-        $offset6 = $offset5 + strlen($obj5);
-        $offset7 = $offset6 + strlen($obj6);
-        $offset8 = $offset7 + strlen($obj7);
-        $xref_offset = $offset8 + strlen($obj8);
-
-        $xref = sprintf(
-            "xref\n0 9\n0000000000 65535 f \n%010d 00000 n \n%010d 00000 n \n%010d 00000 n \n%010d 00000 n \n%010d 00000 n \n%010d 00000 n \n%010d 00000 n \n%010d 00000 n \n",
-            $offset1,
-            $offset2,
-            $offset3,
-            $offset4,
-            $offset5,
-            $offset6,
-            $offset7,
-            $offset8
-        );
-
-        $trailer = "trailer\n<< /Size 9 /Root 1 0 R >>\nstartxref\n{$xref_offset}\n%%EOF";
-
-        return $header . $obj1 . $obj2 . $obj3 . $obj4 . $obj5 . $obj6 . $obj7 . $obj8 . $xref . $trailer;
+        return self::buildPagePdf($page_width, $page_height, $stream->getContent(), $qr_image_obj);
     }
 
     /**
@@ -762,39 +684,7 @@ final class PdfGenerator
         $stream->text(40, 10, self::encode('HOTEL CS-HOTEL | Sistema Integral de Gestión Hotelera & Auditoría'), 8);
         $stream->text($page_width - 160, 10, self::encode('Documento Confidencial'), 8, 'F2');
 
-        $content_stream = $stream->getContent();
-        $stream_len = strlen($content_stream);
-
-        // === Build PDF objects ===
-        $obj1 = "1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n";
-        $obj2 = "2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n";
-        $obj3 = "3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {$page_width} {$page_height}] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>\nendobj\n";
-        $obj4 = "4 0 obj\n<< /Length {$stream_len} >>\nstream\n{$content_stream}\nendstream\nendobj\n";
-        $obj5 = "5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>\nendobj\n";
-        $obj6 = "6 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>\nendobj\n";
-
-        $header = "%PDF-1.4\n";
-        $offset1 = strlen($header);
-        $offset2 = $offset1 + strlen($obj1);
-        $offset3 = $offset2 + strlen($obj2);
-        $offset4 = $offset3 + strlen($obj3);
-        $offset5 = $offset4 + strlen($obj4);
-        $offset6 = $offset5 + strlen($obj5);
-        $xref_offset = $offset6 + strlen($obj6);
-
-        $xref = sprintf(
-            "xref\n0 7\n0000000000 65535 f \n%010d 00000 n \n%010d 00000 n \n%010d 00000 n \n%010d 00000 n \n%010d 00000 n \n%010d 00000 n \n",
-            $offset1,
-            $offset2,
-            $offset3,
-            $offset4,
-            $offset5,
-            $offset6
-        );
-
-        $trailer = "trailer\n<< /Size 7 /Root 1 0 R >>\nstartxref\n{$xref_offset}\n%%EOF";
-
-        return $header . $obj1 . $obj2 . $obj3 . $obj4 . $obj5 . $obj6 . $xref . $trailer;
+        return self::buildPagePdf($page_width, $page_height, $stream->getContent());
     }
 
     /**
@@ -951,37 +841,35 @@ final class PdfGenerator
         $stream->text(40, 10, self::encode('HOTEL CS-HOTEL | Sistema Integral de Gestión Hotelera & Auditoría'), 8);
         $stream->text($page_width - 160, 10, self::encode('Documento Confidencial'), 8, 'F2');
 
-        $content_stream = $stream->getContent();
-        $stream_len = strlen($content_stream);
+        return self::buildPagePdf($page_width, $page_height, $stream->getContent());
+    }
 
+    /** @param array{header: string, data: string}|null $image */
+    private static function buildPagePdf(int|float $page_width, int|float $page_height, string $content_stream, ?array $image = null): string
+    {
+        $stream_len = strlen($content_stream);
+        $image_resource = $image === null ? '' : ' /XObject << /QR1 7 0 R >>';
         $obj1 = "1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n";
         $obj2 = "2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n";
-        $obj3 = "3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {$page_width} {$page_height}] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>\nendobj\n";
+        $obj3 = "3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {$page_width} {$page_height}] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >>{$image_resource} >> >>\nendobj\n";
         $obj4 = "4 0 obj\n<< /Length {$stream_len} >>\nstream\n{$content_stream}\nendstream\nendobj\n";
         $obj5 = "5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>\nendobj\n";
         $obj6 = "6 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>\nendobj\n";
+        $objects = [$obj1, $obj2, $obj3, $obj4, $obj5, $obj6];
+        if ($image !== null) {
+            $objects[] = $image['header'];
+            $objects[] = $image['data'];
+        }
 
-        $header = "%PDF-1.4\n";
-        $offset1 = strlen($header);
-        $offset2 = $offset1 + strlen($obj1);
-        $offset3 = $offset2 + strlen($obj2);
-        $offset4 = $offset3 + strlen($obj3);
-        $offset5 = $offset4 + strlen($obj4);
-        $offset6 = $offset5 + strlen($obj5);
-        $xref_offset = $offset6 + strlen($obj6);
+        $pdf = "%PDF-1.4\n";
+        $size = count($objects) + 1;
+        $xref = "xref\n0 {$size}\n0000000000 65535 f \n";
+        foreach ($objects as $object) {
+            $xref .= sprintf("%010d 00000 n \n", strlen($pdf));
+            $pdf .= $object;
+        }
 
-        $xref = sprintf(
-            "xref\n0 7\n0000000000 65535 f \n%010d 00000 n \n%010d 00000 n \n%010d 00000 n \n%010d 00000 n \n%010d 00000 n \n%010d 00000 n \n",
-            $offset1,
-            $offset2,
-            $offset3,
-            $offset4,
-            $offset5,
-            $offset6
-        );
-
-        $trailer = "trailer\n<< /Size 7 /Root 1 0 R >>\nstartxref\n{$xref_offset}\n%%EOF";
-
-        return $header . $obj1 . $obj2 . $obj3 . $obj4 . $obj5 . $obj6 . $xref . $trailer;
+        $xref_offset = strlen($pdf);
+        return $pdf . $xref . "trailer\n<< /Size {$size} /Root 1 0 R >>\nstartxref\n{$xref_offset}\n%%EOF";
     }
 }

@@ -10,6 +10,9 @@ use PDO;
 
 final class RoomRepository
 {
+    private const SELECT_ROOMS = 'SELECT id, room_category_id, number, status, floor, description, created_at, updated_at
+             FROM rooms';
+
     private PDO $db;
     private RoomCategoryRepository $category_repository;
     private StayRepository $stay_repository;
@@ -27,8 +30,7 @@ final class RoomRepository
     public function findById(int $id): ?Room
     {
         $stmt = $this->db->prepare(
-            'SELECT id, room_category_id, number, status, floor, description, created_at, updated_at
-             FROM rooms
+            self::SELECT_ROOMS . '
              WHERE id = :id'
         );
 
@@ -40,21 +42,7 @@ final class RoomRepository
             return null;
         }
 
-        $category = $this->category_repository->findById((int) $row['room_category_id']);
-        $current_stay = $row['status'] === 'occupied' ? $this->stay_repository->findActiveByRoomId((int) $row['id']) : null;
-
-        return new Room(
-            id: (int) $row['id'],
-            room_category_id: (int) $row['room_category_id'],
-            number: $row['number'],
-            status: $row['status'],
-            floor: $row['floor'],
-            description: $row['description'],
-            created_at: $row['created_at'],
-            updated_at: $row['updated_at'],
-            category: $category,
-            current_stay: $current_stay,
-        );
+        return $this->hydrateRoom($row);
     }
 
     public function lockById(int $id): bool
@@ -73,8 +61,7 @@ final class RoomRepository
     public function findByNumber(string $number): ?Room
     {
         $stmt = $this->db->prepare(
-            'SELECT id, room_category_id, number, status, floor, description, created_at, updated_at
-             FROM rooms
+            self::SELECT_ROOMS . '
              WHERE number = :number'
         );
 
@@ -86,6 +73,32 @@ final class RoomRepository
             return null;
         }
 
+        return $this->hydrateRoom($row);
+    }
+
+    /**
+     * @return array<int, Room>
+     */
+    public function findAll(): array
+    {
+        $stmt = $this->db->query(
+            self::SELECT_ROOMS . '
+             ORDER BY number ASC'
+        );
+
+        if ($stmt === false) {
+            return [];
+        }
+
+        /** @var array<int, array{id: int|string, room_category_id: int|string, number: string, status: string, floor: ?string, description: ?string, created_at: string, updated_at: string}> $rows */
+        $rows = $stmt->fetchAll();
+
+        return array_map($this->hydrateRoom(...), $rows);
+    }
+
+    /** @param array{id: int|string, room_category_id: int|string, number: string, status: string, floor: ?string, description: ?string, created_at: string, updated_at: string} $row */
+    private function hydrateRoom(array $row): Room
+    {
         $category = $this->category_repository->findById((int) $row['room_category_id']);
         $current_stay = $row['status'] === 'occupied' ? $this->stay_repository->findActiveByRoomId((int) $row['id']) : null;
 
@@ -100,46 +113,6 @@ final class RoomRepository
             updated_at: $row['updated_at'],
             category: $category,
             current_stay: $current_stay,
-        );
-    }
-
-    /**
-     * @return array<int, Room>
-     */
-    public function findAll(): array
-    {
-        $stmt = $this->db->query(
-            'SELECT id, room_category_id, number, status, floor, description, created_at, updated_at
-             FROM rooms
-             ORDER BY number ASC'
-        );
-
-        if ($stmt === false) {
-            return [];
-        }
-
-        /** @var array<int, array{id: int|string, room_category_id: int|string, number: string, status: string, floor: ?string, description: ?string, created_at: string, updated_at: string}> $rows */
-        $rows = $stmt->fetchAll();
-
-        return array_map(
-            function (array $row): Room {
-                $category = $this->category_repository->findById((int) $row['room_category_id']);
-                $current_stay = $row['status'] === 'occupied' ? $this->stay_repository->findActiveByRoomId((int) $row['id']) : null;
-
-                return new Room(
-                    id: (int) $row['id'],
-                    room_category_id: (int) $row['room_category_id'],
-                    number: $row['number'],
-                    status: $row['status'],
-                    floor: $row['floor'],
-                    description: $row['description'],
-                    created_at: $row['created_at'],
-                    updated_at: $row['updated_at'],
-                    category: $category,
-                    current_stay: $current_stay,
-                );
-            },
-            $rows
         );
     }
 

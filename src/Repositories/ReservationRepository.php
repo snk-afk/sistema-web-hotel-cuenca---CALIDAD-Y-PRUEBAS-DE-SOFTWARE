@@ -10,6 +10,10 @@ use PDO;
 
 final class ReservationRepository
 {
+    private const SELECT_RESERVATIONS = 'SELECT id, room_id, guest_id, room_tariff_id, start_time, end_time,
+                    deposit_amount, status, notes, created_by_user_id, created_at, updated_at
+             FROM reservations';
+
     private PDO $db;
     private RoomRepository $room_repository;
     private GuestRepository $guest_repository;
@@ -30,9 +34,7 @@ final class ReservationRepository
     public function findById(int $id): ?Reservation
     {
         $stmt = $this->db->prepare(
-            'SELECT id, room_id, guest_id, room_tariff_id, start_time, end_time,
-                    deposit_amount, status, notes, created_by_user_id, created_at, updated_at
-             FROM reservations
+            self::SELECT_RESERVATIONS . '
              WHERE id = :id'
         );
 
@@ -44,27 +46,7 @@ final class ReservationRepository
             return null;
         }
 
-        $room = $this->room_repository->findById((int) $row['room_id']);
-        $guest = $this->guest_repository->findById((int) $row['guest_id']);
-        $tariff = $this->tariff_repository->findById((int) $row['room_tariff_id']);
-
-        return new Reservation(
-            id: (int) $row['id'],
-            room_id: (int) $row['room_id'],
-            guest_id: (int) $row['guest_id'],
-            room_tariff_id: (int) $row['room_tariff_id'],
-            reserved_check_in_at: $row['start_time'],
-            reserved_check_out_at: $row['end_time'],
-            advance_payment: (float) $row['deposit_amount'],
-            status: $row['status'],
-            notes: $row['notes'],
-            created_by_user_id: (int) $row['created_by_user_id'],
-            created_at: $row['created_at'],
-            updated_at: $row['updated_at'],
-            room: $room,
-            guest: $guest,
-            tariff: $tariff,
-        );
+        return $this->hydrateReservation($row);
     }
 
     public function lockById(int $id): bool
@@ -86,46 +68,12 @@ final class ReservationRepository
     public function findAllActive(): array
     {
         $stmt = $this->db->query(
-            'SELECT id, room_id, guest_id, room_tariff_id, start_time, end_time,
-                    deposit_amount, status, notes, created_by_user_id, created_at, updated_at
-             FROM reservations
+            self::SELECT_RESERVATIONS . '
              WHERE status IN ("pending", "confirmed")
              ORDER BY start_time ASC'
         );
 
-        if ($stmt === false) {
-            return [];
-        }
-
-        /** @var array<int, array{id: int|string, room_id: int|string, guest_id: int|string, room_tariff_id: int|string, start_time: string, end_time: string, deposit_amount: float|string, status: string, notes: ?string, created_by_user_id: int|string, created_at: string, updated_at: string}> $rows */
-        $rows = $stmt->fetchAll();
-
-        return array_map(
-            function (array $row): Reservation {
-                $room = $this->room_repository->findById((int) $row['room_id']);
-                $guest = $this->guest_repository->findById((int) $row['guest_id']);
-                $tariff = $this->tariff_repository->findById((int) $row['room_tariff_id']);
-
-                return new Reservation(
-                    id: (int) $row['id'],
-                    room_id: (int) $row['room_id'],
-                    guest_id: (int) $row['guest_id'],
-                    room_tariff_id: (int) $row['room_tariff_id'],
-                    reserved_check_in_at: $row['start_time'],
-                    reserved_check_out_at: $row['end_time'],
-                    advance_payment: (float) $row['deposit_amount'],
-                    status: $row['status'],
-                    notes: $row['notes'],
-                    created_by_user_id: (int) $row['created_by_user_id'],
-                    created_at: $row['created_at'],
-                    updated_at: $row['updated_at'],
-                    room: $room,
-                    guest: $guest,
-                    tariff: $tariff,
-                );
-            },
-            $rows
-        );
+        return $this->fetchReservations($stmt);
     }
 
     /**
@@ -134,45 +82,11 @@ final class ReservationRepository
     public function findAll(): array
     {
         $stmt = $this->db->query(
-            'SELECT id, room_id, guest_id, room_tariff_id, start_time, end_time,
-                    deposit_amount, status, notes, created_by_user_id, created_at, updated_at
-             FROM reservations
+            self::SELECT_RESERVATIONS . '
              ORDER BY start_time DESC, id DESC'
         );
 
-        if ($stmt === false) {
-            return [];
-        }
-
-        /** @var array<int, array{id: int|string, room_id: int|string, guest_id: int|string, room_tariff_id: int|string, start_time: string, end_time: string, deposit_amount: float|string, status: string, notes: ?string, created_by_user_id: int|string, created_at: string, updated_at: string}> $rows */
-        $rows = $stmt->fetchAll();
-
-        return array_map(
-            function (array $row): Reservation {
-                $room = $this->room_repository->findById((int) $row['room_id']);
-                $guest = $this->guest_repository->findById((int) $row['guest_id']);
-                $tariff = $this->tariff_repository->findById((int) $row['room_tariff_id']);
-
-                return new Reservation(
-                    id: (int) $row['id'],
-                    room_id: (int) $row['room_id'],
-                    guest_id: (int) $row['guest_id'],
-                    room_tariff_id: (int) $row['room_tariff_id'],
-                    reserved_check_in_at: $row['start_time'],
-                    reserved_check_out_at: $row['end_time'],
-                    advance_payment: (float) $row['deposit_amount'],
-                    status: $row['status'],
-                    notes: $row['notes'],
-                    created_by_user_id: (int) $row['created_by_user_id'],
-                    created_at: $row['created_at'],
-                    updated_at: $row['updated_at'],
-                    room: $room,
-                    guest: $guest,
-                    tariff: $tariff,
-                );
-            },
-            $rows
-        );
+        return $this->fetchReservations($stmt);
     }
 
     /**
@@ -430,5 +344,44 @@ final class ReservationRepository
             'id' => $reservation_id,
             'status' => $status,
         ]);
+    }
+
+    /** @return array<int, Reservation> */
+    private function fetchReservations(\PDOStatement|false $stmt): array
+    {
+        if ($stmt === false) {
+            return [];
+        }
+
+        /** @var array<int, array{id: int|string, room_id: int|string, guest_id: int|string, room_tariff_id: int|string, start_time: string, end_time: string, deposit_amount: float|string, status: string, notes: ?string, created_by_user_id: int|string, created_at: string, updated_at: string}> $rows */
+        $rows = $stmt->fetchAll();
+
+        return array_map($this->hydrateReservation(...), $rows);
+    }
+
+    /** @param array{id: int|string, room_id: int|string, guest_id: int|string, room_tariff_id: int|string, start_time: string, end_time: string, deposit_amount: float|string, status: string, notes: ?string, created_by_user_id: int|string, created_at: string, updated_at: string} $row */
+    private function hydrateReservation(array $row): Reservation
+    {
+        $room = $this->room_repository->findById((int) $row['room_id']);
+        $guest = $this->guest_repository->findById((int) $row['guest_id']);
+        $tariff = $this->tariff_repository->findById((int) $row['room_tariff_id']);
+
+        return new Reservation(
+            id: (int) $row['id'],
+            room_id: (int) $row['room_id'],
+            guest_id: (int) $row['guest_id'],
+            room_tariff_id: (int) $row['room_tariff_id'],
+            reserved_check_in_at: $row['start_time'],
+            reserved_check_out_at: $row['end_time'],
+            advance_payment: (float) $row['deposit_amount'],
+            status: $row['status'],
+            notes: $row['notes'],
+            created_by_user_id: (int) $row['created_by_user_id'],
+            created_at: $row['created_at'],
+            updated_at: $row['updated_at'],
+            room: $room,
+            guest: $guest,
+            tariff: $tariff,
+        );
     }
 }

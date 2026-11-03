@@ -10,6 +10,10 @@ use PDO;
 
 final class FolioPaymentRepository
 {
+    private const SELECT_PAYMENTS = 'SELECT id, folio_id, payment_type, amount, payment_method,
+            reference_number, notes, created_by_user_id, created_at, cashbox_shift_id, reservation_payment_id
+        FROM folio_payments';
+
     private PDO $db;
 
     public function __construct(?PDO $db = null)
@@ -20,8 +24,7 @@ final class FolioPaymentRepository
     public function findById(int $id): ?FolioPayment
     {
         $stmt = $this->db->prepare(
-            'SELECT id, folio_id, payment_type, amount, payment_method, reference_number, notes, created_by_user_id, created_at, cashbox_shift_id, reservation_payment_id
-             FROM folio_payments
+            self::SELECT_PAYMENTS . '
              WHERE id = :id'
         );
 
@@ -33,19 +36,7 @@ final class FolioPaymentRepository
             return null;
         }
 
-        return new FolioPayment(
-            id: (int) $row['id'],
-            folio_id: (int) $row['folio_id'],
-            payment_type: $row['payment_type'],
-            amount: (float) $row['amount'],
-            payment_method: $row['payment_method'],
-            reference_number: $row['reference_number'],
-            notes: $row['notes'],
-            created_by_user_id: (int) $row['created_by_user_id'],
-            created_at: $row['created_at'],
-            cashbox_shift_id: $row['cashbox_shift_id'] !== null ? (int) $row['cashbox_shift_id'] : null,
-            reservation_payment_id: $row['reservation_payment_id'] !== null ? (int) $row['reservation_payment_id'] : null,
-        );
+        return self::hydratePayment($row);
     }
 
     /**
@@ -54,8 +45,7 @@ final class FolioPaymentRepository
     public function findByFolioId(int $folio_id): array
     {
         $stmt = $this->db->prepare(
-            'SELECT id, folio_id, payment_type, amount, payment_method, reference_number, notes, created_by_user_id, created_at, cashbox_shift_id, reservation_payment_id
-             FROM folio_payments
+            self::SELECT_PAYMENTS . '
              WHERE folio_id = :folio_id
              ORDER BY id ASC'
         );
@@ -64,30 +54,13 @@ final class FolioPaymentRepository
         /** @var array<int, array{id: int|string, folio_id: int|string, payment_type: string, amount: float|string, payment_method: string, reference_number: ?string, notes: ?string, created_by_user_id: int|string, created_at: string, cashbox_shift_id: int|string|null, reservation_payment_id: int|string|null}> $rows */
         $rows = $stmt->fetchAll();
 
-        return array_map(
-            fn(array $row): FolioPayment => new FolioPayment(
-                id: (int) $row['id'],
-                folio_id: (int) $row['folio_id'],
-                payment_type: $row['payment_type'],
-                amount: (float) $row['amount'],
-                payment_method: $row['payment_method'],
-                reference_number: $row['reference_number'],
-                notes: $row['notes'],
-                created_by_user_id: (int) $row['created_by_user_id'],
-                created_at: $row['created_at'],
-                cashbox_shift_id: $row['cashbox_shift_id'] !== null ? (int) $row['cashbox_shift_id'] : null,
-                reservation_payment_id: $row['reservation_payment_id'] !== null ? (int) $row['reservation_payment_id'] : null,
-            ),
-            $rows
-        );
+        return array_map(self::hydratePayment(...), $rows);
     }
 
     public function findByReservationPaymentId(int $reservation_payment_id): ?FolioPayment
     {
         $stmt = $this->db->prepare(
-            'SELECT id, folio_id, payment_type, amount, payment_method, reference_number, notes,
-                    created_by_user_id, created_at, cashbox_shift_id, reservation_payment_id
-             FROM folio_payments
+            self::SELECT_PAYMENTS . '
              WHERE reservation_payment_id = :reservation_payment_id'
         );
 
@@ -99,6 +72,12 @@ final class FolioPaymentRepository
             return null;
         }
 
+        return self::hydratePayment($row);
+    }
+
+    /** @param array{id: int|string, folio_id: int|string, payment_type: string, amount: float|string, payment_method: string, reference_number: ?string, notes: ?string, created_by_user_id: int|string, created_at: string, cashbox_shift_id: int|string|null, reservation_payment_id: int|string|null} $row */
+    private static function hydratePayment(array $row): FolioPayment
+    {
         return new FolioPayment(
             id: (int) $row['id'],
             folio_id: (int) $row['folio_id'],

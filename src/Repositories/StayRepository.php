@@ -10,6 +10,11 @@ use PDO;
 
 final class StayRepository
 {
+    private const SELECT_STAYS = 'SELECT id, room_id, room_tariff_id, guest_id, check_in_at, expected_check_out_at,
+                    actual_check_out_at, base_price, applied_price, discount_reason, status,
+                    created_by_user_id, created_at, updated_at
+             FROM stays';
+
     private PDO $db;
     private StayExtensionRepository $extension_repository;
 
@@ -22,55 +27,29 @@ final class StayRepository
     public function findById(int $id): ?Stay
     {
         $stmt = $this->db->prepare(
-            'SELECT id, room_id, room_tariff_id, guest_id, check_in_at, expected_check_out_at,
-                    actual_check_out_at, base_price, applied_price, discount_reason, status,
-                    created_by_user_id, created_at, updated_at
-             FROM stays
+            self::SELECT_STAYS . '
              WHERE id = :id'
         );
 
         $stmt->execute(['id' => $id]);
-        /** @var array{id: int|string, room_id: int|string, room_tariff_id: int|string, guest_id: int|string|null, check_in_at: string, expected_check_out_at: string, actual_check_out_at: ?string, base_price: float|string, applied_price: float|string, discount_reason: ?string, status: string, created_by_user_id: int|string, created_at: string, updated_at: string}|false $row */
-        $row = $stmt->fetch();
-
-        if ($row === false) {
-            return null;
-        }
-
-        $extensions = $this->extension_repository->findByStayId((int) $row['id']);
-
-        return new Stay(
-            id: (int) $row['id'],
-            room_id: (int) $row['room_id'],
-            room_tariff_id: (int) $row['room_tariff_id'],
-            guest_id: $row['guest_id'] !== null ? (int) $row['guest_id'] : null,
-            check_in_at: $row['check_in_at'],
-            expected_check_out_at: $row['expected_check_out_at'],
-            actual_check_out_at: $row['actual_check_out_at'],
-            base_price: (float) $row['base_price'],
-            applied_price: (float) $row['applied_price'],
-            discount_reason: $row['discount_reason'],
-            status: $row['status'],
-            created_by_user_id: (int) $row['created_by_user_id'],
-            created_at: $row['created_at'],
-            updated_at: $row['updated_at'],
-            extensions: $extensions,
-        );
+        return $this->fetchStay($stmt);
     }
 
     public function findActiveByRoomId(int $room_id): ?Stay
     {
         $stmt = $this->db->prepare(
-            'SELECT id, room_id, room_tariff_id, guest_id, check_in_at, expected_check_out_at,
-                    actual_check_out_at, base_price, applied_price, discount_reason, status,
-                    created_by_user_id, created_at, updated_at
-             FROM stays
+            self::SELECT_STAYS . '
              WHERE room_id = :room_id AND status = "active"
              ORDER BY id DESC
              LIMIT 1'
         );
 
         $stmt->execute(['room_id' => $room_id]);
+        return $this->fetchStay($stmt);
+    }
+
+    private function fetchStay(\PDOStatement $stmt): ?Stay
+    {
         /** @var array{id: int|string, room_id: int|string, room_tariff_id: int|string, guest_id: int|string|null, check_in_at: string, expected_check_out_at: string, actual_check_out_at: ?string, base_price: float|string, applied_price: float|string, discount_reason: ?string, status: string, created_by_user_id: int|string, created_at: string, updated_at: string}|false $row */
         $row = $stmt->fetch();
 

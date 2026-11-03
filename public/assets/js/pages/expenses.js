@@ -2,19 +2,18 @@
  * CS-Hotel: Expenses & Other Incomes Frontend Logic
  */
 
+const expensePaymentLabels = {
+    'cash': '💵 Efectivo',
+    'yape': '🟣 Yape / Plin',
+    'card': '💳 Tarjeta',
+    'transfer': '🏦 Transferencia',
+};
+
 let activeExpensesTab = 'expenses';
 let expensesList = [];
 let otherIncomesList = [];
 
-document.addEventListener('DOMContentLoaded', () => {
-    
-document.addEventListener('DOMContentLoaded', () => {
-    loadExpensesAndIncomesData().catch(error => {
-        console.error('Error al cargar los egresos e ingresos:', error);
-    });
-});
-
-});
+document.addEventListener('DOMContentLoaded', loadExpensesAndIncomesData);
 
 async function loadExpensesAndIncomesData() {
     try {
@@ -90,17 +89,10 @@ function renderExpensesTable() {
         'other': '📦 Otro Egreso',
     };
 
-    const methodLabels = {
-        'cash': '💵 Efectivo',
-        'yape': '🟣 Yape / Plin',
-        'card': '💳 Tarjeta',
-        'transfer': '🏦 Transferencia',
-    };
-
     let html = '';
     expensesList.forEach((exp, idx) => {
         const cat = categoryLabels[exp.category] || exp.category;
-        const method = methodLabels[exp.payment_method] || exp.payment_method;
+        const method = expensePaymentLabels[exp.payment_method] || exp.payment_method;
         const amount = Number.parseFloat(exp.amount) || 0;
         const searchStr = `${exp.id} ${exp.concept} ${exp.category} ${exp.supplier_name || ''} ${exp.receipt_number || ''}`.toLowerCase();
 
@@ -136,17 +128,10 @@ function renderIncomesTable() {
         'other_income': '💰 Otro Ingreso',
     };
 
-    const methodLabels = {
-        'cash': '💵 Efectivo',
-        'yape': '🟣 Yape / Plin',
-        'card': '💳 Tarjeta',
-        'transfer': '🏦 Transferencia',
-    };
-
     let html = '';
     otherIncomesList.forEach((inc, idx) => {
         const cat = categoryLabels[inc.category] || inc.category;
-        const method = methodLabels[inc.payment_method] || inc.payment_method;
+        const method = expensePaymentLabels[inc.payment_method] || inc.payment_method;
         const amount = Number.parseFloat(inc.amount) || 0;
         const searchStr = `${inc.id} ${inc.concept} ${inc.category} ${inc.notes || ''}`.toLowerCase();
 
@@ -180,146 +165,70 @@ function filterExpensesTables() {
 
 async function handleCreateExpenseSubmit(event) {
     event.preventDefault();
-
-    const category = document.getElementById('expense-category').value;
-    const concept = document.getElementById('expense-concept').value.trim();
-    const supplier = document.getElementById('expense-supplier').value.trim() || null;
-    const receipt = document.getElementById('expense-receipt').value.trim() || null;
-    const amount = Number.parseFloat(document.getElementById('expense-amount').value) || 0;
-    const paymentMethod = document.getElementById('expense-payment-method').value;
-
-    if (!concept || amount <= 0) {
-        if (typeof showToast === 'function') {
-            showToast('Ingrese el concepto del gasto y un monto mayor a 0.', 'warning');
-        }
-        return;
-    }
-
-    const btn = document.getElementById('btn-submit-expense');
-    if (btn) {
-        btn.disabled = true;
-        btn.textContent = '⏳ Registrando egreso...';
-    }
-
-    try {
-        const result = await apiFetch('/api/expenses', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                category: category,
-                concept: concept,
-                supplier_name: supplier,
-                receipt_number: receipt,
-                amount: amount,
-                payment_method: paymentMethod,
-            }),
-        });
-
-
-        if (result.ok && result.data.status === 'success') {
-            closeModal('modal-create-expense');
-            document.getElementById('form-create-expense').reset();
-            if (typeof showToast === 'function') {
-                showToast('✅ Egreso registrado exitosamente.', 'success');
-            }
-            
-document.addEventListener('DOMContentLoaded', () => {
-    loadExpensesAndIncomesData().catch(error => {
-        console.error('Error al cargar los egresos e ingresos:', error);
-    });
-});
-
-        } else {
-            const errorMsg = result.data.message || 'Error al registrar el egreso.';
-            if (typeof showToast === 'function') {
-                showToast(`❌ ${errorMsg}`, 'error');
-            }
-            if (errorMsg.includes('caja')) {
-                const alertBox = document.getElementById('expenses-cashbox-alert');
-                if (alertBox) alertBox.style.display = 'block';
-            }
-        }
-    } catch (e) {
-        if (typeof showToast === 'function') {
-            showToast('❌ Error de conexión al registrar egreso.', 'error');
-        }
-    } finally {
-        if (btn) {
-            btn.disabled = false;
-            btn.textContent = '🔴 Registrar y Descontar Egreso';
-        }
-    }
+    return submitExpenseOrIncome('expense');
 }
-
-// ─── CREATE OTHER INCOME ───────────────────────────────────
 
 async function handleCreateIncomeSubmit(event) {
     event.preventDefault();
+    return submitExpenseOrIncome('income');
+}
 
-    const category = document.getElementById('income-category').value;
-    const concept = document.getElementById('income-concept').value.trim();
-    const amount = Number.parseFloat(document.getElementById('income-amount').value) || 0;
-    const paymentMethod = document.getElementById('income-payment-method').value;
-    const notes = document.getElementById('income-notes').value.trim() || null;
+async function submitExpenseOrIncome(kind) {
+    const isExpense = kind === 'expense';
+    const name = isExpense ? 'egreso' : 'ingreso';
+    const field = suffix => document.getElementById(`${kind}-${suffix}`).value;
+    const payload = {
+        category: field('category'),
+        concept: field('concept').trim(),
+        amount: Number.parseFloat(field('amount')) || 0,
+        payment_method: field('payment-method'),
+    };
+    if (isExpense) {
+        payload.supplier_name = field('supplier').trim() || null;
+        payload.receipt_number = field('receipt').trim() || null;
+    } else {
+        payload.notes = field('notes').trim() || null;
+    }
 
-    if (!concept || amount <= 0) {
+    if (!payload.concept || payload.amount <= 0) {
         if (typeof showToast === 'function') {
-            showToast('Ingrese el concepto del ingreso y un monto mayor a 0.', 'warning');
+            showToast(`Ingrese el concepto del ${isExpense ? 'gasto' : 'ingreso'} y un monto mayor a 0.`, 'warning');
         }
         return;
     }
 
-    const btn = document.getElementById('btn-submit-income');
+    const btn = document.getElementById(`btn-submit-${kind}`);
     if (btn) {
         btn.disabled = true;
-        btn.textContent = '⏳ Registrando ingreso...';
+        btn.textContent = `⏳ Registrando ${name}...`;
     }
-
     try {
-        const result = await apiFetch('/api/other-incomes', {
+        const result = await apiFetch(isExpense ? '/api/expenses' : '/api/other-incomes', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                category: category,
-                concept: concept,
-                amount: amount,
-                payment_method: paymentMethod,
-                notes: notes,
-            }),
+            body: JSON.stringify(payload),
         });
-
-
         if (result.ok && result.data.status === 'success') {
-            closeModal('modal-create-income');
-            document.getElementById('form-create-income').reset();
+            closeModal(`modal-create-${kind}`);
+            document.getElementById(`form-create-${kind}`).reset();
             if (typeof showToast === 'function') {
-                showToast('✅ Otro ingreso registrado exitosamente.', 'success');
+                showToast(`✅ ${isExpense ? 'Egreso' : 'Otro ingreso'} registrado exitosamente.`, 'success');
             }
-            
-document.addEventListener('DOMContentLoaded', () => {
-    loadExpensesAndIncomesData().catch(error => {
-        console.error('Error al cargar los egresos e ingresos:', error);
-    });
-});
-
+            await loadExpensesAndIncomesData();
         } else {
-            const errorMsg = result.data.message || 'Error al registrar el ingreso.';
-            if (typeof showToast === 'function') {
-                showToast(`❌ ${errorMsg}`, 'error');
-            }
+            const errorMsg = result.data.message || `Error al registrar el ${name}.`;
+            if (typeof showToast === 'function') showToast(`❌ ${errorMsg}`, 'error');
             if (errorMsg.includes('caja')) {
                 const alertBox = document.getElementById('expenses-cashbox-alert');
                 if (alertBox) alertBox.style.display = 'block';
             }
         }
     } catch (e) {
-        if (typeof showToast === 'function') {
-            showToast('❌ Error de conexión al registrar ingreso.', 'error');
-        }
+        if (typeof showToast === 'function') showToast(`❌ Error de conexión al registrar ${name}.`, 'error');
     } finally {
         if (btn) {
             btn.disabled = false;
-            btn.textContent = '🟢 Registrar Ingreso en Caja';
+            btn.textContent = isExpense ? '🔴 Registrar y Descontar Egreso' : '🟢 Registrar Ingreso en Caja';
         }
     }
 }

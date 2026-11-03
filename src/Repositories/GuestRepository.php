@@ -10,6 +10,9 @@ use PDO;
 
 final class GuestRepository
 {
+    private const SELECT_GUESTS = 'SELECT id, document_type, document_number, name, address, phone, email, notes, created_at, updated_at
+             FROM guests';
+
     private PDO $db;
 
     public function __construct(?PDO $db = null)
@@ -20,8 +23,7 @@ final class GuestRepository
     public function findById(int $id): ?Guest
     {
         $stmt = $this->db->prepare(
-            'SELECT id, document_type, document_number, name, address, phone, email, notes, created_at, updated_at
-             FROM guests
+            self::SELECT_GUESTS . '
              WHERE id = :id'
         );
 
@@ -33,32 +35,13 @@ final class GuestRepository
             return null;
         }
 
-        $parts = explode(' ', $row['name'], 2);
-        $first_name = $parts[0] ?? $row['name'];
-        $last_name = $parts[1] ?? '';
-
-        return new Guest(
-            id: (int) $row['id'],
-            document_type: $row['document_type'],
-            document_number: $row['document_number'],
-            name: $row['name'],
-            phone: $row['phone'],
-            email: $row['email'],
-            address: $row['address'],
-            notes: $row['notes'],
-            created_at: $row['created_at'],
-            updated_at: $row['updated_at'],
-            first_name: $first_name,
-            last_name: $last_name,
-            company_name: $row['name'],
-        );
+        return self::hydrateGuest($row);
     }
 
     public function findByDocumentNumber(string $document_number): ?Guest
     {
         $stmt = $this->db->prepare(
-            'SELECT id, document_type, document_number, name, address, phone, email, notes, created_at, updated_at
-             FROM guests
+            self::SELECT_GUESTS . '
              WHERE document_number = :document_number'
         );
 
@@ -70,25 +53,7 @@ final class GuestRepository
             return null;
         }
 
-        $parts = explode(' ', $row['name'], 2);
-        $first_name = $parts[0] ?? $row['name'];
-        $last_name = $parts[1] ?? '';
-
-        return new Guest(
-            id: (int) $row['id'],
-            document_type: $row['document_type'],
-            document_number: $row['document_number'],
-            name: $row['name'],
-            phone: $row['phone'],
-            email: $row['email'],
-            address: $row['address'],
-            notes: $row['notes'],
-            created_at: $row['created_at'],
-            updated_at: $row['updated_at'],
-            first_name: $first_name,
-            last_name: $last_name,
-            company_name: $row['name'],
-        );
+        return self::hydrateGuest($row);
     }
 
     /**
@@ -97,8 +62,7 @@ final class GuestRepository
     public function findAll(): array
     {
         $stmt = $this->db->query(
-            'SELECT id, document_type, document_number, name, address, phone, email, notes, created_at, updated_at
-             FROM guests
+            self::SELECT_GUESTS . '
              ORDER BY id DESC'
         );
 
@@ -109,30 +73,7 @@ final class GuestRepository
         /** @var array<int, array{id: int|string, document_type: string, document_number: string, name: string, phone: ?string, email: ?string, address: ?string, notes: ?string, created_at: string, updated_at: string}> $rows */
         $rows = $stmt->fetchAll();
 
-        return array_map(
-            function (array $row): Guest {
-                $parts = explode(' ', $row['name'], 2);
-                $first_name = $parts[0] ?? $row['name'];
-                $last_name = $parts[1] ?? '';
-
-                return new Guest(
-                    id: (int) $row['id'],
-                    document_type: $row['document_type'],
-                    document_number: $row['document_number'],
-                    name: $row['name'],
-                    phone: $row['phone'],
-                    email: $row['email'],
-                    address: $row['address'],
-                    notes: $row['notes'],
-                    created_at: $row['created_at'],
-                    updated_at: $row['updated_at'],
-                    first_name: $first_name,
-                    last_name: $last_name,
-                    company_name: $row['name'],
-                );
-            },
-            $rows
-        );
+        return array_map(self::hydrateGuest(...), $rows);
     }
 
     /**
@@ -141,8 +82,7 @@ final class GuestRepository
     public function search(string $term): array
     {
         $stmt = $this->db->prepare(
-            'SELECT id, document_type, document_number, name, address, phone, email, notes, created_at, updated_at
-             FROM guests
+            self::SELECT_GUESTS . '
              WHERE document_number LIKE :document_term
                 OR name LIKE :name_term
                 OR phone LIKE :phone_term
@@ -161,29 +101,30 @@ final class GuestRepository
         /** @var array<int, array{id: int|string, document_type: string, document_number: string, name: string, phone: ?string, email: ?string, address: ?string, notes: ?string, created_at: string, updated_at: string}> $rows */
         $rows = $stmt->fetchAll();
 
-        return array_map(
-            function (array $row): Guest {
-                $parts = explode(' ', $row['name'], 2);
-                $first_name = $parts[0] ?? $row['name'];
-                $last_name = $parts[1] ?? '';
+        return array_map(self::hydrateGuest(...), $rows);
+    }
 
-                return new Guest(
-                    id: (int) $row['id'],
-                    document_type: $row['document_type'],
-                    document_number: $row['document_number'],
-                    name: $row['name'],
-                    phone: $row['phone'],
-                    email: $row['email'],
-                    address: $row['address'],
-                    notes: $row['notes'],
-                    created_at: $row['created_at'],
-                    updated_at: $row['updated_at'],
-                    first_name: $first_name,
-                    last_name: $last_name,
-                    company_name: $row['name'],
-                );
-            },
-            $rows
+    /** @param array{id: int|string, document_type: string, document_number: string, name: string, phone: ?string, email: ?string, address: ?string, notes: ?string, created_at: string, updated_at: string} $row */
+    private static function hydrateGuest(array $row): Guest
+    {
+        $parts = explode(' ', $row['name'], 2);
+        $first_name = $parts[0] ?? $row['name'];
+        $last_name = $parts[1] ?? '';
+
+        return new Guest(
+            id: (int) $row['id'],
+            document_type: $row['document_type'],
+            document_number: $row['document_number'],
+            name: $row['name'],
+            phone: $row['phone'],
+            email: $row['email'],
+            address: $row['address'],
+            notes: $row['notes'],
+            created_at: $row['created_at'],
+            updated_at: $row['updated_at'],
+            first_name: $first_name,
+            last_name: $last_name,
+            company_name: $row['name'],
         );
     }
 

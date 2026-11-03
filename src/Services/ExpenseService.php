@@ -44,31 +44,11 @@ final class ExpenseService
         ?string $supplier_name = null,
         ?string $receipt_number = null
     ): Expense {
-        if (!$this->isValidMoneyAmount($amount)) {
-            throw new InvalidArgumentException("El monto del egreso debe ser mayor a cero y tener como máximo dos decimales.");
-        }
+        $shiftId = $this->requireShiftForEntry($user_id, $concept, $amount, $payment_method, true);
 
-        if (trim($concept) === '') {
-            throw new InvalidArgumentException("Debe ingresar la justificación/concepto del egreso.");
-        }
-
-        if (!in_array($payment_method, self::PAYMENT_METHODS, true)) {
-            throw new InvalidArgumentException('Método de pago inválido.');
-        }
-
-        $shift = $this->cashbox_service->getCurrentShift($user_id);
-        if ($shift === null) {
-            throw new DomainException("Debe abrir un turno de caja antes de registrar egresos.");
-        }
-
-        $owns_transaction = !$this->db->inTransaction();
-        if ($owns_transaction) {
-            $this->db->beginTransaction();
-        }
-
-        try {
+        return $this->inTransaction(function () use ($shiftId, $user_id, $category, $concept, $amount, $payment_method, $supplier_name, $receipt_number): Expense {
             $expense = $this->expense_repository->create(
-                cashbox_shift_id: $shift->id,
+                cashbox_shift_id: $shiftId,
                 category: $category,
                 concept: $concept,
                 amount: $amount,
@@ -89,16 +69,8 @@ final class ExpenseService
                 reference_type: 'expense'
             );
 
-            if ($owns_transaction) {
-                $this->db->commit();
-            }
             return $expense;
-        } catch (\Throwable $e) {
-            if ($owns_transaction && $this->db->inTransaction()) {
-                $this->db->rollBack();
-            }
-            throw $e;
-        }
+        });
     }
 
     /**
@@ -117,31 +89,11 @@ final class ExpenseService
         string $payment_method = 'cash',
         ?string $notes = null
     ): OtherIncome {
-        if (!$this->isValidMoneyAmount($amount)) {
-            throw new InvalidArgumentException("El monto del ingreso debe ser mayor a cero y tener como máximo dos decimales.");
-        }
+        $shiftId = $this->requireShiftForEntry($user_id, $concept, $amount, $payment_method, false);
 
-        if (trim($concept) === '') {
-            throw new InvalidArgumentException("Debe ingresar el concepto del ingreso.");
-        }
-
-        if (!in_array($payment_method, self::PAYMENT_METHODS, true)) {
-            throw new InvalidArgumentException('Método de pago inválido.');
-        }
-
-        $shift = $this->cashbox_service->getCurrentShift($user_id);
-        if ($shift === null) {
-            throw new DomainException("Debe abrir un turno de caja antes de registrar ingresos.");
-        }
-
-        $owns_transaction = !$this->db->inTransaction();
-        if ($owns_transaction) {
-            $this->db->beginTransaction();
-        }
-
-        try {
+        return $this->inTransaction(function () use ($shiftId, $user_id, $category, $concept, $amount, $payment_method, $notes): OtherIncome {
             $income = $this->income_repository->create(
-                cashbox_shift_id: $shift->id,
+                cashbox_shift_id: $shiftId,
                 category: $category,
                 concept: $concept,
                 amount: $amount,
@@ -161,16 +113,8 @@ final class ExpenseService
                 reference_type: 'other_income'
             );
 
-            if ($owns_transaction) {
-                $this->db->commit();
-            }
             return $income;
-        } catch (\Throwable $e) {
-            if ($owns_transaction && $this->db->inTransaction()) {
-                $this->db->rollBack();
-            }
-            throw $e;
-        }
+        });
     }
 
     /**
@@ -179,6 +123,51 @@ final class ExpenseService
     public function listOtherIncomes(): array
     {
         return $this->income_repository->findAll();
+    }
+
+    private function requireShiftForEntry(int $userId, string $concept, float $amount, string $paymentMethod, bool $isExpense): int
+    {
+        $entry = $isExpense ? 'egreso' : 'ingreso';
+        if (!$this->isValidMoneyAmount($amount)) {
+            throw new InvalidArgumentException("El monto del {$entry} debe ser mayor a cero y tener como máximo dos decimales.");
+        }
+        if (trim($concept) === '') {
+            throw new InvalidArgumentException($isExpense
+                ? 'Debe ingresar la justificación/concepto del egreso.'
+                : 'Debe ingresar el concepto del ingreso.');
+        }
+        if (!in_array($paymentMethod, self::PAYMENT_METHODS, true)) {
+            throw new InvalidArgumentException('Método de pago inválido.');
+        }
+        $shift = $this->cashbox_service->getCurrentShift($userId);
+        if ($shift === null) {
+            throw new DomainException("Debe abrir un turno de caja antes de registrar {$entry}s.");
+        }
+        return $shift->id;
+    }
+
+    /**
+     * @template T of Expense|OtherIncome
+     * @param callable(): T $operation
+     * @return T
+     */
+    private function inTransaction(callable $operation): Expense|OtherIncome
+    {
+        if ($this->db->inTransaction()) {
+            return $operation();
+        }
+
+        $this->db->beginTransaction();
+        try {
+            $result = $operation();
+            $this->db->commit();
+            return $result;
+        } catch (\Throwable $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            throw $e;
+        }
     }
 
     private function isValidMoneyAmount(float $amount): bool

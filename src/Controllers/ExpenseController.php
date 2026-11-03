@@ -20,60 +20,54 @@ final class ExpenseController
 
     public function index(): void
     {
-        $expenses = $this->expense_service->listExpenses();
-
-        header('Content-Type: application/json');
-        echo json_encode([
+        $this->sendJson([
             'status' => 'success',
-            'data' => $expenses,
+            'data' => $this->expense_service->listExpenses(),
         ]);
     }
 
     public function create(): void
     {
-        /** @var string|false $raw_input */
-        $raw_input = file_get_contents('php://input');
-        /** @var array<string, mixed>|null $body */
-        $body = is_string($raw_input) && $raw_input !== '' ? json_decode($raw_input, true) : $_POST;
-
-        if (!is_array($body)) {
-            $body = [];
-        }
+        $raw = file_get_contents('php://input');
+        $input = ($raw === false || $raw === '') ? $_POST : json_decode($raw, true);
+        $body = is_array($input) ? $input : [];
 
         $user_id = Session::requireAuth();
-        $category = is_string($body['category'] ?? null) ? $body['category'] : 'petty_cash';
-        $concept = is_string($body['concept'] ?? null) ? $body['concept'] : '';
-        $amount = is_numeric($body['amount'] ?? null) ? (float) $body['amount'] : 0.0;
-        $payment_method = is_string($body['payment_method'] ?? null) ? $body['payment_method'] : 'cash';
-        $supplier_name = is_string($body['supplier_name'] ?? null) ? $body['supplier_name'] : null;
-        $receipt_number = is_string($body['receipt_number'] ?? null) ? $body['receipt_number'] : null;
+        $text = array_filter($body, 'is_string');
+        $amount = $body['amount'] ?? null;
 
         try {
             $expense = $this->expense_service->recordExpense(
                 user_id: $user_id,
-                category: $category,
-                concept: $concept,
-                amount: $amount,
-                payment_method: $payment_method,
-                supplier_name: $supplier_name,
-                receipt_number: $receipt_number
+                category: $text['category'] ?? 'petty_cash',
+                concept: $text['concept'] ?? '',
+                amount: is_numeric($amount) ? (float) $amount : 0.0,
+                payment_method: $text['payment_method'] ?? 'cash',
+                supplier_name: $text['supplier_name'] ?? null,
+                receipt_number: $text['receipt_number'] ?? null,
             );
 
-            http_response_code(201);
-            header('Content-Type: application/json');
-            echo json_encode([
+            $this->sendJson([
                 'status' => 'success',
                 'message' => 'Egreso registrado exitosamente',
                 'data' => $expense,
-            ]);
-        } catch (InvalidArgumentException $e) {
-            http_response_code(422);
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
-        } catch (DomainException $e) {
-            http_response_code(409);
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            ], 201);
+        } catch (InvalidArgumentException | DomainException $e) {
+            $this->sendJson([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], $e instanceof InvalidArgumentException ? 422 : 409);
         }
+    }
+
+    /** @param array<string, mixed> $payload */
+    private function sendJson(array $payload, ?int $statusCode = null): void
+    {
+        if ($statusCode !== null) {
+            http_response_code($statusCode);
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode($payload);
     }
 }

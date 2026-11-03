@@ -27,6 +27,22 @@ final class RoomController
         $this->invoice_service = $invoice_service;
     }
 
+    /** @return array<string, mixed> */
+    private function readRequestBody(): array
+    {
+        $raw = file_get_contents('php://input');
+        $body = is_string($raw) && $raw !== '' ? json_decode($raw, true) : $_POST;
+
+        return is_array($body) ? $body : [];
+    }
+
+    private function sendActionError(InvalidArgumentException|DomainException $error): void
+    {
+        http_response_code($error instanceof InvalidArgumentException ? 422 : 409);
+        header('Content-Type: application/json');
+        echo json_encode(['status' => 'error', 'message' => $error->getMessage()]);
+    }
+
     private function getGuestService(): GuestService
     {
         return $this->guest_service ??= new GuestService();
@@ -114,14 +130,7 @@ final class RoomController
 
     public function handlePost(): void
     {
-        /** @var string|false $raw_input */
-        $raw_input = file_get_contents('php://input');
-        /** @var array<string, mixed>|null $body */
-        $body = is_string($raw_input) && $raw_input !== '' ? json_decode($raw_input, true) : $_POST;
-
-        if (!is_array($body)) {
-            $body = [];
-        }
+        $body = $this->readRequestBody();
 
         $action = is_string($body['action'] ?? null) ? $body['action'] : '';
         $room_id = is_numeric($body['room_id'] ?? null) ? (int) $body['room_id'] : (is_numeric($body['from_room_id'] ?? null) ? (int) $body['from_room_id'] : 0);
@@ -172,14 +181,8 @@ final class RoomController
                     'category_id' => $room->room_category_id,
                 ],
             ]);
-        } catch (InvalidArgumentException $e) {
-            http_response_code(422);
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
-        } catch (DomainException $e) {
-            http_response_code(409);
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        } catch (InvalidArgumentException | DomainException $e) {
+            $this->sendActionError($e);
         }
     }
 
@@ -213,27 +216,14 @@ final class RoomController
                     'category_id' => $room->room_category_id,
                 ],
             ]);
-        } catch (InvalidArgumentException $e) {
-            http_response_code(422);
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
-        } catch (DomainException $e) {
-            http_response_code(409);
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        } catch (InvalidArgumentException | DomainException $e) {
+            $this->sendActionError($e);
         }
     }
 
     public function handleCategoryPost(): void
     {
-        /** @var string|false $raw_input */
-        $raw_input = file_get_contents('php://input');
-        /** @var array<string, mixed>|null $body */
-        $body = is_string($raw_input) && $raw_input !== '' ? json_decode($raw_input, true) : $_POST;
-
-        if (!is_array($body)) {
-            $body = [];
-        }
+        $body = $this->readRequestBody();
 
         $id = is_numeric($body['id'] ?? null) ? (int) $body['id'] : null;
         $name = is_string($body['name'] ?? null) ? $body['name'] : '';
@@ -261,22 +251,13 @@ final class RoomController
                 ],
             ]);
         } catch (InvalidArgumentException $e) {
-            http_response_code(422);
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            $this->sendActionError($e);
         }
     }
 
     public function handleTariffPost(): void
     {
-        /** @var string|false $raw_input */
-        $raw_input = file_get_contents('php://input');
-        /** @var array<string, mixed>|null $body */
-        $body = is_string($raw_input) && $raw_input !== '' ? json_decode($raw_input, true) : $_POST;
-
-        if (!is_array($body)) {
-            $body = [];
-        }
+        $body = $this->readRequestBody();
 
         $id = is_numeric($body['id'] ?? null) ? (int) $body['id'] : null;
         $category_id = is_numeric($body['room_category_id'] ?? null) ? (int) $body['room_category_id'] : 0;
@@ -307,22 +288,13 @@ final class RoomController
                 ],
             ]);
         } catch (InvalidArgumentException $e) {
-            http_response_code(422);
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            $this->sendActionError($e);
         }
     }
 
     public function occupy(int $room_id): void
     {
-        /** @var string|false $raw_input */
-        $raw_input = file_get_contents('php://input');
-        /** @var array<string, mixed>|null $body */
-        $body = is_string($raw_input) && $raw_input !== '' ? json_decode($raw_input, true) : $_POST;
-
-        if (!is_array($body)) {
-            $body = [];
-        }
+        $body = $this->readRequestBody();
 
         $tariff_id = is_numeric($body['tariff_id'] ?? null) ? (int) $body['tariff_id'] : 0;
         $applied_price = is_numeric($body['applied_price'] ?? null) ? (float) $body['applied_price'] : 0.0;
@@ -384,27 +356,14 @@ final class RoomController
                     'applied_price' => $stay->applied_price,
                 ],
             ]);
-        } catch (InvalidArgumentException $e) {
-            http_response_code(422);
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
-        } catch (DomainException $e) {
-            http_response_code(409);
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        } catch (InvalidArgumentException | DomainException $e) {
+            $this->sendActionError($e);
         }
     }
 
     public function extend(int $room_id): void
     {
-        /** @var string|false $raw_input */
-        $raw_input = file_get_contents('php://input');
-        /** @var array<string, mixed>|null $body */
-        $body = is_string($raw_input) && $raw_input !== '' ? json_decode($raw_input, true) : $_POST;
-
-        if (!is_array($body)) {
-            $body = [];
-        }
+        $body = $this->readRequestBody();
 
         $added_hours = is_numeric($body['added_hours'] ?? null) ? (int) $body['added_hours'] : 0;
         $added_price = is_numeric($body['added_price'] ?? null) ? (float) $body['added_price'] : 0.0;
@@ -429,27 +388,14 @@ final class RoomController
                     'added_price' => $extension->added_price,
                 ],
             ]);
-        } catch (InvalidArgumentException $e) {
-            http_response_code(422);
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
-        } catch (DomainException $e) {
-            http_response_code(409);
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        } catch (InvalidArgumentException | DomainException $e) {
+            $this->sendActionError($e);
         }
     }
 
     public function transfer(int $from_room_id): void
     {
-        /** @var string|false $raw_input */
-        $raw_input = file_get_contents('php://input');
-        /** @var array<string, mixed>|null $body */
-        $body = is_string($raw_input) && $raw_input !== '' ? json_decode($raw_input, true) : $_POST;
-
-        if (!is_array($body)) {
-            $body = [];
-        }
+        $body = $this->readRequestBody();
 
         $to_room_id = is_numeric($body['to_room_id'] ?? null) ? (int) $body['to_room_id'] : 0;
         $reason = is_string($body['reason'] ?? null) ? $body['reason'] : '';
@@ -468,27 +414,14 @@ final class RoomController
                 'status' => 'success',
                 'message' => 'Transferencia de habitación realizada exitosamente',
             ]);
-        } catch (InvalidArgumentException $e) {
-            http_response_code(422);
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
-        } catch (DomainException $e) {
-            http_response_code(409);
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        } catch (InvalidArgumentException | DomainException $e) {
+            $this->sendActionError($e);
         }
     }
 
     public function checkout(int $room_id): void
     {
-        /** @var string|false $raw_input */
-        $raw_input = file_get_contents('php://input');
-        /** @var array<string, mixed>|null $body */
-        $body = is_string($raw_input) && $raw_input !== '' ? json_decode($raw_input, true) : $_POST;
-
-        if (!is_array($body)) {
-            $body = [];
-        }
+        $body = $this->readRequestBody();
 
         $payment_method = is_string($body['payment_method'] ?? null) && in_array($body['payment_method'], ['cash', 'yape', 'plin', 'card', 'transfer'], true) ? $body['payment_method'] : 'cash';
         $payment_reference = is_string($body['payment_reference'] ?? null) ? $body['payment_reference'] : null;
@@ -577,27 +510,14 @@ final class RoomController
                     'pdf_url' => $invoice?->pdf_url,
                 ],
             ]);
-        } catch (InvalidArgumentException $e) {
-            http_response_code(422);
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
-        } catch (DomainException $e) {
-            http_response_code(409);
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        } catch (InvalidArgumentException | DomainException $e) {
+            $this->sendActionError($e);
         }
     }
 
     public function updateStatus(int $room_id): void
     {
-        /** @var string|false $raw_input */
-        $raw_input = file_get_contents('php://input');
-        /** @var array<string, mixed>|null $body */
-        $body = is_string($raw_input) && $raw_input !== '' ? json_decode($raw_input, true) : $_POST;
-
-        if (!is_array($body)) {
-            $body = [];
-        }
+        $body = $this->readRequestBody();
 
         $new_status = is_string($body['status'] ?? null) ? $body['status'] : '';
 
@@ -609,14 +529,8 @@ final class RoomController
                 'status' => 'success',
                 'message' => "Estado de habitación actualizado a {$new_status}",
             ]);
-        } catch (InvalidArgumentException $e) {
-            http_response_code(422);
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
-        } catch (DomainException $e) {
-            http_response_code(409);
-            header('Content-Type: application/json');
-            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        } catch (InvalidArgumentException | DomainException $e) {
+            $this->sendActionError($e);
         }
     }
 }

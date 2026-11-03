@@ -134,53 +134,55 @@ function renderActiveShift() {
 
 // ─── OPEN SHIFT ────────────────────────────────────────────
 
+async function submitCashboxAction({ endpoint, payload, buttonId, pendingLabel, readyLabel, errorMessage, connectionMessage, onSuccess }) {
+    const button = document.getElementById(buttonId);
+    if (button) {
+        button.disabled = true;
+        button.textContent = pendingLabel;
+    }
+
+    try {
+        const result = await apiFetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        });
+        if (result.ok && result.data.status === 'success') {
+            onSuccess(result);
+            loadCashboxShift().catch(error => console.error('Error al actualizar el turno de caja:', error));
+        } else if (typeof showToast === 'function') {
+            showToast('❌ ' + (result.data.message || errorMessage), 'error');
+        }
+    } catch (error) {
+        if (typeof showToast === 'function') showToast(connectionMessage, 'error');
+    } finally {
+        if (button) {
+            button.disabled = false;
+            button.textContent = readyLabel;
+        }
+    }
+}
+
 async function handleOpenShiftSubmit(event) {
     event.preventDefault();
 
     const initialCash = Number.parseFloat(document.getElementById('open-initial-cash').value) || 0;
     const notes = document.getElementById('open-shift-notes').value.trim() || null;
 
-    const btn = document.getElementById('btn-submit-open-shift');
-    if (btn) {
-        btn.disabled = true;
-        btn.textContent = '⏳ Aperturando turno...';
-    }
-
-    try {
-        const result = await apiFetch('/api/cashbox/open', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                initial_cash: initialCash,
-                notes: notes,
-            }),
-        });
-
-
-        if (result.ok && result.data.status === 'success') {
+    await submitCashboxAction({
+        endpoint: '/api/cashbox/open',
+        payload: { initial_cash: initialCash, notes },
+        buttonId: 'btn-submit-open-shift',
+        pendingLabel: '⏳ Aperturando turno...',
+        readyLabel: '🔓 Abrir Turno de Caja Chica',
+        errorMessage: 'Error al abrir el turno.',
+        connectionMessage: '❌ Error de conexión al abrir turno.',
+        onSuccess() {
             if (typeof showToast === 'function') {
                 showToast('✅ Turno de caja aperturado exitosamente.', 'success');
             }
-            
-            loadCashboxShift().catch(error => {
-            console.error('Error al actualizar el turno de caja:', error);
-            });
-
-        } else {
-            if (typeof showToast === 'function') {
-                showToast(`❌ ${result.data.message || 'Error al abrir el turno.'}`, 'error');
-            }
-        }
-    } catch (e) {
-        if (typeof showToast === 'function') {
-            showToast('❌ Error de conexión al abrir turno.', 'error');
-        }
-    } finally {
-        if (btn) {
-            btn.disabled = false;
-            btn.textContent = '🔓 Abrir Turno de Caja Chica';
-        }
-    }
+        },
+    });
 }
 
 // ─── NEW EXTRAORDINARY MOVEMENT ────────────────────────────
@@ -220,52 +222,22 @@ async function handleNewMovementSubmit(event) {
         return;
     }
 
-    const btn = document.getElementById('btn-submit-movement');
-    if (btn) {
-        btn.disabled = true;
-        btn.textContent = '⏳ Registrando...';
-    }
-
-    try {
-        const result = await apiFetch('/api/cashbox/movement', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                type: type,
-                category: category,
-                concept: concept,
-                amount: amount,
-                payment_method: paymentMethod,
-            }),
-        });
-
-
-        if (result.ok && result.data.status === 'success') {
+    await submitCashboxAction({
+        endpoint: '/api/cashbox/movement',
+        payload: { type, category, concept, amount, payment_method: paymentMethod },
+        buttonId: 'btn-submit-movement',
+        pendingLabel: '⏳ Registrando...',
+        readyLabel: '💾 Registrar Movimiento',
+        errorMessage: 'Error al registrar movimiento.',
+        connectionMessage: '❌ Error de conexión.',
+        onSuccess() {
             closeModal('modal-new-movement');
             document.getElementById('form-new-movement').reset();
             if (typeof showToast === 'function') {
                 showToast('✅ Movimiento registrado exitosamente.', 'success');
             }
-            
-            loadCashboxShift().catch(error => {
-            console.error('Error al actualizar el turno de caja:', error);
-            });
-
-        } else {
-            if (typeof showToast === 'function') {
-                showToast(`❌ ${result.data.message || 'Error al registrar movimiento.'}`, 'error');
-            }
-        }
-    } catch (e) {
-        if (typeof showToast === 'function') {
-            showToast('❌ Error de conexión.', 'error');
-        }
-    } finally {
-        if (btn) {
-            btn.disabled = false;
-            btn.textContent = '💾 Registrar Movimiento';
-        }
-    }
+        },
+    });
 }
 
 // ─── CLOSE SHIFT & ARQUEO ──────────────────────────────────
@@ -300,6 +272,10 @@ function calculateArqueoDifference() {
     const diff = declaredCash - expectedCash;
     const displayBox = document.getElementById('arqueo-diff-display');
 
+    renderCashboxDifference(displayBox, diff);
+}
+
+function renderCashboxDifference(displayBox, diff) {
     if (Math.abs(diff) < 0.01) {
         displayBox.className = 'arqueo-difference-box balanced';
         displayBox.textContent = '✅ DIFERENCIA: S/ 0.00 (CUADRADO PERFECTO)';
@@ -322,28 +298,22 @@ async function handleCloseShiftModalSubmit(event) {
     const declaredTransfer = Number.parseFloat(document.getElementById('close-real-transfer-declared').value) || 0;
     const notes = document.getElementById('close-shift-notes').value.trim() || null;
 
-    const btn = document.getElementById('btn-submit-close-shift');
-    if (btn) {
-        btn.disabled = true;
-        btn.textContent = '⏳ Cerrando turno...';
-    }
-
-    try {
-        const result = await apiFetch('/api/cashbox/close', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                real_cash_declared: declaredCash,
-                real_yape_declared: declaredYape,
-                real_plin_declared: declaredPlin,
-                real_card_declared: declaredCard,
-                real_transfer_declared: declaredTransfer,
-                notes: notes,
-            }),
-        });
-
-
-        if (result.ok && result.data.status === 'success') {
+    await submitCashboxAction({
+        endpoint: '/api/cashbox/close',
+        payload: {
+            real_cash_declared: declaredCash,
+            real_yape_declared: declaredYape,
+            real_plin_declared: declaredPlin,
+            real_card_declared: declaredCard,
+            real_transfer_declared: declaredTransfer,
+            notes,
+        },
+        buttonId: 'btn-submit-close-shift',
+        pendingLabel: '⏳ Cerrando turno...',
+        readyLabel: '🔒 Confirmar Cierre y Sellado de Turno',
+        errorMessage: 'Error al cerrar el turno.',
+        connectionMessage: '❌ Error de conexión al cerrar turno.',
+        onSuccess(result) {
             closeModal('modal-close-shift');
             const shiftResult = result.data.data;
             const balanceMsg = shiftResult.balance_status === 'balanced'
@@ -353,26 +323,8 @@ async function handleCloseShiftModalSubmit(event) {
             if (typeof showToast === 'function') {
                 showToast(`🔒 ${balanceMsg}`, 'success');
             }
-            
-loadCashboxShift().catch(error => {
-    console.error('Error al actualizar el turno de caja:', error);
-});
-
-        } else {
-            if (typeof showToast === 'function') {
-                showToast(`❌ ${result.data.message || 'Error al cerrar el turno.'}`, 'error');
-            }
-        }
-    } catch (e) {
-        if (typeof showToast === 'function') {
-            showToast('❌ Error de conexión al cerrar turno.', 'error');
-        }
-    } finally {
-        if (btn) {
-            btn.disabled = false;
-            btn.textContent = '🔒 Confirmar Cierre y Sellado de Turno';
-        }
-    }
+        },
+    });
 }
 
 // ─── LOAD SHIFTS HISTORY (SPEC-0040) ──────────────────────
@@ -499,16 +451,8 @@ async function openShiftDetailModal(shiftId) {
         const diffBox = document.getElementById('detail-shift-diff-box');
         if (s.difference !== null) {
             const diff = Number.parseFloat(s.difference) || 0;
-            if (Math.abs(diff) < 0.01) {
-                diffBox.className = 'arqueo-difference-box balanced mb-3';
-                diffBox.textContent = '✅ DIFERENCIA: S/ 0.00 (CUADRADO PERFECTO)';
-            } else if (diff < 0) {
-                diffBox.className = 'arqueo-difference-box shortage mb-3';
-                diffBox.textContent = `❌ DIFERENCIA: - S/ ${Math.abs(diff).toFixed(2)} (FALTANTE DE CAJA)`;
-            } else {
-                diffBox.className = 'arqueo-difference-box surplus mb-3';
-                diffBox.textContent = `⚠️ DIFERENCIA: + S/ ${diff.toFixed(2)} (SOBRANTE DE CAJA)`;
-            }
+            renderCashboxDifference(diffBox, diff);
+            diffBox.classList.add('mb-3');
         } else {
             diffBox.className = 'arqueo-difference-box balanced mb-3';
             diffBox.textContent = '🔓 TURNO ACTIVO (BALANCE EN CURSO)';
