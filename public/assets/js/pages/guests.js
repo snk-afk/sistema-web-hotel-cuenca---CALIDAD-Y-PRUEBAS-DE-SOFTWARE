@@ -132,7 +132,7 @@ async function handleGuestFormSubmit(e) {
         const res = await apiFetch('/api/guests', {
             method: 'POST',
             body: JSON.stringify({
-                id: id ? parseInt(id, 10) : undefined,
+                id: id ? Number.parseInt(id, 10) : undefined,
                 document_type: docType,
                 document_number: docNum,
                 name: name,
@@ -176,7 +176,7 @@ async function openGuestProfileModal(guestId) {
                 document.getElementById('profile-guest-doc').textContent = `${guest.document_type}: ${guest.document_number}`;
                 document.getElementById('profile-guest-phone').textContent = `📱 ${guest.phone || 'Sin teléfono'}`;
                 document.getElementById('profile-total-visits').textContent = guest.stays_count || 0;
-                document.getElementById('profile-total-spent').textContent = `S/ ${parseFloat(guest.total_spent || 0).toFixed(2)}`;
+                document.getElementById('profile-total-spent').textContent = `S/ ${Number.parseFloat(guest.total_spent || 0).toFixed(2)}`;
                 document.getElementById('profile-guest-address').textContent = guest.address || 'No especificada';
 
                 const isVip = guest.stays_count >= 2 || (guest.notes && guest.notes.toUpperCase().includes('VIP'));
@@ -204,8 +204,8 @@ async function openGuestProfileModal(guestId) {
                             <td><span class="category-chip">${r.category_name}</span></td>
                             <td>${s.check_in_at}</td>
                             <td>${s.expected_check_out_at}</td>
-                            <td>S/ ${parseFloat(s.applied_price).toFixed(2)}</td>
-                            <td><strong class="text-success">S/ ${parseFloat(s.total_charges || s.applied_price).toFixed(2)}</strong></td>
+                            <td>S/ ${Number.parseFloat(s.applied_price).toFixed(2)}</td>
+                            <td><strong class="text-success">S/ ${Number.parseFloat(s.total_charges || s.applied_price).toFixed(2)}</strong></td>
                             <td><span class="badge badge-primary">ACTIVA</span></td>
                         </tr>
                     `;

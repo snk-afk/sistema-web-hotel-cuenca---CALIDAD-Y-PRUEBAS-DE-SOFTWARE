@@ -93,7 +93,7 @@ async function handleRoomFormSubmit(e) {
     const id = document.getElementById('room-form-id').value;
     const number = document.getElementById('room-form-number').value.trim();
     const floor = document.getElementById('room-form-floor').value.trim();
-    const categoryId = parseInt(document.getElementById('room-form-category-id').value, 10);
+    const categoryId = Number.parseInt(document.getElementById('room-form-category-id').value, 10);
     const description = document.getElementById('room-form-description').value.trim();
 
     const isEdit = Boolean(id);
@@ -104,7 +104,7 @@ async function handleRoomFormSubmit(e) {
             method: 'POST',
             body: JSON.stringify({
                 action: action,
-                room_id: id ? parseInt(id, 10) : undefined,
+                room_id: id ? Number.parseInt(id, 10) : undefined,
                 room_category_id: categoryId,
                 number: number,
                 floor: floor,
@@ -203,10 +203,10 @@ async function handleCategoryFormSubmit(e) {
         const res = await apiFetch('/api/categories', {
             method: 'POST',
             body: JSON.stringify({
-                id: id ? parseInt(id, 10) : undefined,
+                id: id ? Number.parseInt(id, 10) : undefined,
                 name: name,
                 description: description,
-                is_active: parseInt(isActive, 10)
+                is_active: Number.parseInt(isActive, 10)
             })
         });
 
@@ -242,7 +242,7 @@ function openEditTariffModal(id, categoryId, name, hours, price, isActive) {
     document.getElementById('tariff-form-cat-id').value = categoryId;
     document.getElementById('tariff-form-name').value = name;
     document.getElementById('tariff-form-hours').value = hours;
-    document.getElementById('tariff-form-price').value = parseFloat(price).toFixed(2);
+    document.getElementById('tariff-form-price').value = Number.parseFloat(price).toFixed(2);
     document.getElementById('tariff-form-active').value = isActive;
     document.getElementById('group-tariff-active').style.display = 'block';
     document.getElementById('btn-save-tariff').textContent = 'Actualizar Tarifa';
@@ -252,22 +252,22 @@ function openEditTariffModal(id, categoryId, name, hours, price, isActive) {
 async function handleTariffFormSubmit(e) {
     e.preventDefault();
     const id = document.getElementById('tariff-form-id').value;
-    const categoryId = parseInt(document.getElementById('tariff-form-cat-id').value, 10);
+    const categoryId = Number.parseInt(document.getElementById('tariff-form-cat-id').value, 10);
     const name = document.getElementById('tariff-form-name').value.trim();
-    const hours = parseInt(document.getElementById('tariff-form-hours').value, 10);
-    const price = parseFloat(document.getElementById('tariff-form-price').value);
+    const hours = Number.parseInt(document.getElementById('tariff-form-hours').value, 10);
+    const price = Number.parseFloat(document.getElementById('tariff-form-price').value);
     const isActive = document.getElementById('tariff-form-active').value;
 
     try {
         const res = await apiFetch('/api/tariffs', {
             method: 'POST',
             body: JSON.stringify({
-                id: id ? parseInt(id, 10) : undefined,
+                id: id ? Number.parseInt(id, 10) : undefined,
                 room_category_id: categoryId,
                 name: name,
                 duration_hours: hours,
                 price: price,
-                is_active: parseInt(isActive, 10)
+                is_active: Number.parseInt(isActive, 10)
             })
         });
 

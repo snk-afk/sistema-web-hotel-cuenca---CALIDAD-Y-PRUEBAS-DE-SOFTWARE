@@ -66,7 +66,7 @@ function renderCatalog() {
             <div class="pos-product-card" data-search="${searchData}" data-product-id="${product.id}">
                 ${lowBadge}${outBadge}
                 <span class="product-name">${escapeHtml(product.name)}</span>
-                <span class="product-price">S/ ${parseFloat(product.sale_price).toFixed(2)}</span>
+                <span class="product-price">S/ ${Number.parseFloat(product.sale_price).toFixed(2)}</span>
                 <span class="product-stock ${stockClass}">${stockLabel}</span>
                 <button class="btn btn-sm btn-primary btn-add-cart" onclick="addToCart(${product.id})" ${disabled}>➕ Agregar</button>
             </div>
@@ -113,8 +113,8 @@ function addToCart(productId) {
             product_id: productId,
             name: product.name,
             quantity: 1,
-            unit_price: parseFloat(product.sale_price),
-            subtotal: parseFloat(product.sale_price),
+            unit_price: Number.parseFloat(product.sale_price),
+            subtotal: Number.parseFloat(product.sale_price),
             max_stock: product.stock,
         });
     }
@@ -384,7 +384,7 @@ async function openChargeToRoomModal() {
         occupiedRooms.forEach(room => {
             const stay = room.current_stay;
             const guestName = stay.guest_name || 'Sin Nombre';
-            const balance = parseFloat(stay.pending_balance) || 0;
+            const balance = Number.parseFloat(stay.pending_balance) || 0;
 
             html += `
                 <div class="room-select-option" data-room-id="${room.id}" onclick="selectChargeRoom(${room.id}, this)">
@@ -458,10 +458,10 @@ async function handleCreateProduct(event) {
     const name = document.getElementById('product-name').value.trim();
     const sku = document.getElementById('product-sku').value.trim() || null;
     const description = document.getElementById('product-description').value.trim() || null;
-    const salePrice = parseFloat(document.getElementById('product-sale-price').value) || 0;
-    const costPrice = parseFloat(document.getElementById('product-cost-price').value) || 0;
-    const stock = parseInt(document.getElementById('product-stock').value, 10) || 0;
-    const minStock = parseInt(document.getElementById('product-min-stock').value, 10) || 5;
+    const salePrice = Number.parseFloat(document.getElementById('product-sale-price').value) || 0;
+    const costPrice = Number.parseFloat(document.getElementById('product-cost-price').value) || 0;
+    const stock = Number.parseInt(document.getElementById('product-stock').value, 10) || 0;
+    const minStock = Number.parseInt(document.getElementById('product-min-stock').value, 10) || 5;
 
     if (!name) {
         if (typeof showToast === 'function') {

@@ -221,7 +221,7 @@ async function completeHousekeepingTask(taskId) {
 async function handleCreateTaskSubmit(event) {
     event.preventDefault();
 
-    const roomId = parseInt(document.getElementById('task-room-id').value, 10);
+    const roomId = Number.parseInt(document.getElementById('task-room-id').value, 10);
     const taskType = document.getElementById('task-type').value;
     const priority = document.getElementById('task-priority').value;
     const notes = document.getElementById('task-notes').value.trim() || null;

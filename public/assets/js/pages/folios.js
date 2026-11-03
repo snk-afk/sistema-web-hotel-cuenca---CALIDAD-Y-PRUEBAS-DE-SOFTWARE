@@ -6,7 +6,7 @@ let activeFolioTab = 'all';
 let foliosData = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadFoliosData();
+    Number.loadFoliosData();
     window.addEventListener('popstate', () => {
         applyUrlParams();
     });
@@ -35,9 +35,9 @@ async function loadFoliosData() {
                     guest_name: stay.guest_name || 'Sin Nombre',
                     guest_doc: stay.guest_doc || '---',
                     status: 'open',
-                    total_charges: parseFloat(stay.total_charges) || 0,
-                    total_payments: parseFloat(stay.total_payments) || 0,
-                    pending_balance: parseFloat(stay.pending_balance) || 0,
+                    total_charges: Number.parseFloat(stay.total_charges) || 0,
+                    total_payments: Number.parseFloat(stay.total_payments) || 0,
+                    pending_balance: Number.parseFloat(stay.pending_balance) || 0,
                     charges: stay.charges || [],
                     payments: stay.payments || [],
                     check_in_at: stay.check_in_at || '',
@@ -100,8 +100,8 @@ function renderFoliosTable() {
                 <td>Hab. ${folio.room_number} <small class="text-muted">(${folio.category_name})</small></td>
                 <td>${folio.guest_name}</td>
                 <td>${statusBadge}</td>
-                <td>S/ ${folio.total_charges.toFixed(2)}</td>
-                <td>S/ ${folio.total_payments.toFixed(2)}</td>
+                <td>S/ ${Number(folio.total_charges).toFixed(2)}</td>
+                <td>S/ ${Number(folio.total_payments).toFixed(2)}</td>
                 <td><strong class="${balanceClass}">${balanceText}</strong></td>
                 <td>
                     <button class="btn btn-sm btn-outline-info" onclick="openFolioDetailModal(${folio.stay_id})">📋 Ver Detalle</button>
@@ -231,14 +231,14 @@ function openFolioDetailModal(stayId, updateUrl = true) {
         `📋 Folio #${folio.folio_id} — Hab. ${folio.room_number} — ${folio.guest_name}`;
 
     // Summary
-    document.getElementById('folio-detail-charges').textContent = `S/ ${folio.total_charges.toFixed(2)}`;
-    document.getElementById('folio-detail-payments').textContent = `S/ ${folio.total_payments.toFixed(2)}`;
+    document.getElementById('folio-detail-charges').textContent = `S/ ${Number(folio.total_charges).toFixed(2)}`;
+    document.getElementById('folio-detail-payments').textContent = `S/ ${Number(folio.total_payments).toFixed(2)}`;
 
     const balanceEl = document.getElementById('folio-detail-balance');
-    balanceEl.textContent = folio.pending_balance > 0
-        ? `S/ ${folio.pending_balance.toFixed(2)}`
+    balanceEl.textContent = Number(folio.pending_balance) > 0
+        ? `S/ ${Number(folio.pending_balance).toFixed(2)}`
         : 'S/ 0.00 ✅ Pagado';
-    balanceEl.className = folio.pending_balance > 0
+    balanceEl.className = Number(folio.pending_balance) > 0
         ? 'summary-value text-balance-positive'
         : 'summary-value text-balance-zero';
 
@@ -259,7 +259,7 @@ function openFolioDetailModal(stayId, updateUrl = true) {
         let chargesHtml = '';
         folio.charges.forEach(c => {
             const typeLabel = chargeTypeLabels[c.charge_type] || c.charge_type;
-            const amount = parseFloat(c.total_amount);
+            const amount = Number.parseFloat(c.total_amount);
             const amountClass = amount < 0 ? 'text-danger' : '';
             const reversalBadge = amount < 0 ? ' <span class="badge-reversal">REVERSO</span>' : '';
 
@@ -268,7 +268,7 @@ function openFolioDetailModal(stayId, updateUrl = true) {
                     <td>${typeLabel}${reversalBadge}</td>
                     <td>${c.description}</td>
                     <td>${c.quantity}</td>
-                    <td>S/ ${parseFloat(c.unit_price).toFixed(2)}</td>
+                    <td>S/ ${Number.parseFloat(c.unit_price).toFixed(2)}</td>
                     <td class="${amountClass}"><strong>S/ ${amount.toFixed(2)}</strong></td>
                 </tr>
             `;
@@ -304,7 +304,7 @@ function openFolioDetailModal(stayId, updateUrl = true) {
             paymentsHtml += `
                 <tr>
                     <td>${typeLabel}</td>
-                    <td><strong class="text-success">S/ ${parseFloat(p.amount).toFixed(2)}</strong></td>
+                    <td><strong class="text-success">S/ ${Number.parseFloat(p.amount).toFixed(2)}</strong></td>
                     <td>${methodLabel}</td>
                     <td>${p.reference_number || '—'}</td>
                     <td>${p.created_at || '—'}</td>

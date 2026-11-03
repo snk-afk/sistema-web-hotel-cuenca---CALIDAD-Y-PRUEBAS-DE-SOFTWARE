@@ -94,7 +94,7 @@ async function handleCreateUserSubmit(event) {
 
     const fullName = document.getElementById('user-fullname').value.trim();
     const username = document.getElementById('user-username').value.trim();
-    const roleId = parseInt(document.getElementById('user-role-id').value, 10);
+    const roleId = Number.parseInt(document.getElementById('user-role-id').value, 10);
     const email = document.getElementById('user-email').value.trim();
     const password = document.getElementById('user-password').value;
 

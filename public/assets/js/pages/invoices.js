@@ -24,7 +24,7 @@ async function loadInvoicesData() {
 }
 
 function updateInvoicesMetrics() {
-    const totalAmount = allInvoicesList.reduce((sum, inv) => sum + (parseFloat(inv.total_amount) || 0), 0);
+    const totalAmount = allInvoicesList.reduce((sum, inv) => sum + (Number.parseFloat(inv.total_amount) || 0), 0);
     const boletas = allInvoicesList.filter(inv => inv.document_type === 'BOLETA').length;
     const facturas = allInvoicesList.filter(inv => inv.document_type === 'FACTURA').length;
     const notas = allInvoicesList.filter(inv => inv.document_type === 'NOTA_VENTA').length;
@@ -70,7 +70,7 @@ function renderInvoicesTable() {
             sunatBadge = '<span class="badge-sunat-rejected">❌ RECHAZADO</span>';
         }
 
-        const total = parseFloat(inv.total_amount) || 0;
+        const total = Number.parseFloat(inv.total_amount) || 0;
 
         let downloadBtns = `<button class="btn btn-sm btn-outline-info mr-1" onclick="openInvoiceDetailModal(${inv.id})">👁️ Ver</button> `;
         if (inv.pdf_url) {
@@ -212,8 +212,8 @@ function toggleManualInvoiceDocFields() {
 }
 
 function recalculateManualInvoiceTotal() {
-    const qty = parseInt(document.getElementById('issue-item-qty').value, 10) || 1;
-    const price = parseFloat(document.getElementById('issue-item-price').value) || 0;
+    const qty = Number.parseInt(document.getElementById('issue-item-qty').value, 10) || 1;
+    const price = Number.parseFloat(document.getElementById('issue-item-price').value) || 0;
     const total = qty * price;
 
     const taxable = total / 1.18;
@@ -234,8 +234,8 @@ async function handleIssueInvoiceSubmit(event) {
     const customerAddress = document.getElementById('issue-customer-address').value.trim() || null;
 
     const itemDesc = document.getElementById('issue-item-description').value.trim();
-    const itemQty = parseInt(document.getElementById('issue-item-qty').value, 10) || 1;
-    const itemPrice = parseFloat(document.getElementById('issue-item-price').value) || 0;
+    const itemQty = Number.parseInt(document.getElementById('issue-item-qty').value, 10) || 1;
+    const itemPrice = Number.parseFloat(document.getElementById('issue-item-price').value) || 0;
     const totalAmount = itemQty * itemPrice;
 
     if (!customerDocNum || !customerName || !itemDesc || totalAmount <= 0) {

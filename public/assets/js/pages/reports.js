@@ -54,11 +54,11 @@ async function loadReportsData() {
 }
 
 function renderOccupancyKpis(data) {
-    const rate = parseFloat(data.occupancy_rate) || 0;
-    const occupied = parseInt(data.occupied_rooms, 10) || 0;
-    const total = parseInt(data.total_rooms, 10) || 0;
-    const adr = parseFloat(data.adr) || 0;
-    const revpar = parseFloat(data.revpar) || 0;
+    const rate = Number.parseFloat(data.occupancy_rate) || 0;
+    const occupied = Number.parseInt(data.occupied_rooms, 10) || 0;
+    const total = Number.parseInt(data.total_rooms, 10) || 0;
+    const adr = Number.parseFloat(data.adr) || 0;
+    const revpar = Number.parseFloat(data.revpar) || 0;
 
     document.getElementById('kpi-occupancy-rate').textContent = `${rate.toFixed(1)} %`;
     document.getElementById('kpi-occupancy-rooms-count').textContent = `${occupied} de ${total} habitaciones ocupadas`;
@@ -69,12 +69,12 @@ function renderOccupancyKpis(data) {
 }
 
 function renderFinancialSummary(data) {
-    const acc = parseFloat(data.accommodation_income) || 0;
-    const store = parseFloat(data.store_income) || 0;
-    const other = parseFloat(data.other_income) || 0;
-    const totalIncome = parseFloat(data.total_income) || 0;
-    const totalExp = parseFloat(data.total_expenses) || 0;
-    const netProfit = parseFloat(data.net_profit) || 0;
+    const acc = Number.parseFloat(data.accommodation_income) || 0;
+    const store = Number.parseFloat(data.store_income) || 0;
+    const other = Number.parseFloat(data.other_income) || 0;
+    const totalIncome = Number.parseFloat(data.total_income) || 0;
+    const totalExp = Number.parseFloat(data.total_expenses) || 0;
+    const netProfit = Number.parseFloat(data.net_profit) || 0;
 
     // Header KPI
     const kpiProfit = document.getElementById('kpi-net-profit');

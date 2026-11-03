@@ -44,7 +44,7 @@ function initFromUrlParams() {
     // 3. Direct Reservation Detail View (?id= or ?res_id=)
     const idParam = params.get('id') || params.get('res_id');
     if (idParam) {
-        const targetId = parseInt(idParam, 10);
+        const targetId = Number.parseInt(idParam, 10);
         let targetRes = null;
         if (window.allReservationsCatalog && Array.isArray(window.allReservationsCatalog)) {
             targetRes = window.allReservationsCatalog.find(r => r.id === targetId);
@@ -161,14 +161,14 @@ function openViewReservationModal(res, updateUrl = true) {
     };
 
     document.getElementById('view-res-status-badge').innerHTML = statusMap[res.status] || res.status;
-    document.getElementById('view-res-advance').textContent = parseFloat(res.advance_payment) > 0 ? `S/ ${parseFloat(res.advance_payment).toFixed(2)}` : 'S/ 0.00 (Sin adelanto)';
+    document.getElementById('view-res-advance').textContent = Number.parseFloat(res.advance_payment) > 0 ? `S/ ${Number.parseFloat(res.advance_payment).toFixed(2)}` : 'S/ 0.00 (Sin adelanto)';
 
     document.getElementById('view-res-guest-name').textContent = res.guest_name;
     document.getElementById('view-res-guest-doc').textContent = `${res.guest_document_type}: ${res.guest_document_number}`;
     document.getElementById('view-res-guest-phone').textContent = res.guest_phone ? `📞 ${res.guest_phone}` : '';
 
     document.getElementById('view-res-room').textContent = `Habitación ${res.room_number} - ${res.category_name} (Piso ${res.room_floor})`;
-    document.getElementById('view-res-tariff').textContent = `Tarifa: ${res.tariff_name} - S/ ${parseFloat(res.tariff_price).toFixed(2)} (${res.tariff_duration_hours} horas)`;
+    document.getElementById('view-res-tariff').textContent = `Tarifa: ${res.tariff_name} - S/ ${Number.parseFloat(res.tariff_price).toFixed(2)} (${res.tariff_duration_hours} horas)`;
 
     document.getElementById('view-res-checkin').textContent = res.reserved_check_in_at;
     document.getElementById('view-res-checkout').textContent = res.reserved_check_out_at;
@@ -300,7 +300,7 @@ async function quickNoShowReservation(reservationId) {
 }
 
 function executeModalCheckinReservation() {
-    const resId = parseInt(document.getElementById('view-res-id').value, 10);
+    const resId = Number.parseInt(document.getElementById('view-res-id').value, 10);
     const roomNumber = document.getElementById('view-res-room-number').value;
     if (resId) {
         quickCheckinReservation(resId, roomNumber);
@@ -308,14 +308,14 @@ function executeModalCheckinReservation() {
 }
 
 function executeModalCancelReservation() {
-    const resId = parseInt(document.getElementById('view-res-id').value, 10);
+    const resId = Number.parseInt(document.getElementById('view-res-id').value, 10);
     if (resId) {
         quickCancelReservation(resId);
     }
 }
 
 function executeModalNoShowReservation() {
-    const resId = parseInt(document.getElementById('view-res-id').value, 10);
+    const resId = Number.parseInt(document.getElementById('view-res-id').value, 10);
     if (resId) {
         quickNoShowReservation(resId);
     }
