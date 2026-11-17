@@ -10,7 +10,7 @@ require __DIR__ . '/../layouts/sidebar.php';
 
 <div class="page-header d-flex justify-content-between align-items-center mb-3">
     <div>
-        <h2>📋 Estados de Cuenta / Folios</h2>
+        <h1>📋 Estados de Cuenta / Folios</h1>
         <p class="text-muted">Auditoría financiera de cargos, abonos y saldos pendientes por estancia.</p>
     </div>
     <a href="/" class="btn btn-primary">📊 Ir al Mapa de Habitaciones</a>
@@ -55,22 +55,22 @@ require __DIR__ . '/../layouts/sidebar.php';
 <div class="card">
     <!-- Status Filter Tabs -->
     <div class="folios-tabs-bar">
-        <button class="tab-btn active" data-status="all" onclick="filterFoliosByTab('all', this)">
+        <button type="button" class="tab-btn active" data-status="all" aria-pressed="true" onclick="filterFoliosByTab('all', this)">
             Todos <span class="tab-counter" id="tab-count-all">0</span>
         </button>
-        <button class="tab-btn" data-status="open" onclick="filterFoliosByTab('open', this)">
+        <button type="button" class="tab-btn" data-status="open" aria-pressed="false" onclick="filterFoliosByTab('open', this)">
             📂 Abiertos <span class="tab-counter" id="tab-count-open">0</span>
         </button>
-        <button class="tab-btn" data-status="closed" onclick="filterFoliosByTab('closed', this)">
+        <button type="button" class="tab-btn" data-status="closed" aria-pressed="false" onclick="filterFoliosByTab('closed', this)">
             🔒 Cerrados <span class="tab-counter" id="tab-count-closed">0</span>
         </button>
     </div>
 
     <!-- Search Bar -->
     <div class="reservations-filter-bar mb-3">
-        <label for="filter-folios-input">Buscar folios</label>
         <div class="search-box flex-1">
             <span class="search-icon">🔍</span>
+            <label for="filter-folios-input" class="folios-visually-hidden">Buscar folios</label>
             <input type="text" id="filter-folios-input" class="search-input" placeholder="Buscar por habitación, huésped, ID de folio..." onkeyup="filterFoliosTable()">
         </div>
     </div>
@@ -78,16 +78,17 @@ require __DIR__ . '/../layouts/sidebar.php';
     <!-- Folios Table -->
     <div class="table-responsive">
         <table class="table" id="table-folios">
+            <caption class="folios-visually-hidden">Estados de cuenta y folios por estancia</caption>
             <thead>
                 <tr>
-                    <th>Folio #</th>
-                    <th>Habitación</th>
-                    <th>Huésped</th>
-                    <th>Estado</th>
-                    <th>Total Cargos</th>
-                    <th>Total Abonos</th>
-                    <th>Saldo Pendiente</th>
-                    <th>Acciones</th>
+                    <th scope="col">Folio #</th>
+                    <th scope="col">Habitación</th>
+                    <th scope="col">Huésped</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Total Cargos</th>
+                    <th scope="col">Total Abonos</th>
+                    <th scope="col">Saldo Pendiente</th>
+                    <th scope="col">Acciones</th>
                 </tr>
             </thead>
             <tbody id="table-folios-body">
@@ -126,13 +127,14 @@ require __DIR__ . '/../layouts/sidebar.php';
             <h4>📝 Cargos Registrados</h4>
             <div class="table-responsive">
                 <table class="table">
+                    <caption class="folios-visually-hidden">Cargos registrados en el folio</caption>
                     <thead>
                         <tr>
-                            <th>Tipo</th>
-                            <th>Descripción</th>
-                            <th>Cant.</th>
-                            <th>P. Unit.</th>
-                            <th>Total</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Cant.</th>
+                            <th scope="col">P. Unit.</th>
+                            <th scope="col">Total</th>
                         </tr>
                     </thead>
                     <tbody id="folio-charges-body">
@@ -147,13 +149,14 @@ require __DIR__ . '/../layouts/sidebar.php';
             <h4>💰 Abonos / Pagos</h4>
             <div class="table-responsive">
                 <table class="table">
+                    <caption class="folios-visually-hidden">Abonos y pagos registrados en el folio</caption>
                     <thead>
                         <tr>
-                            <th>Tipo</th>
-                            <th>Monto</th>
-                            <th>Método</th>
-                            <th>Referencia</th>
-                            <th>Fecha</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Monto</th>
+                            <th scope="col">Método</th>
+                            <th scope="col">Referencia</th>
+                            <th scope="col">Fecha</th>
                         </tr>
                     </thead>
                     <tbody id="folio-payments-body">

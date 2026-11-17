@@ -9,11 +9,11 @@ require __DIR__ . '/../layouts/sidebar.php';
 
 <div class="page-header d-flex justify-content-between align-items-center mb-3">
     <div>
-        <h2>🛒 Punto de Venta (POS) — Tienda del Hotel</h2>
+        <h1>🛒 Punto de Venta (POS) — Tienda del Hotel</h1>
         <p class="text-muted">Punto de Venta (POS) Tienda: venta directa, carga a habitación y gestión de inventario.</p>
     </div>
     <div class="d-flex gap-2">
-        <button class="btn btn-success" onclick="openModal('modal-create-product')">➕ Nuevo Producto</button>
+        <button type="button" class="btn btn-success" onclick="openModal('modal-create-product')">➕ Nuevo Producto</button>
         <a href="/" class="btn btn-primary">📊 Ir al Dashboard</a>
     </div>
 </div>
@@ -52,7 +52,7 @@ require __DIR__ . '/../layouts/sidebar.php';
         <div class="catalog-search-bar">
             <div class="search-box flex-1">
                 <span class="search-icon">🔍</span>
-                <label for="filter-products-input">Buscar productos por nombre o SKU</label>
+                <label for="filter-products-input" class="store-visually-hidden">Buscar productos por nombre o SKU</label>
                 <input type="text" id="filter-products-input" class="search-input" placeholder="Buscar producto por nombre o SKU..." onkeyup="filterProductsCatalog()">
             </div>
         </div>
@@ -64,9 +64,9 @@ require __DIR__ . '/../layouts/sidebar.php';
 
     <!-- Right Column: Cart -->
     <div class="pos-cart-panel" id="pos-cart-panel">
-        <h3>🛒 Carrito de Compras</h3>
+        <h2>🛒 Carrito de Compras</h2>
 
-        <ul class="cart-items-list" id="store-cart-items">
+        <ul class="cart-items-list" id="store-cart-items" aria-live="polite">
             <li class="cart-empty-msg">El carrito está vacío.</li>
         </ul>
 
@@ -76,17 +76,17 @@ require __DIR__ . '/../layouts/sidebar.php';
         </div>
 
         <div class="cart-actions">
-            <button class="btn btn-success" id="btn-sell-direct" onclick="processDirectSale()" disabled>💵 Venta Directa (Contado)</button>
-            <button class="btn btn-warning" id="btn-charge-room" onclick="openChargeToRoomModal()" disabled>🏨 Cargar a Habitación</button>
+            <button type="button" class="btn btn-success" id="btn-sell-direct" onclick="processDirectSale()" disabled>💵 Venta Directa (Contado)</button>
+            <button type="button" class="btn btn-warning" id="btn-charge-room" onclick="openChargeToRoomModal()" disabled>🏨 Cargar a Habitación</button>
         </div>
     </div>
 </div>
 
 <!-- MODAL: CREATE PRODUCT -->
-<div id="modal-create-product" class="modal">
+<div id="modal-create-product" class="modal" role="dialog" aria-modal="true" aria-labelledby="create-product-title">
     <div class="modal-content" style="max-width: 560px;">
         <button type="button" class="close" aria-label="Cerrar ventana" onclick="closeModal('modal-create-product')">&times;</button>
-        <h3 style="color: #ffffff; margin-bottom: 1rem;">➕ Registrar Nuevo Producto</h3>
+        <h2 id="create-product-title" class="store-modal-title">➕ Registrar Nuevo Producto</h2>
 
         <form id="form-create-product" onsubmit="handleCreateProduct(event)">
             <div class="form-group">
@@ -133,36 +133,36 @@ require __DIR__ . '/../layouts/sidebar.php';
 </div>
 
 <!-- Cashbox Alert Banner (Hidden if open) -->
-<div id="store-cashbox-alert" class="alert alert-warning mb-3" style="display: none;">
+<div id="store-cashbox-alert" class="alert alert-warning mb-3" role="alert" style="display: none;">
     <span>⚠️ <strong>Caja Cerrada:</strong> No hay un turno de caja abierto para registrar pagos en efectivo.</span>
     <a href="/caja" class="btn btn-sm btn-outline-warning ml-2">Abrir Turno en Caja</a>
 </div>
 
 <!-- MODAL: SELECT ROOM FOR CHARGE -->
-<div id="modal-charge-room" class="modal">
+<div id="modal-charge-room" class="modal" role="dialog" aria-modal="true" aria-labelledby="charge-room-title">
     <div class="modal-content" style="max-width: 520px;">
         <button type="button" class="close" aria-label="Cerrar ventana" onclick="closeModal('modal-charge-room')">&times;</button>
-        <h3 style="color: #ffffff; margin-bottom: 1rem;">🏨 Seleccionar Habitación para Cargar Consumo</h3>
+        <h2 id="charge-room-title" class="store-modal-title">🏨 Seleccionar Habitación para Cargar Consumo</h2>
 
         <div class="room-select-list" id="room-select-list">
             <p class="text-muted text-center">Cargando habitaciones ocupadas...</p>
         </div>
 
-        <button class="btn btn-warning btn-block mt-3" id="btn-confirm-charge-room" onclick="confirmChargeToRoom()" disabled>
+        <button type="button" class="btn btn-warning btn-block mt-3" id="btn-confirm-charge-room" onclick="confirmChargeToRoom()" disabled>
             ✅ Confirmar Cargo a Habitación
         </button>
     </div>
 </div>
 
 <!-- MODAL: STORE DIRECT SALE CHECKOUT (Comprobante y Métodos de Pago) -->
-<div id="modal-store-checkout" class="modal">
+<div id="modal-store-checkout" class="modal" role="dialog" aria-modal="true" aria-labelledby="store-checkout-title">
     <div class="modal-content" style="max-width: 540px;">
         <button type="button" class="close" aria-label="Cerrar ventana" onclick="closeModal('modal-store-checkout')">&times;</button>
-        <h3 style="color: #ffffff; margin-bottom: 1rem;">💵 Finalizar Venta Directa POS</h3>
+        <h2 id="store-checkout-title" class="store-modal-title">💵 Finalizar Venta Directa POS</h2>
 
         <div class="checkout-balance-box mb-3" style="background: rgba(15, 23, 42, 0.6); padding: 14px; border-radius: 6px; text-align: center; border: 1px solid var(--border-color);">
             <span class="text-muted" style="font-size: 0.85rem; text-transform: uppercase;">Total a Cobrar:</span>
-            <h2 id="store-checkout-total-amount" class="text-success" style="font-size: 1.8rem; margin: 4px 0 0 0; font-weight: 800;">S/ 0.00</h2>
+            <p id="store-checkout-total-amount" class="text-success" style="font-size: 1.8rem; margin: 4px 0 0 0; font-weight: 800;">S/ 0.00</p>
         </div>
 
         <form id="form-store-checkout" onsubmit="executeStoreCheckout(event)">
@@ -207,18 +207,18 @@ require __DIR__ . '/../layouts/sidebar.php';
 </div>
 
 <!-- MODAL: RECIBO / VOUCHER TÉRMICO TRAS VENTA DIRECTA POS -->
-<div id="modal-store-receipt" class="modal">
+<div id="modal-store-receipt" class="modal" role="dialog" aria-modal="true" aria-labelledby="store-receipt-title">
     <div class="modal-content" style="max-width: 520px; background: var(--bg-card);">
         <button type="button" class="close" aria-label="Cerrar ventana" onclick="closeModal('modal-store-receipt')">&times;</button>
-        <h3 style="color: #ffffff; margin-bottom: 0.8rem; font-size: 1.1rem;">🧾 Comprobante de Venta Emitido</h3>
+        <h2 id="store-receipt-title" class="store-modal-title store-modal-title--compact">🧾 Comprobante de Venta Emitido</h2>
 
-        <iframe id="store-receipt-pdf-frame" src="" style="width: 100%; height: 60vh; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: #ffffff;"></iframe>
+        <iframe id="store-receipt-pdf-frame" title="Vista previa del comprobante de venta" src="" style="width: 100%; height: 60vh; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: #ffffff;"></iframe>
 
         <div class="d-flex justify-content-between align-items-center gap-2 mt-3">
             <div class="d-flex gap-2" id="store-receipt-actions">
                 <!-- Botones dinámicos de voucher y ESC/POS -->
             </div>
-            <button class="btn btn-secondary" onclick="closeModal('modal-store-receipt')">Listo / Cerrar</button>
+            <button type="button" class="btn btn-secondary" onclick="closeModal('modal-store-receipt')">Listo / Cerrar</button>
         </div>
     </div>
 </div>

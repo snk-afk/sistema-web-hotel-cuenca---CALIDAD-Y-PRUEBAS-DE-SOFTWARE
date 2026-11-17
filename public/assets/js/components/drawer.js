@@ -174,6 +174,7 @@ function togglePriceMode(mode) {
 }
 
 let currentDrawerOperationMode = 'checkin';
+let roomDrawerTrigger = null;
 
 function switchToImmediateCheckinForm() {
     switchDrawerTab('tab-free-checkin');
@@ -267,6 +268,7 @@ function recalculateFutureReservationDates() {
 }
 
 function openRoomDrawer(roomId) {
+    roomDrawerTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     currentDrawerRoomId = roomId;
     const card = document.querySelector(`.room-card[data-room-id="${roomId}"]`);
     if (!card) return;
@@ -462,6 +464,10 @@ function openRoomDrawer(roomId) {
     const overlay = document.getElementById('room-drawer-overlay');
     if (overlay) {
         overlay.style.display = 'flex';
+        const closeButton = overlay.querySelector('.ns-room-modal__close');
+        if (closeButton instanceof HTMLElement) {
+            closeButton.focus();
+        }
     }
 }
 
@@ -660,7 +666,40 @@ function closeRoomDrawer(e) {
     }
     const overlay = document.getElementById('room-drawer-overlay');
     overlay.style.display = 'none';
+    if (roomDrawerTrigger instanceof HTMLElement && document.contains(roomDrawerTrigger)) {
+        roomDrawerTrigger.focus();
+    }
+    roomDrawerTrigger = null;
 }
+
+document.addEventListener('keydown', event => {
+    const overlay = document.getElementById('room-drawer-overlay');
+    if (!overlay || overlay.style.display === 'none') return;
+
+    if (event.key === 'Escape') {
+        event.preventDefault();
+        closeRoomDrawer();
+        return;
+    }
+
+    if (event.key === 'Tab') {
+        const focusableElements = Array.from(overlay.querySelectorAll(
+            'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )).filter(element => element instanceof HTMLElement && element.offsetParent !== null);
+
+        if (focusableElements.length === 0) return;
+
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+        if (event.shiftKey && document.activeElement === firstElement) {
+            event.preventDefault();
+            lastElement.focus();
+        } else if (!event.shiftKey && document.activeElement === lastElement) {
+            event.preventDefault();
+            firstElement.focus();
+        }
+    }
+});
 
 function switchDrawerTab(tabId) {
     const tabs = document.querySelectorAll('.ns-room-modal__tab, .drawer-tab, .ns-drawer__tab');

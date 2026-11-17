@@ -72,7 +72,7 @@ function renderCatalog() {
                 <span class="product-name">${escapeHtml(product.name)}</span>
                 <span class="product-price">S/ ${Number.parseFloat(product.sale_price).toFixed(2)}</span>
                 <span class="product-stock ${stockClass}">${stockLabel}</span>
-                <button class="btn btn-sm btn-primary btn-add-cart" onclick="addToCart(${product.id})" ${disabled}>➕ Agregar</button>
+                <button type="button" class="btn btn-sm btn-primary btn-add-cart" onclick="addToCart(${product.id})" ${disabled}>➕ Agregar</button>
             </div>
         `;
     });
@@ -183,11 +183,11 @@ function renderCart() {
                     <span class="cart-item-subtotal">${item.quantity} × S/ ${item.unit_price.toFixed(2)} = S/ ${item.subtotal.toFixed(2)}</span>
                 </div>
                 <div class="cart-qty-controls">
-                    <button onclick="changeCartQty(${item.product_id}, -1)">−</button>
+                    <button type="button" aria-label="Disminuir cantidad de ${escapeHtml(item.name)}" onclick="changeCartQty(${item.product_id}, -1)">−</button>
                     <span class="cart-qty-value">${item.quantity}</span>
-                    <button onclick="changeCartQty(${item.product_id}, 1)">+</button>
+                    <button type="button" aria-label="Aumentar cantidad de ${escapeHtml(item.name)}" onclick="changeCartQty(${item.product_id}, 1)">+</button>
                 </div>
-                <button class="btn-remove-item" onclick="removeFromCart(${item.product_id})">🗑️</button>
+                <button type="button" class="btn-remove-item" aria-label="Quitar ${escapeHtml(item.name)} del carrito" onclick="removeFromCart(${item.product_id})">🗑️</button>
             </li>
         `;
     });
@@ -395,13 +395,13 @@ async function openChargeToRoomModal() {
             const balance = Number.parseFloat(stay.pending_balance) || 0;
 
             html += `
-                <div class="room-select-option" data-room-id="${room.id}" onclick="selectChargeRoom(${room.id}, this)">
+                <button type="button" class="room-select-option" data-room-id="${room.id}" aria-pressed="false" onclick="selectChargeRoom(${room.id}, this)">
                     <div class="room-info">
                         <span class="room-number">🏨 Hab. ${room.number}</span>
                         <span class="room-guest">${guestName}</span>
                     </div>
                     <span class="room-balance">Saldo: S/ ${balance.toFixed(2)}</span>
-                </div>
+                </button>
             `;
         });
 
@@ -414,8 +414,12 @@ async function openChargeToRoomModal() {
 function selectChargeRoom(roomId, el) {
     selectedChargeRoomId = roomId;
 
-    document.querySelectorAll('.room-select-option').forEach(opt => opt.classList.remove('selected'));
+    document.querySelectorAll('.room-select-option').forEach(opt => {
+        opt.classList.remove('selected');
+        opt.setAttribute('aria-pressed', 'false');
+    });
     el.classList.add('selected');
+    el.setAttribute('aria-pressed', 'true');
 
     document.getElementById('btn-confirm-charge-room').disabled = false;
 }

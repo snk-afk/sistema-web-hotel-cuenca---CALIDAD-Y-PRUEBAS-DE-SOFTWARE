@@ -33,3 +33,5 @@ services:
 
 volumes:
   hotel_db_data:
+    external: true
+    name: hotel_hotel_db_data

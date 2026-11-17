@@ -1,7 +1,7 @@
 <?php declare(strict_types=1); ?>
 
-<div id="room-drawer-overlay" class="ns-room-modal" style="display: none;" role="button" tabindex="0" aria-label="Cerrar panel de habitación" onclick="closeRoomDrawer(event)" onkeydown="if (event.target === this && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); closeRoomDrawer(event); }">
-    <div class="ns-room-modal__dialog">
+<div id="room-drawer-overlay" class="ns-room-modal" style="display: none;" onclick="closeRoomDrawer(event)">
+    <div class="ns-room-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="drawer-room-number">
         <!-- Header con Título, Badges de Estado y Categoría y Botón de Cierre -->
         <div class="ns-room-modal__header">
             <div class="ns-room-modal__title-group">
@@ -68,11 +68,11 @@
                 <div class="ns-room-modal__form-group">
                     <div class="ns-room-modal__label">Modalidad de Registro:</div>
                     <div class="ns-room-modal__pill-group" role="group" aria-label="Modalidad de Registro">
-                        <label class="ns-room-modal__pill-option active" id="drawer-pill-op-checkin">
-                            <input type="radio" name="operation_mode" value="checkin" checked onchange="toggleDrawerOperationMode('checkin')"> ⚡ Check-In Inmediato
+                        <label class="ns-room-modal__pill-option active" id="drawer-pill-op-checkin" for="operation-mode-checkin">
+                            <input type="radio" id="operation-mode-checkin" name="operation_mode" value="checkin" checked onchange="toggleDrawerOperationMode('checkin')"> ⚡ Check-In Inmediato
                         </label>
-                        <label class="ns-room-modal__pill-option" id="drawer-pill-op-reservation">
-                            <input type="radio" name="operation_mode" value="reservation" onchange="toggleDrawerOperationMode('reservation')"> 📅 Reservar a Futuro
+                        <label class="ns-room-modal__pill-option" id="drawer-pill-op-reservation" for="operation-mode-reservation">
+                            <input type="radio" id="operation-mode-reservation" name="operation_mode" value="reservation" onchange="toggleDrawerOperationMode('reservation')"> 📅 Reservar a Futuro
                         </label>
                     </div>
                 </div>
@@ -114,11 +114,11 @@
                         <div class="ns-room-modal__form-group">
                             <div class="ns-room-modal__label">Tipo de Huésped:</div>
                             <div class="ns-room-modal__pill-group" role="group" aria-label="Tipo de Huésped">
-                                <label class="ns-room-modal__pill-option active" id="drawer-pill-dni">
-                                    <input type="radio" name="doc_type_mode" value="DNI" checked onchange="toggleGuestDocType('DNI')"> 🪪 Persona (DNI)
+                                <label class="ns-room-modal__pill-option active" id="drawer-pill-dni" for="doc-type-mode-dni">
+                                    <input type="radio" id="doc-type-mode-dni" name="doc_type_mode" value="DNI" checked onchange="toggleGuestDocType('DNI')"> 🪪 Persona (DNI)
                                 </label>
-                                <label class="ns-room-modal__pill-option" id="drawer-pill-ruc">
-                                    <input type="radio" name="doc_type_mode" value="RUC" onchange="toggleGuestDocType('RUC')"> 🏢 Empresa (RUC)
+                                <label class="ns-room-modal__pill-option" id="drawer-pill-ruc" for="doc-type-mode-ruc">
+                                    <input type="radio" id="doc-type-mode-ruc" name="doc_type_mode" value="RUC" onchange="toggleGuestDocType('RUC')"> 🏢 Empresa (RUC)
                                 </label>
                             </div>
                         </div>
@@ -148,11 +148,11 @@
                         <div class="ns-room-modal__form-group">
                             <div class="ns-room-modal__label">Régimen de Tiempo:</div>
                             <div class="ns-room-modal__pill-group" role="group" aria-label="Régimen de Tiempo">
-                                <label class="ns-room-modal__pill-option active">
-                                    <input type="radio" name="stay_mode" value="tariff" checked onchange="toggleStayMode('tariff')"> ⚡ Tarifa Estándar
+                                <label class="ns-room-modal__pill-option active" for="stay-mode-tariff">
+                                    <input type="radio" id="stay-mode-tariff" name="stay_mode" value="tariff" checked onchange="toggleStayMode('tariff')"> ⚡ Tarifa Estándar
                                 </label>
-                                <label class="ns-room-modal__pill-option">
-                                    <input type="radio" name="stay_mode" value="custom" onchange="toggleStayMode('custom')"> 📅 Horario Libre
+                                <label class="ns-room-modal__pill-option" for="stay-mode-custom">
+                                    <input type="radio" id="stay-mode-custom" name="stay_mode" value="custom" onchange="toggleStayMode('custom')"> 📅 Horario Libre
                                 </label>
                             </div>
                         </div>
@@ -186,11 +186,11 @@
                         <div class="ns-room-modal__form-group">
                             <div class="ns-room-modal__label">Modalidad de Precio:</div>
                             <div class="ns-room-modal__pill-group" role="group" aria-label="Modalidad de Precio">
-                                <label class="ns-room-modal__pill-option active">
-                                    <input type="radio" name="price_mode" value="normal" checked onchange="togglePriceMode('normal')"> 💵 Precio Oficial
+                                <label class="ns-room-modal__pill-option active" for="price-mode-normal">
+                                    <input type="radio" id="price-mode-normal" name="price_mode" value="normal" checked onchange="togglePriceMode('normal')"> 💵 Precio Oficial
                                 </label>
-                                <label class="ns-room-modal__pill-option">
-                                    <input type="radio" name="price_mode" value="custom" onchange="togglePriceMode('custom')"> ✏️ Modificar
+                                <label class="ns-room-modal__pill-option" for="price-mode-custom">
+                                    <input type="radio" id="price-mode-custom" name="price_mode" value="custom" onchange="togglePriceMode('custom')"> ✏️ Modificar
                                 </label>
                             </div>
                         </div>
@@ -460,7 +460,8 @@
                     <h4 class="ns-room-modal__card-title">🔄 Transferencia de Habitación</h4>
                     <p style="color: #94a3b8; font-size: 0.88rem; margin: 0 0 10px 0;">Mover al huésped actual con todo su folio a otra habitación libre disponible.</p>
                     <div class="ns-room-modal__form-group">
-                        <select id="drawer-transfer-target-room" class="ns-room-modal__select" aria-label="Habitación de destino">
+                        <label for="drawer-transfer-target-room" class="ns-room-modal__label">Habitación de destino:</label>
+                        <select id="drawer-transfer-target-room" class="ns-room-modal__select">
                             <option value="">Seleccione habitación libre...</option>
                         </select>
                     </div>
@@ -478,7 +479,7 @@
         <button type="button" class="close" onclick="closeCheckoutReceiptModal()" aria-label="Cerrar comprobante">&times;</button>
         <h3 style="color: #ffffff; margin-bottom: 0.8rem; font-size: 1.1rem;">🧾 Liquidación de Salida / Comprobante</h3>
 
-        <iframe id="checkout-receipt-pdf-frame" src="" style="width: 100%; height: 60vh; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: #ffffff;"></iframe>
+        <iframe id="checkout-receipt-pdf-frame" title="Vista previa del comprobante de checkout" src="" style="width: 100%; height: 60vh; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: #ffffff;"></iframe>
 
         <div class="d-flex justify-content-between align-items-center gap-2 mt-3">
             <div class="d-flex gap-2" id="checkout-receipt-actions">

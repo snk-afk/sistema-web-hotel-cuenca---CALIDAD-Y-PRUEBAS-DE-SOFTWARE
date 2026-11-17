@@ -105,10 +105,14 @@ function filterByTab(status, tabBtn, updateUrl = true) {
     activeReservationTab = status;
 
     const allButtons = document.querySelectorAll('.reservations-tabs-bar .tab-btn');
-    allButtons.forEach(btn => btn.classList.remove('active'));
+    allButtons.forEach(btn => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
+    });
 
     if (tabBtn) {
         tabBtn.classList.add('active');
+        tabBtn.setAttribute('aria-pressed', 'true');
     }
 
     filterReservationsTable(updateUrl);

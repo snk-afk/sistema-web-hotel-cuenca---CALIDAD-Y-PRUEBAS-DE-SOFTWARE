@@ -51,10 +51,14 @@ function updateRackStatsCounts() {
 function filterRackByStatus(status, element) {
     currentActiveStatusFilter = status;
     const pills = document.querySelectorAll('.stat-pill');
-    pills.forEach(p => p.classList.remove('active-filter'));
+    pills.forEach(p => {
+        p.classList.remove('active-filter');
+        p.setAttribute('aria-pressed', 'false');
+    });
 
     if (element) {
         element.classList.add('active-filter');
+        element.setAttribute('aria-pressed', 'true');
     }
 
     filterRackRooms();

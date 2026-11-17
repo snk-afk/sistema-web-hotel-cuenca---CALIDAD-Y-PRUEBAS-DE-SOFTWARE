@@ -9,7 +9,7 @@ require __DIR__ . '/../layouts/sidebar.php';
 
 <div class="page-header d-flex justify-content-between align-items-center mb-3">
     <div>
-        <h2>🪪 Directorio Maestro de Huéspedes & CRM</h2>
+        <h1>🪪 Directorio Maestro de Huéspedes & CRM</h1>
         <p class="text-muted">Padrón central de clientes, historial de visitas y métricas de consumo acumulado.</p>
     </div>
     <button class="btn btn-primary" onclick="openCreateGuestModal()">➕ Nuevo Huésped</button>
@@ -72,16 +72,17 @@ require __DIR__ . '/../layouts/sidebar.php';
 
     <div class="table-responsive">
         <table class="data-table" id="table-guests-directory">
+            <caption class="guests-visually-hidden">Directorio de huéspedes registrados</caption>
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Documento</th>
-                    <th>Huésped / Razón Social</th>
-                    <th>Contacto (Tel / Correo)</th>
-                    <th>Visitas</th>
-                    <th>Total Acumulado</th>
-                    <th>Notas / Perfil</th>
-                    <th>Acciones</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Documento</th>
+                    <th scope="col">Huésped / Razón Social</th>
+                    <th scope="col">Contacto (Tel / Correo)</th>
+                    <th scope="col">Visitas</th>
+                    <th scope="col">Total Acumulado</th>
+                    <th scope="col">Notas / Perfil</th>
+                    <th scope="col">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -142,7 +143,7 @@ require __DIR__ . '/../layouts/sidebar.php';
                                 <div class="d-flex gap-1">
                                     <a href="/reservas?search=<?= urlencode($g_doc_num) ?>" class="btn btn-sm btn-outline-info" title="Ver Historial de Reservas de este Huésped">📅 Reservas</a>
                                     <button class="btn btn-sm btn-outline-info" onclick="openGuestProfileModal(<?= $g_id ?>)">📜 Historial</button>
-                                    <button class="btn btn-sm btn-secondary" onclick="openEditGuestModal(<?= $g_id ?>, '<?= htmlspecialchars($g_doc_type, ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>', '<?= htmlspecialchars($g_doc_num, ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>', '<?= htmlspecialchars($g_name, ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>', '<?= htmlspecialchars($g_phone, ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>', '<?= htmlspecialchars($g_email, ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>', '<?= htmlspecialchars($g_address, ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>', '<?= htmlspecialchars($g_notes, ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>')">✏️</button>
+                                    <button class="btn btn-sm btn-secondary" aria-label="Editar huésped <?= htmlspecialchars($g_name, ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>" onclick="openEditGuestModal(<?= $g_id ?>, '<?= htmlspecialchars($g_doc_type, ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>', '<?= htmlspecialchars($g_doc_num, ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>', '<?= htmlspecialchars($g_name, ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>', '<?= htmlspecialchars($g_phone, ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>', '<?= htmlspecialchars($g_email, ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>', '<?= htmlspecialchars($g_address, ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>', '<?= htmlspecialchars($g_notes, ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>')">✏️</button>
                                 </div>
                             </td>
                         </tr>
@@ -175,7 +176,7 @@ require __DIR__ . '/../layouts/sidebar.php';
                     <label id="lbl-modal-doc-num" for="guest-form-doc-num">Número de Documento:</label>
                     <div class="d-flex gap-1">
                         <input type="text" id="guest-form-doc-num" class="form-control" placeholder="Ej: 74819203" required>
-                        <button type="button" class="btn btn-secondary" onclick="lookupGuestDocumentInModal()" title="Consultar Padrón RENIEC/SUNAT">🔍</button>
+                        <button type="button" class="btn btn-secondary" aria-label="Consultar documento en RENIEC o SUNAT" onclick="lookupGuestDocumentInModal()" title="Consultar Padrón RENIEC/SUNAT">🔍</button>
                     </div>
                 </div>
             </div>
@@ -245,16 +246,17 @@ require __DIR__ . '/../layouts/sidebar.php';
         <h4 class="mb-2">📋 Historial Cronológico de Estancias</h4>
         <div class="table-responsive" style="max-height: 260px; overflow-y: auto;">
             <table class="data-table" id="table-guest-history">
+                <caption class="guests-visually-hidden">Historial cronológico de estancias del huésped</caption>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Habitación</th>
-                        <th>Categoría</th>
-                        <th>Ingreso</th>
-                        <th>Salida</th>
-                        <th>Tarifa</th>
-                        <th>Monto</th>
-                        <th>Estado</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Habitación</th>
+                        <th scope="col">Categoría</th>
+                        <th scope="col">Ingreso</th>
+                        <th scope="col">Salida</th>
+                        <th scope="col">Tarifa</th>
+                        <th scope="col">Monto</th>
+                        <th scope="col">Estado</th>
                     </tr>
                 </thead>
                 <tbody id="guest-history-body">

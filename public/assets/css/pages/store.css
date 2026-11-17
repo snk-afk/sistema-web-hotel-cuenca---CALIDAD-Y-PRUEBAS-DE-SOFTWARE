@@ -1,5 +1,54 @@
 /* CS-Hotel: Store POS Styling */
 
+.page-header h1 {
+    font-size: 1.5rem;
+}
+
+.page-header .btn-primary,
+.pos-product-card .btn-primary {
+    background-color: #2563eb;
+}
+
+.page-header .btn-primary:hover,
+.pos-product-card .btn-primary:hover {
+    background-color: #1d4ed8;
+}
+
+.btn-success {
+    background-color: #047857;
+}
+
+.btn-success:hover {
+    background-color: #065f46;
+}
+
+.store-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.store-modal-title {
+    color: #ffffff;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.store-modal-title--compact {
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+}
+
+html[data-a11y-theme="light"] .store-modal-title {
+    color: #172033;
+}
+
 .store-metrics-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -131,7 +180,7 @@
     top: 80px;
 }
 
-.pos-cart-panel h3 {
+.pos-cart-panel h2 {
     color: #ffffff;
     font-size: 1.05rem;
     margin-bottom: 0.75rem;
@@ -272,6 +321,11 @@
     margin-bottom: 6px;
     cursor: pointer;
     transition: background 0.15s ease;
+    width: 100%;
+    background-color: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
 }
 
 .room-select-option:hover {

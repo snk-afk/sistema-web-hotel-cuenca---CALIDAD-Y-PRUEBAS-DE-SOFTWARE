@@ -8,19 +8,23 @@ require __DIR__ . '/../layouts/sidebar.php';
 ?>
 
 <div class="dashboard-header-bar">
+    <h1 class="dashboard-visually-hidden">Mapa de habitaciones</h1>
     <div class="search-box">
-        <label class="search-icon" for="rack-search-input" aria-label="Buscar habitaciones"><span aria-hidden="true">🔍</span></label>
+        <label class="search-icon" for="rack-search-input">
+            <span aria-hidden="true">🔍</span>
+            <span class="dashboard-visually-hidden">Buscar habitaciones</span>
+        </label>
         <input type="text" id="rack-search-input" class="search-input" placeholder="Buscar por N° habitación, DNI, RUC o Nombre..." onkeyup="filterRackRooms()">
     </div>
 
     <div class="rack-stats-pills">
-        <button type="button" class="stat-pill pill-all active-filter" onclick="filterRackByStatus('all', this)">🏨 Todos (<strong id="count-all"><?= count($rooms) ?></strong>)</button>
-        <button type="button" class="stat-pill pill-free" onclick="filterRackByStatus('free', this)">🟢 Libres (<strong id="count-free">0</strong>)</button>
-        <button type="button" class="stat-pill pill-occupied" onclick="filterRackByStatus('occupied', this)">🔵 Ocupadas (<strong id="count-occupied">0</strong>)</button>
-        <button type="button" class="stat-pill pill-overdue" onclick="filterRackByStatus('overdue', this)">⚠️ Vencidas (<strong id="count-overdue">0</strong>)</button>
-        <button type="button" class="stat-pill pill-cleaning" onclick="filterRackByStatus('cleaning', this)">🧹 Limpieza (<strong id="count-cleaning">0</strong>)</button>
-        <button type="button" class="stat-pill pill-reserved" onclick="filterRackByStatus('reserved', this)">📅 Reservadas (<strong id="count-reserved">0</strong>)</button>
-        <button type="button" class="stat-pill pill-maintenance" onclick="filterRackByStatus('maintenance', this)">🔧 Avería (<strong id="count-maintenance">0</strong>)</button>
+        <button type="button" class="stat-pill pill-all active-filter" aria-pressed="true" onclick="filterRackByStatus('all', this)">🏨 Todos (<strong id="count-all"><?= count($rooms) ?></strong>)</button>
+        <button type="button" class="stat-pill pill-free" aria-pressed="false" onclick="filterRackByStatus('free', this)">🟢 Libres (<strong id="count-free">0</strong>)</button>
+        <button type="button" class="stat-pill pill-occupied" aria-pressed="false" onclick="filterRackByStatus('occupied', this)">🔵 Ocupadas (<strong id="count-occupied">0</strong>)</button>
+        <button type="button" class="stat-pill pill-overdue" aria-pressed="false" onclick="filterRackByStatus('overdue', this)">⚠️ Vencidas (<strong id="count-overdue">0</strong>)</button>
+        <button type="button" class="stat-pill pill-cleaning" aria-pressed="false" onclick="filterRackByStatus('cleaning', this)">🧹 Limpieza (<strong id="count-cleaning">0</strong>)</button>
+        <button type="button" class="stat-pill pill-reserved" aria-pressed="false" onclick="filterRackByStatus('reserved', this)">📅 Reservadas (<strong id="count-reserved">0</strong>)</button>
+        <button type="button" class="stat-pill pill-maintenance" aria-pressed="false" onclick="filterRackByStatus('maintenance', this)">🔧 Avería (<strong id="count-maintenance">0</strong>)</button>
     </div>
 </div>
 

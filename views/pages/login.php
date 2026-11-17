@@ -11,10 +11,10 @@
     <link rel="stylesheet" href="/assets/css/pages/login.css">
 </head>
 <body class="login-body">
-<div class="login-container">
+<main class="login-container">
     <div class="login-card">
         <div class="login-header">
-            <h2>🏨 CS-Hotel System</h2>
+            <h1>🏨 CS-Hotel System</h1>
             <p>Acceso al Sistema de Gestión Hotelera</p>
         </div>
 
@@ -38,7 +38,7 @@
             <button type="submit" class="btn btn-primary btn-block">🔓 Iniciar Sesión</button>
         </form>
     </div>
-</div>
+</main>
 
 <script src="/assets/js/core/api.js"></script>
 <script src="/assets/js/pages/login.js"></script>

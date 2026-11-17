@@ -10,19 +10,19 @@ require __DIR__ . '/../layouts/sidebar.php';
 
 <div class="page-header d-flex justify-content-between align-items-center mb-3">
     <div>
-        <h2>💵 Turnos y Movimientos de Caja</h2>
+        <h1>💵 Turnos y Movimientos de Caja</h1>
         <p class="text-muted">Gestión de Caja Chica y Turnos de Trabajo: control de flujo de efectivo, arqueo diario y trazabilidad de ingresos y egresos.</p>
     </div>
     <div class="d-flex gap-2" id="cashbox-header-actions" style="display: none;">
-        <button class="btn btn-outline-info" onclick="openModal('modal-new-movement')">➕ Registrar Movimiento</button>
-        <button class="btn btn-danger" onclick="openCloseShiftModal()">🔒 Cerrar Turno / Arqueo</button>
+        <button type="button" class="btn btn-outline-info" onclick="openModal('modal-new-movement')">➕ Registrar Movimiento</button>
+        <button type="button" class="btn btn-danger" onclick="openCloseShiftModal()">🔒 Cerrar Turno / Arqueo</button>
     </div>
 </div>
 
 <!-- CONTAINER IF NO ACTIVE SHIFT -->
 <div id="cashbox-no-shift-container" class="card cashbox-welcome-box" style="display: none;">
     <div class="welcome-icon">🔒</div>
-    <h3>No hay un turno de caja abierto</h3>
+    <h2 class="cashbox-section-title cashbox-section-title--welcome">No hay un turno de caja abierto</h2>
     <p class="text-muted mb-4">Para comenzar a operar cobros en recepción, ventas de tienda o pagos de estancias, debe aperturar un nuevo turno de caja chica.</p>
 
     <form id="form-open-shift" onsubmit="handleOpenShiftSubmit(event)">
@@ -81,7 +81,7 @@ require __DIR__ . '/../layouts/sidebar.php';
     <div class="shift-status-card">
         <div class="shift-status-header">
             <div>
-                <h3 style="margin: 0; color: #ffffff;">Turno Activo #<span id="shift-id-display">--</span></h3>
+                <h2 class="cashbox-section-title">Turno Activo #<span id="shift-id-display">--</span></h2>
                 <span class="badge badge-success mt-1">🟢 EN CURSO</span>
             </div>
             <div class="text-right">
@@ -109,20 +109,21 @@ require __DIR__ . '/../layouts/sidebar.php';
     <!-- Movements Table Card -->
     <div class="card">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 style="margin: 0; color: #ffffff;">📜 Movimientos del Turno</h3>
-            <button class="btn btn-sm btn-outline-info" onclick="openModal('modal-new-movement')">➕ Registrar Movimiento</button>
+            <h2 class="cashbox-section-title">📜 Movimientos del Turno</h2>
+            <button type="button" class="btn btn-sm btn-outline-info" onclick="openModal('modal-new-movement')">➕ Registrar Movimiento</button>
         </div>
 
         <div class="table-responsive">
             <table class="table" id="table-cashbox-movements">
+                <caption class="cashbox-visually-hidden">Movimientos registrados en el turno activo</caption>
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Hora</th>
-                        <th>Tipo</th>
-                        <th>Concepto / Detalle</th>
-                        <th>Método</th>
-                        <th>Monto</th>
+                        <th scope="col">#</th>
+                        <th scope="col">Hora</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Concepto / Detalle</th>
+                        <th scope="col">Método</th>
+                        <th scope="col">Monto</th>
                     </tr>
                 </thead>
                 <tbody id="table-cashbox-movements-body">
@@ -137,7 +138,7 @@ require __DIR__ . '/../layouts/sidebar.php';
 <div class="card mt-4" id="cashbox-history-container">
     <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
         <div>
-            <h3 style="margin: 0; color: #ffffff;">📋 Historial de Turnos de Caja</h3>
+            <h2 class="cashbox-section-title">📋 Historial de Turnos de Caja</h2>
             <p class="text-muted" style="margin: 0; font-size: 0.85rem;">Consulta de turnos cerrados, arqueos históricos y trazabilidad de movimientos</p>
         </div>
         <div class="d-flex gap-2">
@@ -173,19 +174,20 @@ require __DIR__ . '/../layouts/sidebar.php';
     <!-- Tabla del Historial -->
     <div class="table-responsive">
         <table class="table" id="table-cashbox-history">
+            <caption class="cashbox-visually-hidden">Historial y arqueos de turnos de caja</caption>
             <thead>
                 <tr>
-                    <th># Turno</th>
-                    <th>Responsable</th>
-                    <th>Apertura</th>
-                    <th>Cierre</th>
-                    <th>Fondo Inicial</th>
-                    <th>Esperado</th>
-                    <th>Declarado</th>
-                    <th>Diferencia</th>
-                    <th>Estado</th>
-                    <th>Arqueo</th>
-                    <th>Acción</th>
+                    <th scope="col"># Turno</th>
+                    <th scope="col">Responsable</th>
+                    <th scope="col">Apertura</th>
+                    <th scope="col">Cierre</th>
+                    <th scope="col">Fondo Inicial</th>
+                    <th scope="col">Esperado</th>
+                    <th scope="col">Declarado</th>
+                    <th scope="col">Diferencia</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Arqueo</th>
+                    <th scope="col">Acción</th>
                 </tr>
             </thead>
             <tbody id="table-cashbox-history-body">
@@ -196,10 +198,10 @@ require __DIR__ . '/../layouts/sidebar.php';
 </div>
 
 <!-- MODAL: REGISTRAR MOVIMIENTO EXTRAORDINARIO -->
-<div id="modal-new-movement" class="modal">
+<div id="modal-new-movement" class="modal" role="dialog" aria-modal="true" aria-labelledby="new-movement-title">
     <div class="modal-content" style="max-width: 520px;">
         <button type="button" class="close" onclick="closeModal('modal-new-movement')" aria-label="Cerrar registro de movimiento">&times;</button>
-        <h3 style="color: #ffffff; margin-bottom: 1rem;">➕ Registrar Movimiento de Caja</h3>
+        <h2 id="new-movement-title" class="cashbox-modal-title">➕ Registrar Movimiento de Caja</h2>
 
         <form id="form-new-movement" onsubmit="handleNewMovementSubmit(event)">
             <div class="form-group">
@@ -247,10 +249,10 @@ require __DIR__ . '/../layouts/sidebar.php';
 </div>
 
 <!-- MODAL: CERRAR TURNO / ARQUEO -->
-<div id="modal-close-shift" class="modal">
+<div id="modal-close-shift" class="modal" role="dialog" aria-modal="true" aria-labelledby="close-shift-title">
     <div class="modal-content" style="max-width: 560px;">
         <button type="button" class="close" onclick="closeModal('modal-close-shift')" aria-label="Cerrar arqueo de caja">&times;</button>
-        <h3 style="color: #ffffff; margin-bottom: 1rem;">🔒 Cierre de Turno y Arqueo de Caja</h3>
+        <h2 id="close-shift-title" class="cashbox-modal-title">🔒 Cierre de Turno y Arqueo de Caja</h2>
 
         <div class="arqueo-comparison-grid">
             <div class="arqueo-box">
@@ -289,7 +291,7 @@ require __DIR__ . '/../layouts/sidebar.php';
                 <input type="number" step="0.01" id="close-real-transfer-declared" class="form-control" placeholder="0.00" min="0" required>
             </div>
 
-            <div id="arqueo-diff-display" class="arqueo-difference-box balanced">
+            <div id="arqueo-diff-display" class="arqueo-difference-box balanced" role="status" aria-live="polite">
                 DIFERENCIA: S/ 0.00 (CUADRADO)
             </div>
 
@@ -304,10 +306,10 @@ require __DIR__ . '/../layouts/sidebar.php';
 </div>
 
 <!-- MODAL: DETALLE DE TURNO CERRADO (SPEC-0040) -->
-<div id="modal-shift-detail" class="modal">
+<div id="modal-shift-detail" class="modal" role="dialog" aria-modal="true" aria-labelledby="shift-detail-title">
     <div class="modal-content" style="max-width: 760px;">
         <button type="button" class="close" onclick="closeModal('modal-shift-detail')" aria-label="Cerrar detalle del turno">&times;</button>
-        <h3 style="color: #ffffff; margin-bottom: 1rem;">🔍 Detalle de Turno #<span id="detail-shift-id">---</span></h3>
+        <h2 id="shift-detail-title" class="cashbox-modal-title">🔍 Detalle de Turno #<span id="detail-shift-id">---</span></h2>
 
         <div class="shift-detail-header-grid mb-3" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
             <div class="arqueo-box">
@@ -336,7 +338,7 @@ require __DIR__ . '/../layouts/sidebar.php';
             </div>
         </div>
 
-        <div id="detail-shift-diff-box" class="arqueo-difference-box balanced mb-3">
+        <div id="detail-shift-diff-box" class="arqueo-difference-box balanced mb-3" role="status" aria-live="polite">
             DIFERENCIA: S/ 0.00
         </div>
 
@@ -344,17 +346,18 @@ require __DIR__ . '/../layouts/sidebar.php';
             <!-- Notas de cierre -->
         </div>
 
-        <h4 style="color: #ffffff; margin-bottom: 0.5rem; font-size: 1rem;">📜 Movimientos Registrados</h4>
+        <h3 class="cashbox-detail-subtitle">📜 Movimientos Registrados</h3>
         <div class="table-responsive" style="max-height: 280px; overflow-y: auto;">
             <table class="table" id="table-detail-movements">
+                <caption class="cashbox-visually-hidden">Movimientos registrados en el turno seleccionado</caption>
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Hora</th>
-                        <th>Tipo</th>
-                        <th>Concepto / Detalle</th>
-                        <th>Método</th>
-                        <th>Monto</th>
+                        <th scope="col">#</th>
+                        <th scope="col">Hora</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Concepto / Detalle</th>
+                        <th scope="col">Método</th>
+                        <th scope="col">Monto</th>
                     </tr>
                 </thead>
                 <tbody id="table-detail-movements-body">

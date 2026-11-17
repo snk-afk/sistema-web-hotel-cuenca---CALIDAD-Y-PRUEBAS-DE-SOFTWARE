@@ -10,7 +10,7 @@ require __DIR__ . '/../layouts/sidebar.php';
 
 <div class="page-header d-flex justify-content-between align-items-center mb-3">
     <div>
-        <h2>📜 Libro Maestro & Historial de Reservas</h2>
+        <h1>📜 Libro Maestro & Historial de Reservas</h1>
         <p class="text-muted">Gestión de Reservas: auditoría, trazabilidad y control de reservas históricas y futuras.</p>
     </div>
     <a href="/" class="btn btn-primary">📊 Ir al Mapa de Habitaciones</a>
@@ -55,22 +55,22 @@ require __DIR__ . '/../layouts/sidebar.php';
 <div class="card">
     <!-- Status Filter Tabs -->
     <div class="reservations-tabs-bar">
-        <button class="tab-btn active" data-status="all" onclick="filterByTab('all', this)">
+        <button type="button" class="tab-btn active" data-status="all" aria-pressed="true" onclick="filterByTab('all', this)">
             Todos <span class="tab-counter"><?= (int) ($metrics['total_reservations'] ?? 0) ?></span>
         </button>
-        <button class="tab-btn" data-status="pending" onclick="filterByTab('pending', this)">
+        <button type="button" class="tab-btn" data-status="pending" aria-pressed="false" onclick="filterByTab('pending', this)">
             ⏳ Pendientes <span class="tab-counter"><?= (int) ($metrics['pending_count'] ?? 0) ?></span>
         </button>
-        <button class="tab-btn" data-status="confirmed" onclick="filterByTab('confirmed', this)">
+        <button type="button" class="tab-btn" data-status="confirmed" aria-pressed="false" onclick="filterByTab('confirmed', this)">
             ✅ Confirmadas <span class="tab-counter"><?= (int) ($metrics['confirmed_count'] ?? 0) ?></span>
         </button>
-        <button class="tab-btn" data-status="checked_in" onclick="filterByTab('checked_in', this)">
+        <button type="button" class="tab-btn" data-status="checked_in" aria-pressed="false" onclick="filterByTab('checked_in', this)">
             🏨 Hospedados <span class="tab-counter"><?= (int) ($metrics['checked_in_count'] ?? 0) ?></span>
         </button>
-            <button class="tab-btn" data-status="cancelled" onclick="filterByTab('cancelled', this)">
+            <button type="button" class="tab-btn" data-status="cancelled" aria-pressed="false" onclick="filterByTab('cancelled', this)">
                 ❌ Canceladas <span class="tab-counter"><?= (int) ($metrics['cancelled_count'] ?? 0) ?></span>
             </button>
-            <button class="tab-btn" data-status="no_show" onclick="filterByTab('no_show', this)">
+            <button type="button" class="tab-btn" data-status="no_show" aria-pressed="false" onclick="filterByTab('no_show', this)">
                 🚫 No-show
             </button>
     </div>
@@ -79,7 +79,7 @@ require __DIR__ . '/../layouts/sidebar.php';
     <div class="reservations-filter-bar mb-3">
         <div class="search-box flex-1">
             <span class="search-icon">🔍</span>
-            <label for="filter-reservations-input">Buscar reservas</label>
+            <label for="filter-reservations-input" class="reservations-visually-hidden">Buscar reservas</label>
             <input type="text" id="filter-reservations-input" class="search-input" placeholder="Buscar por huésped, documento, habitación o ID de reserva..." onkeyup="filterReservationsTable()">
         </div>
     </div>
@@ -87,19 +87,20 @@ require __DIR__ . '/../layouts/sidebar.php';
     <!-- Table -->
     <div class="table-responsive">
         <table class="data-table" id="table-reservations">
+            <caption class="reservations-visually-hidden">Libro maestro e historial de reservas</caption>
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Huésped</th>
-                    <th>Habitación</th>
-                    <th>Rango de Fechas</th>
-                    <th>Tarifa</th>
-                    <th>Anticipo</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Huésped</th>
+                    <th scope="col">Habitación</th>
+                    <th scope="col">Rango de Fechas</th>
+                    <th scope="col">Tarifa</th>
+                    <th scope="col">Anticipo</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acciones</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="table-reservations-body">
                 <?php if (empty($reservations)): ?>
                     <tr class="empty-row">
                         <td colspan="8" class="text-center py-4 text-muted">
@@ -206,7 +207,7 @@ require __DIR__ . '/../layouts/sidebar.php';
         </div>
 
         <div class="mb-3">
-            <h5 class="mb-1 text-primary">👤 Datos del Huésped</h5>
+            <h4 class="mb-1 text-primary reservation-detail-heading">👤 Datos del Huésped</h4>
             <p class="mb-0 font-bold" id="view-res-guest-name" style="color: #ffffff; font-size: 1.05rem;"></p>
             <p class="text-muted mb-0" id="view-res-guest-doc"></p>
             <p class="text-muted mb-0" id="view-res-guest-phone"></p>
@@ -215,7 +216,7 @@ require __DIR__ . '/../layouts/sidebar.php';
         <hr style="border-color: var(--border-color);">
 
         <div class="mb-3">
-            <h5 class="mb-1 text-primary">🚪 Habitación & Tarifa</h5>
+            <h4 class="mb-1 text-primary reservation-detail-heading">🚪 Habitación & Tarifa</h4>
             <p class="mb-0 font-bold" id="view-res-room" style="color: #ffffff;"></p>
             <p class="text-muted mb-0" id="view-res-tariff"></p>
         </div>
@@ -223,14 +224,14 @@ require __DIR__ . '/../layouts/sidebar.php';
         <hr style="border-color: var(--border-color);">
 
         <div class="mb-3">
-            <h5 class="mb-1 text-primary">🕒 Horario Reservado</h5>
+            <h4 class="mb-1 text-primary reservation-detail-heading">🕒 Horario Reservado</h4>
             <p class="mb-0"><strong>Entrada:</strong> <span id="view-res-checkin"></span></p>
             <p class="mb-0"><strong>Salida Estimada:</strong> <span id="view-res-checkout"></span></p>
         </div>
 
         <div class="mb-3" id="view-res-notes-container" style="display: none;">
             <hr style="border-color: var(--border-color);">
-            <h5 class="mb-1 text-primary">📝 Notas / Requerimientos</h5>
+            <h4 class="mb-1 text-primary reservation-detail-heading">📝 Notas / Requerimientos</h4>
             <p class="mb-0 fst-italic" id="view-res-notes" style="color: #94a3b8;"></p>
         </div>
 

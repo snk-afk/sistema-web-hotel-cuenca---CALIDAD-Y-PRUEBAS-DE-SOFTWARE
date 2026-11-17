@@ -120,11 +120,11 @@
                     <fieldset class="a11y-color-vision" id="a11y-color-vision">
                         <legend>Visión del color</legend>
                         <p>Paletas de estado con símbolos y texto redundantes.</p>
-                        <label><input type="radio" name="a11y-color-vision" value="original"> <span>Colores originales</span></label>
-                        <label><input type="radio" name="a11y-color-vision" value="protanopia"> <span>Paleta para protanopia</span></label>
-                        <label><input type="radio" name="a11y-color-vision" value="deuteranopia"> <span>Paleta para deuteranopia</span></label>
-                        <label><input type="radio" name="a11y-color-vision" value="tritanopia"> <span>Paleta para tritanopia</span></label>
-                        <label><input type="radio" name="a11y-color-vision" value="accessible"> <span>Accesible general</span></label>
+                        <label for="a11y-color-original"><input type="radio" id="a11y-color-original" name="a11y-color-vision" value="original"> <span>Colores originales</span></label>
+                        <label for="a11y-color-protanopia"><input type="radio" id="a11y-color-protanopia" name="a11y-color-vision" value="protanopia"> <span>Paleta para protanopia</span></label>
+                        <label for="a11y-color-deuteranopia"><input type="radio" id="a11y-color-deuteranopia" name="a11y-color-vision" value="deuteranopia"> <span>Paleta para deuteranopia</span></label>
+                        <label for="a11y-color-tritanopia"><input type="radio" id="a11y-color-tritanopia" name="a11y-color-vision" value="tritanopia"> <span>Paleta para tritanopia</span></label>
+                        <label for="a11y-color-accessible"><input type="radio" id="a11y-color-accessible" name="a11y-color-vision" value="accessible"> <span>Accesible general</span></label>
                     </fieldset>
                     <button type="button" class="a11y-reset" id="a11y-reset">Restablecer configuración</button>
                     <p class="a11y-status" id="a11y-status" role="status" aria-live="polite"></p>

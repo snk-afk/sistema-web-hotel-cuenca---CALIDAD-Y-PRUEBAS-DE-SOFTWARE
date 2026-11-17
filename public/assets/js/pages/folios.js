@@ -6,7 +6,7 @@ let activeFolioTab = 'all';
 let foliosData = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-    Number.loadFoliosData();
+    loadFoliosData();
     window.addEventListener('popstate', () => {
         applyUrlParams();
     });
@@ -123,10 +123,14 @@ function filterFoliosByTab(status, tabBtn, updateUrl = true) {
     activeFolioTab = status;
 
     const allButtons = document.querySelectorAll('.folios-tabs-bar .tab-btn');
-    allButtons.forEach(btn => btn.classList.remove('active'));
+    allButtons.forEach(btn => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
+    });
 
     if (tabBtn) {
         tabBtn.classList.add('active');
+        tabBtn.setAttribute('aria-pressed', 'true');
     }
 
     filterFoliosTable(updateUrl);

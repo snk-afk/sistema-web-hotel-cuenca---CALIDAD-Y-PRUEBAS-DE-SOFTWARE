@@ -25,10 +25,18 @@
     margin-bottom: 2rem;
 }
 
-.login-header h2 {
+.login-header h1 {
     color: #60a5fa;
     font-size: 1.8rem;
     margin-bottom: 0.25rem;
+}
+
+.login-card .btn-primary {
+    background: #2563eb;
+}
+
+.login-card .btn-primary:hover {
+    background: #1d4ed8;
 }
 
 .login-header p {

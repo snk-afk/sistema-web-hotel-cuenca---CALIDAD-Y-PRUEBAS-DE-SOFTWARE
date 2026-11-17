@@ -1,5 +1,72 @@
 /* CS-Hotel: Cashbox / Caja Chica Styling */
 
+.page-header h1 {
+    font-size: 1.5rem;
+}
+
+.btn-primary {
+    background-color: #2563eb;
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8;
+}
+
+.btn-success {
+    background-color: #047857;
+}
+
+.btn-success:hover {
+    background-color: #065f46;
+}
+
+.btn-danger {
+    background-color: #b91c1c;
+}
+
+.btn-danger:hover {
+    background-color: #991b1b;
+}
+
+.cashbox-section-title {
+    color: #ffffff;
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+.cashbox-section-title--welcome {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+}
+
+.cashbox-modal-title {
+    color: #ffffff;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.cashbox-detail-subtitle {
+    color: #ffffff;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+html[data-a11y-theme="light"] :is(.cashbox-section-title, .cashbox-modal-title, .cashbox-detail-subtitle) {
+    color: #172033;
+}
+
+.cashbox-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 .cashbox-metrics-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -78,7 +145,7 @@
     margin-bottom: 1rem;
 }
 
-.cashbox-welcome-box h3 {
+.cashbox-welcome-box .cashbox-section-title {
     color: #ffffff;
     font-size: 1.4rem;
     margin-bottom: 0.5rem;
