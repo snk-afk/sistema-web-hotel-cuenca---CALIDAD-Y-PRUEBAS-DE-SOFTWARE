@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - CS-Hotel System</title>
     <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/accessibility.css">
     <link rel="stylesheet" href="/assets/css/components/modal.css">
     <link rel="stylesheet" href="/assets/css/pages/login.css">
 </head>
@@ -41,5 +42,6 @@
 
 <script src="/assets/js/core/api.js"></script>
 <script src="/assets/js/pages/login.js"></script>
+<script src="/assets/js/components/accessibility.js"></script>
 </body>
 </html>

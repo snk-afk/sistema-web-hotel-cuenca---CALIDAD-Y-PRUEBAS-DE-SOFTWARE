@@ -41,6 +41,7 @@ if (!isset($page_styles) || !is_array($page_styles)) {
     <meta name="csrf-token" content="<?= htmlspecialchars($csrf_token, ENT_QUOTES | ENT_HTML5, 'UTF-8') ?>">
     <title><?= htmlspecialchars($page_title ?? 'CS-Hotel', ENT_QUOTES | ENT_HTML5, 'UTF-8') ?> - CS-Hotel</title>
     <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/accessibility.css">
     <link rel="stylesheet" href="/assets/css/layout.css">
     <link rel="stylesheet" href="/assets/css/layout/header.css">
     <link rel="stylesheet" href="/assets/css/layout/nav.css">

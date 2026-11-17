@@ -14,5 +14,6 @@
 <script src="/assets/vendor/fullcalendar/es.global.min.js"></script>
 <script src="/assets/js/components/drawer.js"></script>
 <script src="/assets/js/components/pos.js"></script>
+<script src="/assets/js/components/accessibility.js"></script>
 </body>
 </html>

@@ -22,6 +22,7 @@
     background-color: var(--bg-dark);
     overflow-y: auto;
     min-width: 0;
+    width: 100%;
 }
 
 /* ─── Responsive ───────────────────────────────────────────────────── */
@@ -39,5 +40,11 @@
     /* En móvil el body deja de ser flex-row porque el nav es overlay */
     .app-body {
         display: block;
+    }
+}
+
+@media (max-width: 420px) {
+    .app-content {
+        padding: 0.75rem;
     }
 }
